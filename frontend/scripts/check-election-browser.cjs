@@ -88,7 +88,14 @@ async function checkResults(page, language, answer)
     await page.locator('.questionnaire-card button').click();
     await page.locator('input[value="short"]').check();
     await page.getByRole('button', { name: language === 'pt' ? 'Começar questionário' : 'Start questionnaire', exact: true }).click();
-    for (let index = 0; index < 36; index += 1)
+    // Avanço automático (ligado por padrão): a primeira resposta leva sozinha à pergunta 2.
+    const toggle = page.locator('.auto-advance-toggle');
+    assert.equal(await toggle.getAttribute('aria-checked'), 'true');
+    await page.locator('[data-answer="' + answer + '"]').click();
+    await page.getByText('2 / 36', { exact: true }).waitFor();
+    await toggle.click();
+    assert.equal(await toggle.getAttribute('aria-checked'), 'false');
+    for (let index = 1; index < 36; index += 1)
     {
         await page.locator('[data-answer="' + answer + '"]').click();
         if (index < 35) await page.getByRole('button', { name: language === 'pt' ? 'Próxima' : 'Next', exact: true }).click();

@@ -18,6 +18,7 @@ import './styles/results.css';
 import './styles/editorial.css';
 import './styles/motion.css';
 import './styles/election.css';
+import './styles/scale-question.css';
 import './styles/profile.css';
 import './styles/education.css';
 

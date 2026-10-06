@@ -1,0 +1,47 @@
+/* Pergunta do 2 Turno: layout aberto (sem cartão) e resposta numa régua de cinco pontos,
+   na mesma linguagem da logo e do hero (linha, traço central pontilhado e ponto carmim). */
+.scale-question { padding-top: 8px; }
+.scale-question-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.scale-question-topic { display: inline-flex; align-items: center; gap: 10px; font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-700); }
+.scale-question-topic::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--pole); }
+.scale-question-count { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: var(--ink-500); font-variant-numeric: tabular-nums; }
+.scale-question-progress { height: 3px; margin-top: 14px; background: var(--ink-100); border-radius: 3px; overflow: hidden; }
+.scale-question-progress span { display: block; height: 100%; background: var(--green-500); transition: width .3s ease; }
+.election-app .scale-question h2 { max-width: 900px; margin: 44px 0 14px; font-family: var(--font-display); font-size: clamp(1.55rem, 3.4vw, 2.5rem); line-height: 1.15; letter-spacing: -.01em; color: var(--text-strong); }
+.election-app .scale-question-help { display: inline-flex; align-items: center; gap: 8px; padding: 4px 0; border: 0; background: none; color: var(--ink-700); font: inherit; font-size: .95rem; cursor: pointer; text-decoration: underline; text-decoration-color: var(--ink-300); text-underline-offset: 4px; }
+.election-app .scale-question-help:hover { color: var(--text-strong); text-decoration-color: currentColor; }
+.scale-question-help span { display: grid; place-items: center; width: 22px; height: 22px; border: 1.5px solid currentColor; border-radius: 50%; font-size: .8rem; font-weight: 700; text-decoration: none; }
+.scale-question-help:focus-visible { outline: 3px solid #a83039; outline-offset: 3px; border-radius: 6px; }
+
+.scale { margin: 56px 0 24px; }
+.scale-ends { display: none; justify-content: space-between; font-size: .8rem; font-weight: 600; color: var(--ink-500); }
+.scale-track { position: relative; }
+.scale-line, .scale-fill { position: absolute; top: 22px; height: 4px; margin-top: -2px; border-radius: 4px; }
+.scale-line { left: 10%; right: 10%; background: var(--ink-300); }
+.scale-fill { background: var(--green-500); transition: left .25s ease, width .25s ease; }
+.scale-center { position: absolute; left: 50%; top: 0; height: 44px; border-left: 2px dotted var(--ink-400); }
+.scale-points { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); }
+.election-app .scale-point { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 0 4px 6px; border: 0; background: none; color: var(--ink-700); font: inherit; cursor: pointer; }
+.scale-point:disabled { cursor: default; }
+.scale-dot { display: grid; place-items: center; width: 44px; height: 44px; }
+.scale-dot::after { content: ""; width: 20px; height: 20px; border: 2px solid var(--ink-400); border-radius: 50%; background: var(--paper, #F4F1E8); transition: transform .2s cubic-bezier(.34, 1.56, .64, 1), background .2s, border-color .2s, box-shadow .2s; }
+.scale-point:hover:not(:disabled) .scale-dot::after { border-color: var(--green-500); transform: scale(1.15); }
+.scale-point.selected .scale-dot::after { width: 26px; height: 26px; border: 0; background: var(--red-500, #880912); box-shadow: 0 0 0 5px var(--paper, #F4F1E8), 0 6px 14px -4px rgba(136, 9, 18, .55); animation: scale-land .32s cubic-bezier(.34, 1.56, .64, 1); }
+.scale-label { max-width: 11ch; text-align: center; font-size: .88rem; line-height: 1.3; }
+.scale-point.selected .scale-label { color: var(--text-strong); font-weight: 700; }
+.scale-point:focus-visible { outline: none; }
+.scale-point:focus-visible .scale-dot { outline: 3px solid #a83039; outline-offset: -2px; border-radius: 50%; }
+.scale-current { display: none; margin: 18px 0 0; text-align: center; font-family: var(--font-display); font-weight: 700; color: var(--text-strong); }
+@keyframes scale-land { 0% { transform: translateY(-14px) scale(.6); } 70% { transform: translateY(2px) scale(1.05); } 100% { transform: none; } }
+
+@media (max-width: 560px) {
+  .election-app .scale-question h2 { margin-top: 28px; }
+  .scale { margin-top: 36px; }
+  .scale-ends { display: flex; margin-bottom: 12px; }
+  .scale-label { display: none; }
+  .scale-current { display: block; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scale-fill, .scale-dot::after, .scale-question-progress span { transition: none; }
+  .scale-point.selected .scale-dot::after { animation: none; }
+}

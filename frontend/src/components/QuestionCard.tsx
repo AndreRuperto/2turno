@@ -19,15 +19,23 @@ interface QuestionCardProps {
   axis?: Axis;
   /** Numero da pergunta exibido no canto superior direito. */
   number?: number;
+  /** Explicação do eixo para modelos com eixos próprios (ex.: o eleitoral); sem ela, usa a do 12 Axes. */
+  axisDescription?: string;
+  /** Frase dizendo para qual polo concordar leva; aparece no painel do "?". */
+  agreeHint?: string;
+  /** Exemplo concreto do que a frase significa na prática; aparece no painel do "?". */
+  example?: { label: string; text: string };
   options: AnswerOption[];
   selected?: AnswerValue;
   disabled?: boolean;
   onSelect: (answer: AnswerValue) => void;
 }
 
-export function QuestionCard({ question, axisLabel, axis, number, options, selected, disabled = false, onSelect }: QuestionCardProps) {
+export function QuestionCard({ question, axisLabel, axis, number, axisDescription, agreeHint, example, options, selected, disabled = false, onSelect }: QuestionCardProps) {
   const [isAxisInfoOpen, setIsAxisInfoOpen] = useState(false);
   const agreeColor = axis && (question.agreePole === 'LEFT' ? axis.leftColor : axis.rightColor);
+  // Os ícones de polo existem só para os eixos do 12 Axes; eixos próprios usam um ponto na cor do polo.
+  const plainTag = axisDescription !== undefined;
 
   return (
     <article className="question-card" aria-labelledby="question-title">
@@ -37,9 +45,9 @@ export function QuestionCard({ question, axisLabel, axis, number, options, selec
       <header className="question-card-header">
         {axis ? (
           <div className="question-axis-help">
-            <p className="question-axis-tag" style={{ '--pole': agreeColor } as CSSProperties}>
+            <p className={plainTag ? 'question-axis-tag question-axis-tag-plain' : 'question-axis-tag'} style={{ '--pole': agreeColor } as CSSProperties}>
               <i aria-hidden="true">
-                <PoleIcon axisId={axis.id} side={question.agreePole === 'LEFT' ? 'left' : 'right'} className="question-axis-tag-ico" />
+                {!plainTag && <PoleIcon axisId={axis.id} side={question.agreePole === 'LEFT' ? 'left' : 'right'} className="question-axis-tag-ico" />}
               </i>
               <span>{question.agreePole === 'LEFT' ? axis.leftPole : axis.rightPole}</span>
             </p>
@@ -94,7 +102,13 @@ export function QuestionCard({ question, axisLabel, axis, number, options, selec
               <>{axis.leftPole} × <span>{axis.rightPole}</span></>
             )}
           </h3>
-          <p className="e-axis-sheet-text">{t.axisExplanations[axis.id]}</p>
+          <p className="e-axis-sheet-text">{axisDescription ?? t.axisExplanations[axis.id]}</p>
+          {agreeHint && <p className="e-axis-sheet-text">{agreeHint}</p>}
+          {example && (
+            <p className="question-example">
+              <strong>{example.label}</strong> {example.text}
+            </p>
+          )}
         </InfoSheet>
       )}
     </article>

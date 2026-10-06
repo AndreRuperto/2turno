@@ -54,8 +54,23 @@
 .comparison-marker.marker-2 { background: #225e75; box-shadow: 0 0 0 1px #225e75; }
 .comparison-values { display: flex; flex-wrap: wrap; gap: 12px 22px; padding: 0; list-style: none; font-size: 13px; }
 .comparison-values li { line-height: 1.6; }
-.format-options { display: flex; flex-wrap: wrap; gap: 16px; border: 0; padding: 0; margin: 20px 0; }
-.format-options label { display: flex; align-items: center; gap: 10px; border: 1px solid #c5cabe; border-radius: 14px; padding: 16px; }
+.format-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; border: 0; padding: 0; margin: 0; min-width: 0; }
+.format-options legend { padding: 0; margin-bottom: 14px; font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; color: var(--text-strong); }
+.election-app .format-option, .format-option { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; border: 1.5px solid var(--ink-100); border-radius: 14px; background: var(--surface); cursor: pointer; transition: border-color .15s, background .15s, box-shadow .15s, transform .15s; }
+.format-option:hover { border-color: var(--green-400); transform: translateY(-1px); box-shadow: 0 6px 18px -10px rgba(16, 46, 36, .35); }
+.format-option.selected { border-color: var(--green-500); background: var(--green-50); box-shadow: 0 0 0 1px var(--green-500); }
+/* O rádio real cobre o cartão (clique, teclado e leitor de tela); o visual é o .format-option-radio. */
+.format-option input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.format-option-head { display: flex; align-items: center; gap: 10px; }
+.format-option-head strong { font-family: var(--font-display); font-size: 1.1rem; color: var(--text-strong); }
+.format-option-radio { width: 18px; height: 18px; flex: none; border: 2px solid var(--ink-400); border-radius: 50%; background: var(--surface); transition: border-color .15s, box-shadow .15s; }
+.format-option.selected .format-option-radio { border-color: var(--green-500); box-shadow: inset 0 0 0 3px var(--surface), inset 0 0 0 9px var(--green-500); }
+.format-option-badge { margin-left: auto; padding: 3px 9px; border-radius: 999px; background: var(--green-500); color: #fff; font-size: .72rem; font-weight: 600; letter-spacing: .02em; }
+.format-option-meta { font-weight: 600; color: var(--green-500); font-size: .95rem; }
+.format-option-description { color: var(--ink-700); font-size: .92rem; line-height: 1.45; }
+.format-option:has(input:focus-visible) { outline: 3px solid #a83039; outline-offset: 3px; }
+.election-app .election-start .format-start { padding: 14px 28px; border: 0; border-radius: 12px; font-weight: 600; font-size: 1.02rem; box-shadow: 0 8px 20px -10px rgba(16, 46, 36, .6); transition: transform .15s, box-shadow .15s; }
+.election-app .election-start .format-start:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 12px 24px -10px rgba(16, 46, 36, .7); }
 .candidate-quick-info p { line-height: 1.6; }
 .user-profile > h1 { margin-top: 0; }
 .candidate-overview { margin: 32px 0; }
@@ -63,7 +78,7 @@
 .candidate-page-header .ideology-header { padding: 18px 0 0; margin: 18px 0 0; border-radius: 0; }
 .candidate-page-header .portrait { width: 144px; height: 144px; }
 .running-mate { margin: 32px 0; }
-.profile-link:focus-visible, .candidate-info-button:focus-visible, .axis-exact summary:focus-visible, .format-options input:focus-visible { outline: 3px solid #a83039; outline-offset: 4px; }
+.profile-link:focus-visible, .candidate-info-button:focus-visible, .axis-exact summary:focus-visible { outline: 3px solid #a83039; outline-offset: 4px; }
 @media (max-width: 880px)
 {
     .home-options { grid-template-columns: 1fr; }

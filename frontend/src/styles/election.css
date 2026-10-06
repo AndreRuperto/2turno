@@ -4,10 +4,15 @@
 .election-app h1 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3rem); }
 .election-app section { margin-block: 36px; }
 .election-app a { color: var(--green-500); }
-.election-app button, .election-app select, .election-app input { padding: 12px; border: 1px solid var(--line-strong); border-radius: 8px; font: inherit; }
-.election-app button { cursor: pointer; background: var(--green-500); color: white; }
-.election-app button:disabled { opacity: .5; cursor: default; }
-.election-start { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help)), .election-app select, .election-app input { padding: 12px; border: 1px solid var(--line-strong); border-radius: 8px; font: inherit; }
+.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help)) { cursor: pointer; background: var(--green-500); color: white; }
+.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help)):disabled { opacity: .5; cursor: default; }
+.election-start { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+.election-start .format-options { width: 100%; }
+@media (max-width: 760px) {
+  .election-start .format-options { grid-template-columns: 1fr; }
+  .election-app .election-start .format-start { width: 100%; }
+}
 .election-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; margin-block: 24px; }
 .election-profile, .election-match { padding: 20px; border: 1px solid var(--line-strong); border-radius: 12px; background: white; }
 .election-profile { display: flex; gap: 16px; align-items: center; }
@@ -40,3 +45,18 @@
   .home-hero-text { max-width: none; }
 }
 .election-kicker { margin: 0; font-weight: 600; color: var(--ink-700); }
+
+/* Selo da pergunta sem ícone de polo: um ponto na cor do polo para onde a frase puxa. */
+.question-axis-tag.question-axis-tag-plain i { width: 10px; height: 10px; }
+.question-example { margin: 14px 0 0; padding: 12px 14px; border-left: 3px solid var(--ac, var(--green-500)); border-radius: 0 8px 8px 0; background: color-mix(in srgb, var(--ac, var(--green-500)) 8%, transparent); font-size: .95rem; line-height: 1.5; }
+.question-example strong { font-weight: 600; }
+.election-actions { margin-top: 24px; }
+.election-actions.quiz-navigation { justify-content: space-between; }
+.election-actions.quiz-navigation button { min-width: 120px; }
+.election-app .election-actions.quiz-navigation button:first-child { background: transparent; color: var(--green-500); border: 1.5px solid var(--green-500); }
+.election-app .election-actions.quiz-navigation button:first-child:hover:not(:disabled) { background: var(--green-50); }
+/* O toggle aparece também no celular (no 12 Axes ele some abaixo de 760px). */
+.election-actions.quiz-navigation .auto-advance-toggle { display: inline-flex; margin: 0; }
+@media (max-width: 560px) {
+  .election-actions.quiz-navigation .auto-advance-toggle { order: -1; width: 100%; justify-content: center; }
+}

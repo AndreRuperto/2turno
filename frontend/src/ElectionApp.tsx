@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { QuestionCard } from './components/QuestionCard';
+import { useEffect, useRef, useState } from 'react';
+import { ScaleQuestion } from './components/election/ScaleQuestion';
 import { LANG } from './i18n';
 import { fetchElectionQuiz, submitElectionAnswers } from './services/electionApi';
 import site from './site.json';
@@ -7,12 +7,26 @@ import profiles from './data/electionProfiles.generated.json';
 import { CandidateCard, ComparisonAxis, ProfileCard, candidatePage, profileText } from './components/election/ProfileComponents';
 import { HomeEducation } from './components/election/HomeEducation';
 import educationTranslations from './i18n/electionEducation.json';
+import questionExamples from './i18n/electionQuestionExamples.json';
 import presentation from './utils/electionPresentation.cjs';
 import type { ElectionComparison, ElectionQuiz } from './types/election';
 import type { AnswerValue, QuizPayload, QuizVariant } from './types/quiz';
 import { selectAllQuestionsBalanced, selectAndBalanceQuestions } from './utils/quizSelection';
 
 const languagePrefix = LANG === 'en' ? '/en' : '';
+const AUTO_ADVANCE_KEY = '2turno-auto-advance';
+
+function readAutoAdvance(): boolean
+{
+  try
+  {
+    return window.localStorage.getItem(AUTO_ADVANCE_KEY) !== 'false';
+  }
+  catch
+  {
+    return true;
+  }
+}
 const text = LANG === 'pt' ? {
   title: '2 Turno — Lula x Flávio Bolsonaro',
   heading: 'Lula ou Flávio? Veja de quem você está mais perto.',
@@ -21,11 +35,19 @@ const text = LANG === 'pt' ? {
   candidates: 'Candidatos do segundo turno',
   proposals: 'Ver posições por eixo',
   start: 'Fazer o quiz',
-  formats: ['Curto — 36 perguntas', 'Completo — 60 perguntas', 'Todos os temas — 72 perguntas'],
+  formats: [
+    { name: 'Curto', count: '36 perguntas', time: '~5 min', description: 'Uma visão rápida dos 12 temas.' },
+    { name: 'Completo', count: '60 perguntas', time: '~8 min', description: 'Equilíbrio entre tempo e precisão.' },
+    { name: 'Todos os temas', count: '72 perguntas', time: '~10 min', description: 'Todas as perguntas, para o resultado mais preciso.' }
+  ],
+  recommended: 'Recomendado',
   previous: 'Anterior',
   next: 'Próxima',
   finish: 'Comparar respostas',
   restart: 'Começar novamente',
+  scale: { help: 'O que está em jogo', helpAria: 'O que está em jogo nesta pergunta: eixo e exemplo', scaleAria: 'Sua resposta', example: 'Na prática:' },
+  autoAdvance: 'Avançar ao responder',
+  agreeHint: (pole: string) => `Concordar com esta frase aproxima você de “${pole}”; discordar, do polo oposto.`,
   loading: 'Carregando o quiz…',
   results: 'Suas respostas, Lula e Flávio Bolsonaro',
   closest: 'Mais próximo das suas respostas:',
@@ -46,11 +68,19 @@ const text = LANG === 'pt' ? {
   candidates: 'Runoff candidates',
   proposals: 'See positions by axis',
   start: 'Take the quiz',
-  formats: ['Short — 36 questions', 'Extended — 60 questions', 'All topics — 72 questions'],
+  formats: [
+    { name: 'Short', count: '36 questions', time: '~5 min', description: 'A quick look at all 12 topics.' },
+    { name: 'Extended', count: '60 questions', time: '~8 min', description: 'A balance between time and precision.' },
+    { name: 'All topics', count: '72 questions', time: '~10 min', description: 'Every question, for the most precise result.' }
+  ],
+  recommended: 'Recommended',
   previous: 'Previous',
   next: 'Next',
   finish: 'Compare answers',
   restart: 'Start again',
+  scale: { help: 'What is at stake', helpAria: 'What is at stake in this question: axis and example', scaleAria: 'Your answer', example: 'In practice:' },
+  autoAdvance: 'Advance on answer',
+  agreeHint: (pole: string) => `Agreeing with this statement moves you toward “${pole}”; disagreeing, toward the opposite pole.`,
   loading: 'Loading the quiz…',
   results: 'Your answers, Lula and Flávio Bolsonaro',
   closest: 'Closest to your answers:',
@@ -73,6 +103,8 @@ export default function ElectionApp()
   const [quiz, setQuiz] = useState<QuizPayload | null>(null);
   const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
   const [questionIndex, setQuestionIndex] = useState(0);
+  const [autoAdvance, setAutoAdvance] = useState(readAutoAdvance);
+  const advanceTimer = useRef<number | null>(null);
   const [comparison, setComparison] = useState<ElectionComparison | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -140,7 +172,44 @@ export default function ElectionApp()
     }
   }
 
+  // Troca de pergunta (botões, novo quiz ou saída) cancela um avanço automático pendente.
+  useEffect(() => () =>
+  {
+    if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
+    advanceTimer.current = null;
+  }, [questionIndex, quiz]);
+
+  function toggleAutoAdvance()
+  {
+    const next = !autoAdvance;
+    setAutoAdvance(next);
+    try
+    {
+      window.localStorage.setItem(AUTO_ADVANCE_KEY, String(next));
+    }
+    catch
+    {
+      // Sem armazenamento (aba privada, bloqueio): a escolha vale só nesta visita.
+    }
+  }
+
+  // Com o avanço automático, responder leva à próxima pergunta; a última espera o botão de comparar.
+  function selectAnswer(questionId: string, answer: AnswerValue)
+  {
+    setAnswers(previous => ({ ...previous, [questionId]: answer }));
+    if (!autoAdvance || !quiz || questionIndex >= quiz.questions.length - 1) return;
+    const answeredIndex = questionIndex;
+    if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
+    advanceTimer.current = window.setTimeout(() =>
+    {
+      advanceTimer.current = null;
+      setQuestionIndex(index => (index === answeredIndex ? answeredIndex + 1 : index));
+    }, 250);
+  }
+
   const question = quiz?.questions[questionIndex];
+  const questionAxis = question && quiz?.axes.find(axis => axis.id === question.axisId);
+  const questionExample = question && (questionExamples[LANG] as Record<string, string>)[question.id];
 
   return <div className="election-app">
     <header className="election-header">
@@ -178,23 +247,42 @@ export default function ElectionApp()
           {choosingFormat && <section className="election-start" aria-label={profileText.formats}>
             <fieldset className="format-options">
               <legend>{profileText.formats}</legend>
-              {(['short', 'extended', 'extreme'] as const).map((format, index) => <label key={format}>
-                <input type="radio" name="questionnaire-format" value={format} checked={variant === format}
-                  onChange={() => setVariant(format)} disabled={busy} />{text.formats[index]}
-              </label>)}
+              {(['short', 'extended', 'extreme'] as const).map((format, index) =>
+              {
+                const option = text.formats[index];
+                return <label key={format} className={variant === format ? 'format-option selected' : 'format-option'}>
+                  <input type="radio" name="questionnaire-format" value={format} checked={variant === format}
+                    onChange={() => setVariant(format)} disabled={busy} />
+                  <span className="format-option-head">
+                    <span className="format-option-radio" aria-hidden="true" />
+                    <strong>{option.name}</strong>
+                    {format === 'extended' && <span className="format-option-badge">{text.recommended}</span>}
+                  </span>
+                  <span className="format-option-meta">{option.count} · {option.time}</span>
+                  <span className="format-option-description">{option.description}</span>
+                </label>;
+              })}
             </fieldset>
-            <button type="button" onClick={startQuiz} disabled={busy}>{profileText.begin}</button>
+            <button className="format-start" type="button" onClick={startQuiz} disabled={busy}>
+              {profileText.begin}<span aria-hidden="true"> →</span>
+            </button>
           </section>}
           <HomeEducation />
         </>}
         {quiz && question && <section>
-          <p>{questionIndex + 1} / {quiz.questions.length}</p>
-          <progress aria-label={text.start} value={Object.keys(answers).length} max={quiz.questions.length} />
-          <QuestionCard key={question.id} question={question} axisLabel={quiz.axes.find(axis => axis.id === question.axisId)?.label}
-            options={quiz.answerOptions} selected={answers[question.id]} disabled={busy}
-            onSelect={answer => setAnswers(previous => ({ ...previous, [question.id]: answer }))} />
-          <div className="election-actions">
+          <ScaleQuestion key={question.id} question={question} axis={questionAxis}
+            index={questionIndex} total={quiz.questions.length} answered={Object.keys(answers).length}
+            axisDescription={educationTranslations[LANG].axisDescriptions[question.axisId as keyof typeof educationTranslations.pt.axisDescriptions]}
+            example={questionExample}
+            agreeHint={questionAxis && text.agreeHint(question.agreePole === 'LEFT' ? questionAxis.leftPole : questionAxis.rightPole)}
+            options={quiz.answerOptions} selected={answers[question.id]} disabled={busy} text={text.scale}
+            onSelect={answer => selectAnswer(question.id, answer)} />
+          <div className="election-actions quiz-navigation">
             <button type="button" disabled={busy || questionIndex === 0} onClick={() => setQuestionIndex(questionIndex - 1)}>{text.previous}</button>
+            <button className="auto-advance-toggle" type="button" role="switch" aria-checked={autoAdvance} onClick={toggleAutoAdvance}>
+              <span className="auto-advance-switch" aria-hidden="true" />
+              {text.autoAdvance}
+            </button>
             {questionIndex < quiz.questions.length - 1
               ? <button type="button" disabled={busy || !answers[question.id]} onClick={() => setQuestionIndex(questionIndex + 1)}>{text.next}</button>
               : <button type="button" disabled={busy || Object.keys(answers).length !== quiz.questions.length} onClick={finishQuiz}>{text.finish}</button>}
