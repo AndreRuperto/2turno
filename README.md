@@ -2,294 +2,226 @@
 
 # 2 Turno
 
-A quiz for Brazil's 2026 presidential runoff (25 October 2026): answer questions on twelve topics and see whether you are closer to Lula (PT · 13) or Flávio Bolsonaro (PL · 22), with each position sourced to their government programmes. Built on the 12 Axes project, whose international catalogue remains in the repository.
+Quiz do segundo turno da eleição presidencial de 2026 (25 de outubro de 2026). Responda a perguntas sobre doze temas e veja se você está mais próximo de **Lula (PT · 13)** ou de **Flávio Bolsonaro (PL · 22)**. Cada posição dos candidatos tem como fonte o plano de governo registrado no TSE.
 
-**[12axes.vercel.app](https://12axes.vercel.app)** · Portuguese and English · no sign-up
+Português e inglês · sem cadastro
 
-![Java](https://img.shields.io/badge/Java-21-orange) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3-6DB33F) ![React](https://img.shields.io/badge/React-18-61DAFB) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6) ![CI](https://github.com/Fuguety/2Turno/actions/workflows/ci.yml/badge.svg)
+![Java](https://img.shields.io/badge/Java-21-orange) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3-6DB33F) ![React](https://img.shields.io/badge/React-18-61DAFB) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6) ![CI](https://github.com/AndreRuperto/2turno/actions/workflows/ci.yml/badge.svg)
 
 </div>
 
-## Overview
+## Visão geral
 
-The website build publishes only **2 Turno**: the election quiz, one page per candidate with
-their position on each axis and links to the cited pages of their programme, and a methodology
-page, in Portuguese and English. Candidate coding, sources and uncertainty are documented in
-[MODEL-BRAZIL-2026.md](colinha-eleitoral/MODEL-BRAZIL-2026.md) and
-[PLANOS-2026.md](colinha-eleitoral/PLANOS-2026.md). International source data and the original
-general model remain available internally. The general-project overview below describes the
-reusable 12 Axes architecture.
+O site publica apenas a experiência eleitoral, em português (padrão) e inglês (`/en`):
 
-Most political tests reduce you to a single point on a left-right line, or to a two-axis grid. 12 Axes measures twelve dimensions separately, so someone who wants a free market and a strong state, or open borders and a religious society, sees that combination instead of an average that hides it.
+- **Página inicial** com o teste, os dois candidatos e seções explicativas: espectro político, os 12 eixos, como funciona e um exemplo de resultado.
+- **Quiz** em três durações, com o resultado eixo a eixo e a compatibilidade com cada candidato.
+- **Uma página por candidato** (`/candidatos/lula-da-silva`, `/candidatos/flavio-bolsonaro`), com a posição em cada eixo e links para as páginas citadas do plano de governo.
+- **Página de metodologia** (`/election-methodology`), com as fontes e as respostas marcadas como incertas.
 
-The project is also a full-stack portfolio piece: a Spring Boot REST API with its own matching algorithm, a React and TypeScript frontend, a versioned JSON data layer, automated tests, CI, and cloud deploys.
+O projeto foi construído sobre o [12 Axes](#origem-12-axes), um quiz político geral. O modelo eleitoral é um banco de dados próprio e versionado, que fica ao lado do modelo geral. O catálogo internacional e o quiz geral continuam no repositório, mas não são publicados.
 
-## About the project
+## Como funciona
 
-### What it is
+### Os 12 eixos
 
-An anonymous quiz. You rate statements on a five-point agreement scale and get a percentage on each axis, your closest ideologies, the country or historical regime nearest to you, and the political figures who think most like you.
+Os eixos do 2 Turno são diferentes dos eixos do 12 Axes. Foram definidos para o debate eleitoral brasileiro:
 
-### Who it is for
+| Eixo | Primeiro polo | Segundo polo |
+|------|---------------|--------------|
+| Coordenação econômica | Política industrial ativa | Coordenação pelo mercado |
+| Proteção social e orçamento | Ampliação da proteção social | Contenção de gastos sociais |
+| Tributação | Maior progressividade | Redução geral de impostos |
+| Serviços e empresas públicas | Provisão e controle públicos | Provisão privada e concessões |
+| Relações de trabalho | Proteção definida em lei | Flexibilidade negociada |
+| Direitos e costumes | Ampliação de direitos sociais | Preservação de normas tradicionais |
+| Religião e Estado | Decisões públicas laicas | Referências religiosas na política |
+| Armas de fogo | Acesso civil restrito | Acesso civil ampliado |
+| Justiça penal | Reintegração e garantias processuais | Penas e encarceramento ampliados |
+| Meio ambiente | Prioridade à proteção ambiental | Flexibilidade para uso de recursos |
+| Política externa | Cooperação multilateral | Autonomia e acordos bilaterais |
+| Equilíbrio entre Poderes | Controle judicial mais amplo | Maior margem dos Poderes eleitos |
 
-People curious about politics who want more than a left-right label, students comparing doctrines and regimes, and anyone who wants to see where they disagree with their own side.
+Cada eixo vai de 0 a 100. Quanto maior a nota, mais perto do primeiro polo; 50 é o centro. Os rótulos "primeiro" e "segundo" polo não significam esquerda e direita.
 
-### What sets it apart
+### Perguntas
 
-- Twelve axes scored independently, so the result keeps tensions and unusual combinations.
-- Three catalogs (ideologies, countries, personalities), each matched on its own. Countries include +68 historical regimes, from the Paris Commune to Atatürk's Turkey.
-- Every profile in the catalogs answered the same 240 questions a user can answer, instead of being placed by hand.
-- An optional religion filter, so a user can hide profiles tied to a faith that is not theirs.
-- A shareable result card, a PDF report, and a link that rebuilds the result from the URL.
+O banco eleitoral tem **72 perguntas**, seis por eixo: três puxam para cada polo, para que concordar com tudo não distorça o resultado. As perguntas não citam candidatos. Elas tratam de políticas concretas, como compras do SUS, jornada de trabalho, porte de armas, licenciamento ambiental e procedimentos judiciais.
 
-### The 12 axes
+| Formato | Perguntas | Por eixo |
+|---------|----------:|---------:|
+| Curto | 36 | 3 |
+| Completo (padrão) | 60 | 5 |
+| Extremo | 72 | 6 |
 
-The model is inspired by the original [12 Axes test](https://politicaltests.github.io/12axes/). Each axis runs between two poles:
+| Resposta | Valor |
+|----------|------:|
+| Concordo totalmente | 1,00 |
+| Concordo | 0,75 |
+| Neutro | 0,50 |
+| Discordo | 0,25 |
+| Discordo totalmente | 0,00 |
 
-| Axis | Pole A | Pole B |
-|------|--------|--------|
-| Structure | Federal | Unitary |
-| Representation | Democracy | Autocracy |
-| Power | Security | Liberty |
-| Immigration | Assimilation | Multiculturalism |
-| Diplomacy | Militarist | Pacifist |
-| Intervention | Non-interventionist | Nationalist |
-| Economy | Public | Private |
-| Control | Planning | Free market |
-| Trade | Protectionism | Globalism |
-| Religion | Irreligious | Religious |
-| Morality | Progressive | Traditionalist |
-| Technology | Technology | Biology |
+### Cálculo da compatibilidade
 
-### Political spectra
+1. Em cada eixo, a nota é `100 × média das contribuições` para o primeiro polo. Em uma pergunta do segundo polo, a contribuição é `1 − concordância`.
+2. A distância até um candidato é a média das diferenças absolutas nos 12 eixos, todos com o mesmo peso.
+3. **Compatibilidade = 100 − distância**, com uma casa decimal (modelo `mean-absolute-distance-v1`).
 
-The axes describe the user. Ideologies are grouped into eight broader families, in the spirit of the [Political Compass](https://www.politicalcompass.org/), which place a result on the familiar map: Left, Radical Left, Center, Right, Far-Right, Libertarian, Anarchist, and Third Position. The family is a label for reading the result. It does not count in the score.
+As notas dos candidatos saem da mesma fórmula, aplicada às respostas codificadas de cada um. Não existe vetor mantido à mão.
 
-### How your result is calculated
+### Posições dos candidatos
 
-1. Each answer moves an axis toward one of its poles. Strong agreement counts fully, "neutral" leaves the axis at the center, and disagreement pushes the other way.
-2. The average of your answers on each axis becomes a percentage between the two poles, labeled balanced, leaning, strong, or very strong depending on how far it is from the center.
-3. Your twelve percentages form a profile, which is compared with every ideology, country, and personality in the catalogs. The closest ones are shown with a compatibility score.
+Cada candidato respondeu às 72 perguntas por meio de uma **interpretação editorial** do plano de governo e de atos públicos, como projetos de lei e decretos. Nenhum dos candidatos respondeu ao quiz pessoalmente. A codificação segue estas regras:
 
-### Questions and scoring
+- Compromisso explícito e forte: concordo ou discordo **totalmente**.
+- Posição com ressalvas: concordo ou discordo.
+- Sem evidência específica: **neutro, marcado como incerto**. Isso não significa que o candidato seja moderado no tema.
 
-| Format | Questions | Per axis |
-|--------|----------:|---------:|
-| Short | 36 | 3 |
-| Complete | 60 | 5 |
-| Extreme | 240 | 20 |
+Na versão atual (`brazil-presidential-2026-v2`, evidências até 05/10/2026), Lula tem 12 respostas incertas e Flávio tem 22.
 
-The pool has 240 statements, 20 per axis, half phrased toward each pole so agreeing with everything does not skew the result. The short and complete formats draw a balanced subset. Five multiple-choice "archetype" questions at the end add broader signals across several axes. A last, optional question about your religion sets the filter and does not affect the score.
+### Nota metodológica
 
-| Answer | Value |
-|--------|------:|
-| Strongly agree | 1.00 |
-| Agree | 0.75 |
-| Neutral | 0.50 |
-| Disagree | 0.25 |
-| Strongly disagree | 0.00 |
+O 2 Turno é uma ferramenta para explorar propostas, não um instrumento científico nem uma recomendação de voto. Uma compatibilidade alta mostra que suas respostas estão perto das posições codificadas do candidato neste questionário. Ela não indica probabilidade de voto nem concordância com tudo o que o candidato defende. O site fala sempre em "proximidade com suas respostas", nunca em "vote em".
 
-### Methodological note
+Os detalhes completos estão em:
 
-12 Axes is a tool for exploring ideas. It is not a scientific instrument. A high compatibility means your answers are close to a profile, not that you belong to a movement, should vote for someone, or share anyone's values in full. Profiles are simplified models, and the questions inevitably carry the framing of whoever wrote them.
+- [MODEL-BRAZIL-2026.md](colinha-eleitoral/MODEL-BRAZIL-2026.md): eixos, notas, perguntas, pontuação e incertezas
+- [PLANOS-2026.md](colinha-eleitoral/PLANOS-2026.md): leitura dos planos de governo e páginas citadas
+- [VALIDATION-BRAZIL-2026.md](colinha-eleitoral/VALIDATION-BRAZIL-2026.md): validação do modelo
 
-## Features
-
-- Three quiz lengths with auto-advance and a back button.
-- Results by axis, with intensity and the rarest and most common positions in your profile.
-- Top ideologies, the closest current and historical countries, and matching personalities by category, plus the least compatible ideology.
-- An "axis tension" readout for pairs of positions that rarely appear together.
-- Book recommendations tied to your profile.
-- Religion filter for Christianity, Judaism, Islam, and Buddhism.
-- Share card (PNG), PDF report, and shareable result link.
-- Static, indexable pages for every ideology, country, and personality.
-
-## Demo
-
-<div align="center">
-<img src=".github/assets/result-card.png" alt="12 Axes result card" width="360">
-</div>
-
-The share card sums up a result: the main ideology and its family, the most compatible personality, the dominant pole on each of the twelve axes, and the closest personalities and countries.
-
-## Architecture
+## Arquitetura
 
 ### Stack
 
-| Layer | Technology |
-|-------|------------|
+| Camada | Tecnologia |
+|--------|------------|
 | Backend | Java 21, Spring Boot 3.3, Maven |
 | Frontend | React 18, TypeScript, Vite 5 |
-| Data | Versioned JSON, loaded into memory at startup |
-| Tests | JUnit 5, MockMvc, AssertJ, Vitest |
-| CI | GitHub Actions (backend tests, i18n check, frontend tests and build) |
-| Deploy | Backend on Render (Docker), frontend on Vercel |
+| Dados | JSON versionado, carregado em memória na inicialização |
+| Testes | JUnit 5, MockMvc, AssertJ, Vitest, Playwright |
+| CI | GitHub Actions (testes do backend, checagem de i18n, testes e build do frontend) |
 
-There is no database. The catalogs change only through reviewed commits, so the backend reads the JSON once at startup, validates it, and scores every request in memory.
+Não há banco de dados. Os dados só mudam por commits revisados, então o backend lê os JSON uma vez, valida e calcula tudo em memória.
 
-### Project data
+### Dados eleitorais
 
-All data lives in `backend/src/main/resources/data/`, with English translations in `i18n/en/`.
+| Arquivo | Conteúdo |
+|---------|----------|
+| `backend/src/main/resources/data/elections/brazil-2026.json` | Modelo eleitoral: eixos, 72 perguntas, respostas codificadas e evidências dos candidatos |
+| `backend/src/main/resources/data/i18n/en/elections/brazil-2026.json` | Tradução para o inglês |
+| `backend/src/main/resources/data/elections/brazil-catalogue.json` | Registro de perfis brasileiros (o endpoint `/catalog` ainda existe, mas o catálogo não é publicado) |
+| `frontend/src/i18n/electionEducation.json` | Textos das seções educativas da página inicial |
 
-| File | Contents |
-|------|----------|
-| `axes.json` | The 12 axes, their poles and labels |
-| `questions-pool.json` | 240 questions, with axis, polarity, and weight |
-| `archetype-questions.json` | The five multiple-choice questions |
-| `ideologies.json` / `ideology-profiles.json` | Ideologies and their 12-axis vectors |
-| `countries.json` / `countries-profiles.json` | Countries, regions, and historical regimes |
-| `personalities.json` / `personality-profiles.json` | Political figures and intellectuals |
-| `books.json` | Book recommendations |
-
-On startup the backend refuses to run if any catalog entry lacks a vector or a vector does not have exactly the 12 known axes.
-
-### Repository structure
+### Estrutura do repositório
 
 ```txt
-12Axes/
-├── backend/                 Spring Boot API
+2turno/
+├── backend/                 API Spring Boot
 │   └── src/main/java/com/twelveaxes/
-│       ├── config/          CORS, cache headers, origin enforcement
-│       ├── controller/      REST endpoints
-│       ├── model/           records and DTOs
-│       └── service/         data loading, scoring, matchers, religion filter
-├── frontend/                React + Vite app
-│   ├── src/components/      home, quiz, results, report
-│   ├── src/i18n/            PT/EN strings
-│   └── scripts/             static page generator, image optimizer
-├── profile-audit/           pipeline that builds the catalog vectors
-├── scripts/                 repository checks (i18n)
-└── .claude/skills/          Claude Code skills for adding profiles
+│       ├── config/          CORS, cache, checagem de origem
+│       ├── controller/      ElectionController (2 Turno) e os endpoints gerais do 12 Axes
+│       ├── model/           records e DTOs
+│       └── service/         carga de dados, pontuação, ElectionComparisonService
+├── frontend/                app React + Vite
+│   ├── src/ElectionApp.tsx  ponto de entrada do 2 Turno
+│   ├── src/components/      election/, editorial/, results/
+│   ├── src/i18n/            textos PT/EN
+│   └── scripts/             geração das páginas estáticas e auditoria do build
+├── colinha-eleitoral/       documentação do modelo eleitoral e dos planos de governo
+├── profile-audit/           pipeline de vetores do catálogo do 12 Axes
+├── scripts/                 dev.mjs (sobe tudo) e checagem de i18n
+└── .claude/                 skills do Claude Code para o catálogo do 12 Axes
 ```
 
-### How matching works
+### API eleitoral
 
-A result is a vector of twelve values from 0 to 100. The `ProfileMatchScorer` compares it with each profile using four weighted parts:
+Todos os endpoints aceitam `lang=pt|en`.
 
-| Component | Weight | What it measures |
-|-----------|-------:|------------------|
-| Per axis | 0.42 | Distance on each axis, with an extra penalty when you and the profile are on opposite sides of the center |
-| Direction | 0.33 | Cosine similarity of both vectors around the center, damped near it, where direction is mostly noise |
-| Magnitude | 0.18 | Whether your overall intensity matches the profile's, so a moderate user does not match an extreme profile just because the direction agrees |
-| Outlier | 0.07 | A penalty for a single axis that is far off |
-
-Each catalog is ranked separately. A match also reports a percentile inside its own catalog, because ideologies tend to be more extreme than real countries and the raw scores are not comparable across catalogs. `ScorerBenchmarkTest` guards the calibration: it checks that noisy answers generated from a profile still find that profile.
-
-### API
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
 | `GET` | `/api/health` | Health check |
-| `GET` | `/api/quiz?variant=short\|extended\|extreme` | Quiz metadata and the question pool |
-| `POST` | `/api/results` | Scores answers and returns axes and matches |
-| `GET` | `/api/results/by-axes?v=...` | Rebuilds a result from 12 values, for shared links |
-| `GET` | `/api/ideologies[/{id}]` | Ideology catalog |
-| `GET` | `/api/countries[/{id}]` | Country catalog |
-| `GET` | `/api/personalities[/{id}]` | Personality catalog |
+| `GET` | `/api/elections/brazil-2026/model` | Modelo completo: eixos, candidatos, notas e incertezas |
+| `GET` | `/api/elections/brazil-2026/quiz?variant=short\|extended\|extreme` | Perguntas do formato escolhido |
+| `POST` | `/api/elections/brazil-2026/results` | Calcula as respostas e devolve eixos e compatibilidade |
+| `POST` | `/api/elections/brazil-2026/compare` | Compara um vetor de 12 eixos com os candidatos |
+| `GET` | `/api/elections/brazil-2026/profiles/{id}` | Perfil de um candidato |
 
-Endpoints accept `lang=pt|en`, and the result endpoints accept `religion` for the filter. `/api/**` answers only requests whose `Origin` or `Referer` is in `FRONTEND_ORIGINS`, and returns `403` otherwise. `/api/health` stays open for the Render health check.
+O servidor rejeita perguntas desconhecidas ou repetidas, eixos sem cobertura e seleções desbalanceadas entre os polos. As rotas `/api/**` só respondem a requisições cujo `Origin` ou `Referer` esteja em `FRONTEND_ORIGINS`; as outras recebem `403`. `/api/health` fica aberto.
 
-<details>
-<summary>Example request</summary>
+Os endpoints gerais do 12 Axes (`/api/quiz`, `/api/results`, `/api/ideologies`, `/api/countries`, `/api/personalities`, `/api/compare`) continuam no backend, mas o site não os usa.
 
-```json
-POST /api/results?lang=en
-{
-  "variant": "short",
-  "answers": [
-    { "questionId": "estrutura_01", "answer": "STRONGLY_AGREE" },
-    { "questionId": "poder_03", "answer": "DISAGREE" }
-  ]
-}
-```
+## Rodando localmente
 
-`answer` is one of `STRONGLY_AGREE`, `AGREE`, `NEUTRAL`, `DISAGREE`, `STRONGLY_DISAGREE`.
+Requisitos: Java 21, Maven 3.9+, Node.js 20.11+ e npm.
 
-</details>
-
-### Running locally
-
-You need Java 21, Maven 3.9+, Node.js 20.11+, and npm.
-
-From the repository root, one command starts both and stops both on Ctrl+C:
+Na raiz do repositório, um comando sobe backend e frontend, e o Ctrl+C derruba os dois:
 
 ```bash
-npm run dev               # backend on :8080, then frontend on http://localhost:5173
-npm run dev:prod-api      # frontend only, against the production API (no Java needed)
+npm run dev               # backend em :8080 e frontend em http://localhost:5173
+npm run dev:prod-api      # só o frontend, usando a API de produção (não precisa de Java)
 ```
 
-It installs the frontend dependencies on first run, uses the Maven in `.tools/apache-maven-*` when present (otherwise `mvn` from the PATH), reuses a backend already listening on 8080, and stops early with a clear message if Java 21 is missing.
+O script instala as dependências do frontend na primeira execução e usa o Maven de `.tools/apache-maven-*` quando ele existe (senão, o `mvn` do PATH). Se já houver um backend na porta 8080, ele é reaproveitado. Sem Java 21, o script para com uma mensagem explicando o que instalar.
 
-To run each side separately:
+Para rodar cada lado separadamente:
 
 ```bash
 # Backend: http://localhost:8080
 cd backend
 mvn spring-boot:run
 
-# Frontend: http://localhost:5173 (proxies /api to the backend)
+# Frontend: http://localhost:5173 (faz proxy de /api para o backend)
 cd frontend
 npm install
 npm run dev
 ```
 
-To point the local frontend at the production API instead, create `frontend/.env.local` with `VITE_API_URL=https://one2axes-backend.onrender.com`.
+| Variável | Lado | Padrão | Uso |
+|----------|------|--------|-----|
+| `PORT` | Backend | `8080` | Porta HTTP |
+| `FRONTEND_ORIGINS` | Backend | localhost + Vercel | Origens permitidas para CORS e para a API |
+| `API_ORIGIN_ENFORCEMENT` | Backend | `true` | `false` desliga a checagem de origem |
+| `VITE_API_URL` | Frontend | vazio | URL base da API em produção (veja `frontend/.env.example`) |
 
-| Variable | Side | Default | Purpose |
-|----------|------|---------|---------|
-| `PORT` | Backend | `8080` | HTTP port |
-| `FRONTEND_ORIGINS` | Backend | localhost + Vercel | Allowed origins for CORS and the API |
-| `API_ORIGIN_ENFORCEMENT` | Backend | `true` | Set to `false` to turn off the origin check |
-| `VITE_API_URL` | Frontend | empty | API base URL in production |
-
-### Tests
+## Testes
 
 ```bash
-cd backend && mvn test          # 129 tests
-cd frontend && npm test         # Vitest
-cd frontend && npm run build    # type check, build, static pages
+cd backend && mvn test                                            # suíte completa
+cd backend && mvn -Dtest=ElectionComparisonTest,BrazilCatalogueTest test   # só o modelo eleitoral
+cd frontend && npm test                                           # Vitest
+cd frontend && npm run build                                      # tipos, build, páginas estáticas e auditoria
+cd frontend && npm run test:browser                               # teste no navegador (Playwright)
+python scripts/check_i18n.py                                      # traduções
 ```
 
-The backend suite covers the question pool, the three formats, every catalog vector, links between catalogs, the religion filter, the REST endpoints, and matching regressions. The frontend suite covers question selection and translation. `RandomQuizSimulationTest` simulates users of a given leaning, for example `mvn -Dtest=RandomQuizSimulationTest "-Dquiz.mode=traditional" test`.
+O `npm run build` gera as páginas estáticas dos candidatos e da metodologia e depois roda `check-brazil-build.cjs`. Esse script falha se o build contiver páginas, retratos ou links do catálogo internacional.
 
-### Deploy
+Problema conhecido: o `ScorerBenchmarkTest` do catálogo geral do 12 Axes falha (75,4 contra o mínimo de 76,5). A falha já existia antes do modelo eleitoral e não afeta o 2 Turno.
 
-| Part | Platform | Configuration |
-|------|----------|---------------|
-| Backend | Render | `render.yaml` and `backend/Dockerfile` |
-| Frontend | Vercel | `frontend/vercel.json`, output `dist` |
+## Deploy
 
-Every push and pull request runs the CI workflow in `.github/workflows/ci.yml`.
+| Parte | Configuração |
+|-------|--------------|
+| Backend | `backend/Dockerfile` (há também um `render.yaml` herdado do 12 Axes) |
+| Frontend | `frontend/vercel.json`, saída em `frontend/dist` |
 
-## Contributing
+Em produção, o backend precisa de `FRONTEND_ORIGINS` com o domínio do frontend, e o frontend precisa de `VITE_API_URL` apontando para o backend. Todo push e pull request roda o CI em `.github/workflows/ci.yml`.
 
-Bug reports, corrections to profiles, and translation fixes are welcome as issues or pull requests. Keep each pull request to one change, run the backend and frontend tests, and describe how you tested it. [CONTRIBUTING.md](CONTRIBUTING.md) has the full checklist.
+## Origem: 12 Axes
 
-### Adding ideologies, countries, or personalities
+O 2 Turno reaproveita a base do **12 Axes**, de Enzo Xavier Santos: um quiz político geral com 240 perguntas, doze eixos próprios e catálogos de ideologias, países e personalidades. Tudo isso continua no repositório e funciona internamente:
 
-Catalog entries are not written by hand. Each new profile answers all 240 questions, one by one, in character, and its vector is computed from those answers with the same formula a user gets. The process is in [`profile-audit/NEW_PROFILE.md`](profile-audit/NEW_PROFILE.md), and the repository ships [Claude Code](https://claude.com/claude-code) skills that run it end to end:
+- dados gerais em `backend/src/main/resources/data/` (`axes.json`, `questions-pool.json`, `ideologies.json`, `countries.json`, `personalities.json` e os vetores correspondentes);
+- o pipeline de auditoria de perfis em [`profile-audit/`](profile-audit/NEW_PROFILE.md) e as skills `/new_*` e `/audit_*` em `.claude/`;
+- os geradores de páginas internacionais em `frontend/scripts/`.
 
-| Skill | Purpose |
-|-------|---------|
-| `/new_ideology <name>` | Create an ideology |
-| `/new_country <name>` | Create a country or historical regime |
-| `/new_personality <name>` | Create a personality |
-| `/audit_ideology`, `/audit_country`, `/audit_personality` | Re-audit an existing profile |
+O modelo eleitoral não altera esses dados nem o algoritmo geral (`ProfileMatchScorer`). Ele também não converte resultados do quiz geral, porque os eixos têm significados diferentes.
 
-A new profile has to meet these requirements before it is merged:
+## Contribuindo
 
-- Metadata in Portuguese and English, with the English version free of Brazil-specific references.
-- A full 240-answer audit, archived in `profile-audit/answers/`.
-- `python profile-audit/validate.py <catalog> <id>` passes. It blocks vectors that are near duplicates of an existing profile, too many neutral answers, and a religious vector with no religion tag.
-- Portraits and historical flags come from Wikimedia Commons, with their source recorded, and are compressed with `npm run optimize:images`.
-- `mvn test` passes.
+Correções de posições dos candidatos devem vir com a fonte (página do plano de governo ou ato público). Mande uma mudança por pull request, rode os testes do backend e do frontend e descreva como testou. O [CONTRIBUTING.md](CONTRIBUTING.md) tem o checklist completo.
 
-### License
+## Licença
 
-12 Axes is source-available but not open source. The code, questions, profiles, and vectors are © 2026 Enzo Xavier Santos, all rights reserved. You may read the code and send contributions, but copying, redistributing, translating, or using any part commercially needs written permission. See [LICENSE](LICENSE) for the full terms.
-
-## Author
-
-**Enzo Xavier Santos** built 12 Axes as a portfolio project and a practical study of full-stack architecture with Java, React, and TypeScript.
-
-For permission requests or questions, write to enzo.xs@hotmail.com.
+O código, as perguntas, os perfis e os vetores do 12 Axes são © 2026 Enzo Xavier Santos, com todos os direitos reservados. O código está disponível para leitura, mas não é open source. Veja os termos completos em [LICENSE](LICENSE).
