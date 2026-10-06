@@ -32,7 +32,7 @@ import collections
 import importlib.util
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-DATA = os.path.join(BASE, "..", "backend", "src", "main", "resources", "data")
+DATA = os.path.join(BASE, "..", "backend", "data")
 
 _spec = importlib.util.spec_from_file_location("compat", os.path.join(BASE, "compatibility.py"))
 compat = importlib.util.module_from_spec(_spec)

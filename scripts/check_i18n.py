@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1] / "backend/src/main/resources/data"
+ROOT = Path(__file__).resolve().parents[1] / "backend/data"
 CATALOGS = {
     "axes": ("axes", ("label", "leftPole", "rightPole")),
     "questions-pool": ("questions", ("text",)),

@@ -20,7 +20,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, '..', '..')
-DATA = os.path.join(ROOT, 'backend', 'src', 'main', 'resources', 'data')
+DATA = os.path.join(ROOT, 'backend', 'data')
 sys.path.insert(0, os.path.join(ROOT, 'profile-audit'))
 from profile_vector import AXIS_ORDER, compute_vector, question_map  # noqa: E402
 

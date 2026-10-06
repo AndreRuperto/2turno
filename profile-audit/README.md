@@ -22,9 +22,9 @@ misture perfis de catálogos diferentes no mesmo lote).
 
 | Catálogo | Metadados (fonte) | Perfis salvos (destino) | Campos usados no prompt |
 |---|---|---|---|
-| `personality` | `backend/src/main/resources/data/personalities.json` | `backend/src/main/resources/data/personality-profiles.json` (chave `personalityId`) | `id`, `name`, `role`, `lifespan`, `description` |
-| `ideology` | `backend/src/main/resources/data/ideologies.json` | `backend/src/main/resources/data/ideology-profiles.json` (chave `ideologyId`) | `id`, `name`, `category`, `description` |
-| `country` | `backend/src/main/resources/data/countries.json` | `backend/src/main/resources/data/countries-profiles.json` (chave `countryId`) | `id`, `name`, `category`, `description` (ver nota sobre `historical`/`period` abaixo) |
+| `personality` | `backend/data/personalities.json` | `backend/data/personality-profiles.json` (chave `personalityId`) | `id`, `name`, `role`, `lifespan`, `description` |
+| `ideology` | `backend/data/ideologies.json` | `backend/data/ideology-profiles.json` (chave `ideologyId`) | `id`, `name`, `category`, `description` |
+| `country` | `backend/data/countries.json` | `backend/data/countries-profiles.json` (chave `countryId`) | `id`, `name`, `category`, `description` (ver nota sobre `historical`/`period` abaixo) |
 
 Nota sobre `country`: perfis com `"historical": true` representam um país em um período específico
 (ex.: "Alemanha Nazista — Terceiro Reich", `period` preenchido). Inclua isso na descrição passada ao
@@ -47,12 +47,12 @@ três catálogos** — só mudam os metadados de entrada e o arquivo de saída.
 | `_legacy/` | Pipeline antigo (scripts `.mjs`, logs, JSONs de estado de ~25MB), só de personalidades. **Não usar.** Mantido só para referência histórica. |
 
 Arquivo vivo do resto do repo que todos os catálogos compartilham:
-- `backend/src/main/resources/data/questions-pool.json` — as 240 perguntas com `id`, `axisId`, `text`, `agreePole` (LEFT/RIGHT), `weight`. É a fonte da fórmula de cálculo do vetor (seção abaixo).
+- `backend/data/questions-pool.json` — as 240 perguntas com `id`, `axisId`, `text`, `agreePole` (LEFT/RIGHT), `weight`. É a fonte da fórmula de cálculo do vetor (seção abaixo).
 
 ## Resumo rápido dos 12 eixos
 
 Use este bloco como trava anti-confusão antes de auditar qualquer perfil. A referência completa está em
-`backend/src/main/resources/data/axes-explained.md`; abaixo fica só o resumo operacional de 1 linha por eixo.
+`backend/data/axes-explained.md`; abaixo fica só o resumo operacional de 1 linha por eixo.
 
 - `estrutura` — Federal × Unitário: mede descentralização territorial/institucional vs. comando nacional uniforme. **Não mede democracia vs. autocracia.** Um perfil pode ser autocrático e ainda assim descentralizador/secessionista/federal.
 - `representacao` — Democracia × Autocracia: mede confiança em eleições, participação, oposição, conselhos, anarquia/organização voluntária vs. liderança forte, tecnocracia, monarquia ou regimes autoritários. **Não mede centralização territorial.**
@@ -179,7 +179,7 @@ O perfil é calculado **como um usuário do quiz**: as 240 perguntas mais as per
 (mesma conta do `ScoringService.java`). A implementação única fica em `profile-audit/profile_vector.py`
 — use-a, não reescreva a fórmula:
 1. Mapeie cada resposta para um score: `DT=0, D=0.25, N=0.5, C=0.75, CT=1`.
-2. Busque a pergunta em `backend/src/main/resources/data/questions-pool.json` pelo `id` e leia o campo `agreePole`.
+2. Busque a pergunta em `backend/data/questions-pool.json` pelo `id` e leia o campo `agreePole`.
 3. Se `agreePole == "LEFT"`, o valor da pergunta no eixo é o score direto. Se `agreePole == "RIGHT"`, o valor é `1 - score`.
 4. Cada alternativa de arquétipo escolhida (bloco `archetype`) entra como **uma resposta a mais** em
    cada eixo que ela toca, com valor `effects[eixo] / 100` (ex.: Economia D soma um valor em
@@ -198,9 +198,9 @@ from profile_vector import compute_vector, AXIS_ORDER  # 240 perguntas + arquét
 CATALOG = "personality"  # ou "ideology" / "country"
 KEY_FIELD = {"personality": "personalityId", "ideology": "ideologyId", "country": "countryId"}[CATALOG]
 PROFILES_FILE = {
-    "personality": "backend/src/main/resources/data/personality-profiles.json",
-    "ideology": "backend/src/main/resources/data/ideology-profiles.json",
-    "country": "backend/src/main/resources/data/countries-profiles.json",
+    "personality": "backend/data/personality-profiles.json",
+    "ideology": "backend/data/ideology-profiles.json",
+    "country": "backend/data/countries-profiles.json",
 }[CATALOG]
 
 ids_neste_lote = [...]  # os 15 ids do lote
@@ -256,7 +256,7 @@ lote**. Só dispare o próximo lote de 15 após confirmação explícita — nã
 ## Perguntas de arquétipo
 
 Além das 240 perguntas, o quiz do usuário tem **perguntas de arquétipo** de múltipla escolha
-(`backend/src/main/resources/data/archetype-questions.json`: sociedade, poder, economia, mundo,
+(`backend/data/archetype-questions.json`: sociedade, poder, economia, mundo,
 tecnologia). Cada alternativa tem `effects` por eixo, na mesma escala do vetor (0–100, 100 = polo
 esquerdo de `axes.json`), e entra no resultado do usuário como uma resposta a mais em cada eixo que
 toca.
@@ -297,7 +297,7 @@ Se as perguntas de arquétipo mudarem, os vetores já mesclados continuam com as
 
 ## Direção real dos eixos (medida nos dados)
 
-`backend/src/main/resources/data/axes-explained.md` descreve **`religiao` e `imigracao` invertidos**
+`backend/data/axes-explained.md` descreve **`religiao` e `imigracao` invertidos**
 em relação à implementação. Use esta tabela, que foi conferida contra perfis reais do catálogo:
 
 | Eixo | 0 | 100 | Âncoras |

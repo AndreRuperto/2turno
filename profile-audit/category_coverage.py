@@ -12,7 +12,7 @@ from compatibility import compatibility
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "backend" / "src" / "main" / "resources" / "data"
+DATA = ROOT / "backend" / "data"
 REPORT = Path(__file__).resolve().parent / "reports" / "ideology-personality-category-coverage.md"
 
 

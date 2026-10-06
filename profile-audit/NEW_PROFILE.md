@@ -88,9 +88,9 @@ já presente no catálogo. Isso é validado por `IdeologyPersonalityMappingTest`
 
 Adicione um novo objeto ao **final** do array JSON correspondente:
 
-- `ideology` → `backend/src/main/resources/data/ideologies.json`
-- `personality` → `backend/src/main/resources/data/personalities.json`
-- `country` → `backend/src/main/resources/data/countries.json`
+- `ideology` → `backend/data/ideologies.json`
+- `personality` → `backend/data/personalities.json`
+- `country` → `backend/data/countries.json`
 
 Escreva a `description` em português, no mesmo estilo enxuto e factual dos outros perfis do
 catálogo (1 a 3 frases, sem opinião, citando fatos/características concretas verificáveis). Leia
@@ -327,9 +327,9 @@ serviria para dezenas de outras correntes.
 
 Adicione o mesmo objeto (traduzido) ao **final** do array correspondente em:
 
-- `backend/src/main/resources/data/i18n/en/ideologies.json`
-- `backend/src/main/resources/data/i18n/en/personalities.json`
-- `backend/src/main/resources/data/i18n/en/countries.json`
+- `backend/data/i18n/en/ideologies.json`
+- `backend/data/i18n/en/personalities.json`
+- `backend/data/i18n/en/countries.json`
 
 Regras de tradução (confirmadas comparando os pares PT/EN já existentes nesses arquivos):
 
@@ -450,9 +450,9 @@ para um único perfil novo (não um lote de 15):
 5. Calcule o vetor com o script Python de referência da seção "5." do README — que importa
    `compute_vector` de `profile-audit/profile_vector.py` e já soma as perguntas de arquétipo (adapte
    `ids_neste_lote` para conter só o novo `id`) e mescle no arquivo de perfis correspondente:
-   - `ideology` → `backend/src/main/resources/data/ideology-profiles.json`
-   - `personality` → `backend/src/main/resources/data/personality-profiles.json`
-   - `country` → `backend/src/main/resources/data/countries-profiles.json`
+   - `ideology` → `backend/data/ideology-profiles.json`
+   - `personality` → `backend/data/personality-profiles.json`
+   - `country` → `backend/data/countries-profiles.json`
 
    Como o perfil é novo (não existe ainda no array), o script precisa **acrescentar** um objeto
    novo em vez de só atualizar um existente. Ajuste assim:

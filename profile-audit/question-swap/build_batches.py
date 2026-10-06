@@ -3,7 +3,7 @@ import json
 import os
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
-DATA = os.path.join(ROOT, 'backend', 'src', 'main', 'resources', 'data')
+DATA = os.path.join(ROOT, 'backend', 'data')
 HERE = os.path.dirname(os.path.abspath(__file__))
 BATCH_SIZE = 20
 CATALOGS = {

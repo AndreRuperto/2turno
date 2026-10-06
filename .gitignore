@@ -1,8 +1,5 @@
-# Java
-backend/target/
-backend/.mvn/wrapper/maven-wrapper.jar
-
 # Node
+backend/node_modules/
 frontend/node_modules/
 frontend/dist/
 frontend/.npm-cache/

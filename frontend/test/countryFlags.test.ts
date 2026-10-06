@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import countries from '../../backend/src/main/resources/data/countries.json';
+import countries from '../../backend/data/countries.json';
 
 interface CountryAsset {
   id: string;

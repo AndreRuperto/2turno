@@ -16,8 +16,8 @@ Leia **profile-audit/README.md inteiro** (raiz do projeto) — autossuficiente, 
 | Campo | Valor |
 |---|---|
 | `CATALOG` | `country` |
-| Metadados (fonte) | `backend/src/main/resources/data/countries.json` |
-| Perfis salvos (destino) | `backend/src/main/resources/data/countries-profiles.json` (chave `countryId`) |
+| Metadados (fonte) | `backend/data/countries.json` |
+| Perfis salvos (destino) | `backend/data/countries-profiles.json` (chave `countryId`) |
 | Campos usados no prompt | `id`, `name`, `category`, `description` (ver nota `historical`/`period`) |
 | `religions` | não entra no prompt, mas é revisado a cada lote (ver Execução); em país histórico, vale a religião daquele período |
 | Tipo de perfil no cabeçalho do prompt | `"país/nação"` |

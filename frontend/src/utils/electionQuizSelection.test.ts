@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import electionModel from '../../../backend/src/main/resources/data/elections/brazil-2026.json';
+import electionModel from '../../../backend/data/elections/brazil-2026.json';
 import type { Question, QuizPayload, QuizVariant } from '../types/quiz';
 import { selectAllQuestionsBalanced, selectAndBalanceQuestions } from './quizSelection';
 

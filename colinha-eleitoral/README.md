@@ -27,7 +27,7 @@ sem páginas ou retratos internacionais. Veja [BRAZIL-ONLY.md](BRAZIL-ONLY.md) p
 O 1º turno (04/10) não dá tempo. No 2º turno só há presidente e alguns governadores, quase todos já
 com perfil no catálogo `personality`, então a cobertura é praticamente completa.
 
-Perfis de candidatos de 2026 que já existem em `backend/src/main/resources/data/personalities.json`:
+Perfis de candidatos de 2026 que já existem em `backend/data/personalities.json`:
 `lula-da-silva`, `flavio-bolsonaro`, `tarcisio-de-freitas`, `fernando-haddad`, `romeu-zema`,
 `ronaldo-caiado`, `marina-silva`, `renan-santos`, `ciro-gomes`, `guilherme-boulos`, `jair-bolsonaro`.
 

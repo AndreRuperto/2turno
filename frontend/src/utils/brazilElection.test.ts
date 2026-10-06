@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { createRequire } from 'node:module';
 import type { ElectionComparison } from '../types/election';
 import { ELECTION_MODEL_ID, validateElectionComparison } from './brazilElection';
-import electionModel from '../../../backend/src/main/resources/data/elections/brazil-2026.json';
+import electionModel from '../../../backend/data/elections/brazil-2026.json';
 
 const require = createRequire(import.meta.url);
 const { candidateProfiles, electionScores } = require('../../scripts/brazil-catalogue.cjs');

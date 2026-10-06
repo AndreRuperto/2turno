@@ -1,7 +1,7 @@
 const { readFileSync } = require('node:fs');
 const { resolve, join } = require('node:path');
 
-const dataDirectory = resolve(__dirname, '../../backend/src/main/resources/data');
+const dataDirectory = resolve(__dirname, '../../backend/data');
 const site = require('../src/site.json');
 const candidateIds = new Set(site.candidates.map(candidate => candidate.id));
 

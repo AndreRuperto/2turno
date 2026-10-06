@@ -1,6 +1,6 @@
 // Gera páginas estáticas de SEO (ideologias, países, personalidades) em PT e EN
 // a partir dos JSONs do backend. Roda após o `vite build` e escreve direto em dist/.
-// Fonte estrutural: backend/src/main/resources/data (PT). Textos EN vêm dos
+// Fonte estrutural: backend/data (PT). Textos EN vêm dos
 // overlays em data/i18n/en/*.json (chaveados por id, com fallback para PT).
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
@@ -14,7 +14,7 @@ import { countriesIndexPage, COUNTRIES_CSS } from './countries-index.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
-const DATA_DIR = resolve(ROOT, '../backend/src/main/resources/data');
+const DATA_DIR = resolve(ROOT, '../backend/data');
 const CATALOGUE_ONLY = process.argv.includes('--catalogue-only');
 const DIST = join(ROOT, CATALOGUE_ONLY ? 'node_modules/.cache/catalogue-pages' : 'dist');
 const SITE = 'https://12axes.vercel.app';

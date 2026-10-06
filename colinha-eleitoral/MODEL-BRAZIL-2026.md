@@ -6,7 +6,7 @@ The [TSE runoff announcement](https://www.tse.jus.br/comunicacao/noticias/2026/O
 
 ## Architecture and compatibility
 
-The existing project uses Java 21/Spring Boot and TypeScript/React. The general model is defined in `backend/src/main/resources/data/{axes,questions,personalities,ideologies,countries}.json`, with English overlays in `data/i18n/en/`. `QuizDataService` loads these resources; `ScoringService` converts responses into axis percentages; `ProfileMatchScorer` compares the general catalogue. The frontend's `quizSelection.ts` selects core questions with distinct topics and balanced agreement poles.
+The existing project uses Java 21/Spring Boot and TypeScript/React. The general model is defined in `backend/data/{axes,questions,personalities,ideologies,countries}.json`, with English overlays in `data/i18n/en/`. `QuizDataService` loads these resources; `ScoringService` converts responses into axis percentages; `ProfileMatchScorer` compares the general catalogue. The frontend's `quizSelection.ts` selects core questions with distinct topics and balanced agreement poles.
 
 Replacing the meanings of the original twelve axes would invalidate existing personality/country/ideology vectors, shared results, and Claude's ongoing catalogue work. This implementation therefore adds a versioned Brazilian election bank alongside the general model, reusing its question records, answer scale, scorer, payload, and frontend selection functions. The general quiz, candidate catalogue vectors, and unrelated profiles retain their original meanings.
 

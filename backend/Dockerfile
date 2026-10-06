@@ -1,12 +1,10 @@
-FROM maven:3.9.9-eclipse-temurin-21 AS build
+FROM node:22-alpine
 WORKDIR /app
-COPY pom.xml .
-RUN mvn -B dependency:go-offline
+ENV NODE_ENV=production
+COPY package.json ./
 COPY src ./src
-RUN mvn -B clean package -DskipTests
-
-FROM eclipse-temurin:21-jre-alpine
-WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-ENV JAVA_OPTS="-XX:MaxRAMPercentage=75"
-CMD ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+COPY data/elections ./data/elections
+COPY data/i18n/en/elections ./data/i18n/en/elections
+USER node
+EXPOSE 8080
+CMD ["node", "src/server.js"]

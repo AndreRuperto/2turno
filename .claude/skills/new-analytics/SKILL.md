@@ -37,7 +37,7 @@ Antes de codar, releia estes arquivos (podem ter mudado desde a última vez que 
   - `outlierSimilarity` (7%): penaliza com base no eixo de maior diferença (`maxDiff/100`, expoente
     2.5).
   - Resultado: `clamp(0,100)` e arredondado a 1 casa decimal.
-- `backend/src/main/resources/data/axes.json` — confirma os 12 eixos e seus ids internos.
+- `backend/data/axes.json` — confirma os 12 eixos e seus ids internos.
 - `backend/src/main/java/com/twelveaxes/service/IdeologyMatcherService.java`,
   `PersonalityMatcherService.java`, `CountryMatcherService.java` — confirma que o match é **top-1 por
   categoria** (ideologia, personalidade, país são calculados separadamente, cada um contra seu próprio
@@ -70,7 +70,7 @@ Cada valor no CSV é 0–100 (o "rightPercent" do eixo).
 
 ## Passo 2 — Onde estão os catálogos
 
-Todos em `backend/src/main/resources/data/`:
+Todos em `backend/data/`:
 
 - Vetores: `ideology-profiles.json` (campo `ideologyId` + `vector`), `personality-profiles.json`
   (`personalityId` + `vector`), `countries-profiles.json` (`countryId` + `vector`).
@@ -149,7 +149,7 @@ Escreva um script Node (`analyze.js`) que:
   mudam o ranking final.
 - Nunca conte o mesmo `name`/URL mais de uma vez, mesmo que apareça em vários arquivos de entrada ou
   repetida dentro do mesmo arquivo.
-- Nunca modifique os arquivos de dados do backend (`backend/src/main/resources/data/*.json`) — a
+- Nunca modifique os arquivos de dados do backend (`backend/data/*.json`) — a
   skill é somente leitura sobre eles.
 - Nunca commite CSVs de analytics ou o `.xlsx` gerado no git (a pasta `analytics/` já está no
   `.gitignore` — mantenha assim).

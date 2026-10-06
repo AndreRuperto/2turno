@@ -7,7 +7,7 @@ versionados). As páginas abaixo são as do PDF, que coincidem com a numeração
 
 Objetivo: substituir codificações `NEUTRAL` marcadas como incertas por posições documentadas e
 corrigir intensidades que os planos contradizem. As mudanças abaixo foram aplicadas a
-`backend/src/main/resources/data/elections/brazil-2026.json` como `brazil-presidential-2026-v2`
+`backend/data/elections/brazil-2026.json` como `brazil-presidential-2026-v2`
 (ver [MODEL-BRAZIL-2026.md](MODEL-BRAZIL-2026.md)).
 
 ## Resumo

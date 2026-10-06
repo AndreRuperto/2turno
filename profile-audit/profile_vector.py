@@ -21,7 +21,7 @@ import os
 import sys
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-DATA = os.path.join(BASE, "..", "backend", "src", "main", "resources", "data")
+DATA = os.path.join(BASE, "..", "backend", "data")
 
 AXIS_ORDER = ['estrutura', 'representacao', 'poder', 'imigracao', 'diplomacia', 'intervencao',
               'economia', 'controle', 'comercio', 'religiao', 'moral', 'tecnologia']

@@ -6,7 +6,7 @@ Quiz do segundo turno da eleição presidencial de 2026 (25 de outubro de 2026).
 
 Português e inglês · sem cadastro
 
-![Java](https://img.shields.io/badge/Java-21-orange) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3-6DB33F) ![React](https://img.shields.io/badge/React-18-61DAFB) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6) ![CI](https://github.com/AndreRuperto/2turno/actions/workflows/ci.yml/badge.svg)
+![Node.js](https://img.shields.io/badge/Node.js-22-5FA04E) ![React](https://img.shields.io/badge/React-18-61DAFB) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6) ![CI](https://github.com/AndreRuperto/2turno/actions/workflows/ci.yml/badge.svg)
 
 </div>
 
@@ -96,10 +96,10 @@ Os detalhes completos estão em:
 
 | Camada | Tecnologia |
 |--------|------------|
-| Backend | Java 21, Spring Boot 3.3, Maven |
+| Backend | Node.js 22 (`node:http`, sem dependências) |
 | Frontend | React 18, TypeScript, Vite 5 |
 | Dados | JSON versionado, carregado em memória na inicialização |
-| Testes | JUnit 5, MockMvc, AssertJ, Vitest, Playwright |
+| Testes | `node:test` no backend, Vitest e Playwright no frontend |
 | CI | GitHub Actions (testes do backend, checagem de i18n, testes e build do frontend) |
 
 Não há banco de dados. Os dados só mudam por commits revisados, então o backend lê os JSON uma vez, valida e calcula tudo em memória.
@@ -108,21 +108,20 @@ Não há banco de dados. Os dados só mudam por commits revisados, então o back
 
 | Arquivo | Conteúdo |
 |---------|----------|
-| `backend/src/main/resources/data/elections/brazil-2026.json` | Modelo eleitoral: eixos, 72 perguntas, respostas codificadas e evidências dos candidatos |
-| `backend/src/main/resources/data/i18n/en/elections/brazil-2026.json` | Tradução para o inglês |
-| `backend/src/main/resources/data/elections/brazil-catalogue.json` | Registro de perfis brasileiros (o endpoint `/catalog` ainda existe, mas o catálogo não é publicado) |
+| `backend/data/elections/brazil-2026.json` | Modelo eleitoral: eixos, 72 perguntas, respostas codificadas e evidências dos candidatos |
+| `backend/data/i18n/en/elections/brazil-2026.json` | Tradução para o inglês |
+| `backend/data/elections/brazil-catalogue.json` | Registro de perfis brasileiros, usado pelos scripts do frontend (o catálogo não é publicado) |
 | `frontend/src/i18n/electionEducation.json` | Textos das seções educativas da página inicial |
 
 ### Estrutura do repositório
 
 ```txt
 2turno/
-├── backend/                 API Spring Boot
-│   └── src/main/java/com/twelveaxes/
-│       ├── config/          CORS, cache, checagem de origem
-│       ├── controller/      ElectionController (2 Turno) e os endpoints gerais do 12 Axes
-│       ├── model/           records e DTOs
-│       └── service/         carga de dados, pontuação, ElectionComparisonService
+├── backend/                 API em Node
+│   ├── src/server.js        HTTP, rotas, CORS, checagem de origem, limite por IP
+│   ├── src/election.js      carga e validação do modelo, pontuação e comparação
+│   ├── test/                testes (node:test)
+│   └── data/                todos os JSON (eleitorais e do 12 Axes)
 ├── frontend/                app React + Vite
 │   ├── src/ElectionApp.tsx  ponto de entrada do 2 Turno
 │   ├── src/components/      election/, editorial/, results/
@@ -145,31 +144,28 @@ Todos os endpoints aceitam `lang=pt|en`.
 | `GET` | `/api/elections/brazil-2026/quiz?variant=short\|extended\|extreme` | Perguntas do formato escolhido |
 | `POST` | `/api/elections/brazil-2026/results` | Calcula as respostas e devolve eixos e compatibilidade |
 | `POST` | `/api/elections/brazil-2026/compare` | Compara um vetor de 12 eixos com os candidatos |
-| `GET` | `/api/elections/brazil-2026/profiles/{id}` | Perfil de um candidato |
 
-O servidor rejeita perguntas desconhecidas ou repetidas, eixos sem cobertura e seleções desbalanceadas entre os polos. As rotas `/api/**` só respondem a requisições cujo `Origin` ou `Referer` esteja em `FRONTEND_ORIGINS`; as outras recebem `403`. `/api/health` fica aberto.
-
-Os endpoints gerais do 12 Axes (`/api/quiz`, `/api/results`, `/api/ideologies`, `/api/countries`, `/api/personalities`, `/api/compare`) continuam no backend, mas o site não os usa.
+O servidor rejeita perguntas desconhecidas ou repetidas, eixos sem cobertura e seleções desbalanceadas entre os polos. As rotas `/api/**` só respondem a requisições cujo `Origin` ou `Referer` esteja em `FRONTEND_ORIGINS` e que tragam `User-Agent` e `Sec-Fetch-Site` (todo navegador manda); as outras recebem `403`. Cada IP pode fazer até 240 requisições por minuto (`429` depois disso). `/api/health` fica aberto.
 
 ## Rodando localmente
 
-Requisitos: Java 21, Maven 3.9+, Node.js 20.11+ e npm.
+Requisitos: Node.js 20.11+ e npm.
 
 Na raiz do repositório, um comando sobe backend e frontend, e o Ctrl+C derruba os dois:
 
 ```bash
 npm run dev               # backend em :8080 e frontend em http://localhost:5173
-npm run dev:prod-api      # só o frontend, usando a API de produção (não precisa de Java)
+npm run dev:prod-api      # só o frontend, usando a API de produção
 ```
 
-O script instala as dependências do frontend na primeira execução e usa o Maven de `.tools/apache-maven-*` quando ele existe (senão, o `mvn` do PATH). Se já houver um backend na porta 8080, ele é reaproveitado. Sem Java 21, o script para com uma mensagem explicando o que instalar.
+O script instala as dependências do frontend na primeira execução e sobe o backend com `node --watch`, que reinicia sozinho quando um arquivo muda. Se já houver um backend na porta 8080, ele é reaproveitado.
 
 Para rodar cada lado separadamente:
 
 ```bash
 # Backend: http://localhost:8080
 cd backend
-mvn spring-boot:run
+npm run dev        # ou npm start, sem recarregar ao salvar
 
 # Frontend: http://localhost:5173 (faz proxy de /api para o backend)
 cd frontend
@@ -180,43 +176,46 @@ npm run dev
 | Variável | Lado | Padrão | Uso |
 |----------|------|--------|-----|
 | `PORT` | Backend | `8080` | Porta HTTP |
-| `FRONTEND_ORIGINS` | Backend | localhost + Vercel | Origens permitidas para CORS e para a API |
+| `FRONTEND_ORIGINS` | Backend | `http://localhost:5173,http://127.0.0.1:5173` | Origens permitidas para CORS e para a API, separadas por vírgula |
 | `API_ORIGIN_ENFORCEMENT` | Backend | `true` | `false` desliga a checagem de origem |
+| `API_REQUIRE_FETCH_METADATA` | Backend | `true` | `false` deixa de exigir `Sec-Fetch-Site` |
+| `API_RATE_LIMIT_ENABLED` | Backend | `true` | `false` desliga o limite por IP |
+| `API_RATE_LIMIT_PER_MINUTE` | Backend | `240` | Requisições por IP por minuto |
+| `API_ACCESS_SAMPLE_EVERY` | Backend | `200` | Registra no log 1 a cada N acessos aceitos (`0` desliga) |
 | `VITE_API_URL` | Frontend | vazio | URL base da API em produção (veja `frontend/.env.example`) |
 
 ## Testes
 
 ```bash
-cd backend && mvn test                                            # suíte completa
-cd backend && mvn -Dtest=ElectionComparisonTest,BrazilCatalogueTest test   # só o modelo eleitoral
-cd frontend && npm test                                           # Vitest
-cd frontend && npm run build                                      # tipos, build, páginas estáticas e auditoria
-cd frontend && npm run test:browser                               # teste no navegador (Playwright)
-python scripts/check_i18n.py                                      # traduções
+cd backend && npm test             # modelo eleitoral, pontuação e API HTTP
+cd frontend && npm test            # Vitest
+cd frontend && npm run build       # tipos, build, páginas estáticas e auditoria
+cd frontend && npm run test:browser   # navegador real (Playwright + Edge), com o npm run dev rodando
+python scripts/check_i18n.py       # traduções
 ```
 
 O `npm run build` gera as páginas estáticas dos candidatos e da metodologia e depois roda `check-brazil-build.cjs`. Esse script falha se o build contiver páginas, retratos ou links do catálogo internacional.
 
-Problema conhecido: o `ScorerBenchmarkTest` do catálogo geral do 12 Axes falha (75,4 contra o mínimo de 76,5). A falha já existia antes do modelo eleitoral e não afeta o 2 Turno.
+O teste de navegador usa `http://127.0.0.1:5173` por padrão. Se o Vite estiver escutando só em `localhost`, rode com `ELECTION_TEST_URL=http://localhost:5173`.
 
 ## Deploy
 
 | Parte | Configuração |
 |-------|--------------|
-| Backend | `backend/Dockerfile` (há também um `render.yaml` herdado do 12 Axes) |
+| Backend | `backend/Dockerfile` (imagem `node:22-alpine`; serve em qualquer host com Docker). Há também um `render.yaml` herdado do 12 Axes |
 | Frontend | `frontend/vercel.json`, saída em `frontend/dist` |
 
 Em produção, o backend precisa de `FRONTEND_ORIGINS` com o domínio do frontend, e o frontend precisa de `VITE_API_URL` apontando para o backend. Todo push e pull request roda o CI em `.github/workflows/ci.yml`.
 
 ## Origem: 12 Axes
 
-O 2 Turno reaproveita a base do **12 Axes**, de Enzo Xavier Santos: um quiz político geral com 240 perguntas, doze eixos próprios e catálogos de ideologias, países e personalidades. Tudo isso continua no repositório e funciona internamente:
+O 2 Turno reaproveita a base do **12 Axes**, de Enzo Xavier Santos: um quiz político geral com 240 perguntas, doze eixos próprios e catálogos de ideologias, países e personalidades. O backend original em Java/Spring Boot foi substituído pelo backend em Node, que só implementa a API eleitoral. Continuam no repositório:
 
-- dados gerais em `backend/src/main/resources/data/` (`axes.json`, `questions-pool.json`, `ideologies.json`, `countries.json`, `personalities.json` e os vetores correspondentes);
-- o pipeline de auditoria de perfis em [`profile-audit/`](profile-audit/NEW_PROFILE.md) e as skills `/new_*` e `/audit_*` em `.claude/`;
-- os geradores de páginas internacionais em `frontend/scripts/`.
+- os dados gerais em `backend/data/` (`axes.json`, `questions-pool.json`, `ideologies.json`, `countries.json`, `personalities.json` e os vetores correspondentes);
+- o pipeline de auditoria de perfis em [`profile-audit/`](profile-audit/NEW_PROFILE.md) (Python) e as skills `/new_*` e `/audit_*` em `.claude/`;
+- os geradores de páginas internacionais em `frontend/scripts/`, incluindo o porte em JS do algoritmo geral (`profile-match.mjs`).
 
-O modelo eleitoral não altera esses dados nem o algoritmo geral (`ProfileMatchScorer`). Ele também não converte resultados do quiz geral, porque os eixos têm significados diferentes.
+Os endpoints gerais do 12 Axes (`/api/quiz`, `/api/results`, `/api/ideologies` etc.) e os testes Java do catálogo saíram junto com o backend Java. O código deles continua no repositório original, [Fuguety/2Turno](https://github.com/Fuguety/2Turno). O quiz eleitoral não converte resultados do quiz geral, porque os eixos têm significados diferentes.
 
 ## Contribuindo
 

@@ -22,7 +22,7 @@ The [README](README.md#running-locally) covers the requirements and how to run t
 
 Keep each pull request to one change. Before asking for a review:
 
-1. After backend or catalog changes, run `mvn test` in `backend/`.
+1. After backend or catalog changes, run `npm test` in `backend/`.
 2. After catalog text changes, run `python scripts/check_i18n.py` from the repository root so every entry has its English version.
 3. After frontend or translation changes, run `npm ci`, `npm test`, and `npm run build` in `frontend/`. The build also generates the static catalog pages, so it catches broken profile data.
 4. In the description, say what changed, how you tested it, and which entries still need a translation, if any.

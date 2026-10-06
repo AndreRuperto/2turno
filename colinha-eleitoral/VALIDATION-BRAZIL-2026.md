@@ -98,8 +98,8 @@ files (`ScoringService.java` and the planning README).
 
 | File | Change |
 | --- | --- |
-| [backend/src/main/resources/data/elections/brazil-2026.json](../backend/src/main/resources/data/elections/brazil-2026.json) | New election axes, 72 core questions, two answer-based profiles, uncertainty and 14 sources. |
-| [backend/src/main/resources/data/i18n/en/elections/brazil-2026.json](../backend/src/main/resources/data/i18n/en/elections/brazil-2026.json) | English axis/question/title translation; scoring metadata inherited from the base. |
+| [backend/data/elections/brazil-2026.json](../backend/data/elections/brazil-2026.json) | New election axes, 72 core questions, two answer-based profiles, uncertainty and 14 sources. |
+| [backend/data/i18n/en/elections/brazil-2026.json](../backend/data/i18n/en/elections/brazil-2026.json) | English axis/question/title translation; scoring metadata inherited from the base. |
 | [backend/src/main/java/com/twelveaxes/controller/ElectionController.java](../backend/src/main/java/com/twelveaxes/controller/ElectionController.java) | Four election model/quiz/results/compare endpoints. |
 | [backend/src/main/java/com/twelveaxes/model/ElectionModel.java](../backend/src/main/java/com/twelveaxes/model/ElectionModel.java) | Election model, evidence, sources, translations and quiz wrapper records. |
 | [backend/src/main/java/com/twelveaxes/model/ElectionAnswerRequest.java](../backend/src/main/java/com/twelveaxes/model/ElectionAnswerRequest.java) | Validated answer submission with explicit model and variant. |

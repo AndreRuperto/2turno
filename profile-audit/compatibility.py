@@ -31,7 +31,7 @@ OUTLIER_FULL_SPREAD = 100.0
 OUTLIER_EXPONENT = 2.5
 DIRECTION_AUGMENT_RADIUS = 8.0
 
-BASE = os.path.join(os.path.dirname(__file__), "..", "backend", "src", "main", "resources", "data")
+BASE = os.path.join(os.path.dirname(__file__), "..", "backend", "data")
 
 CATALOGS = {
     "personality": ("personality-profiles.json", "personalityId", "personalities.json"),

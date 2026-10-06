@@ -16,8 +16,8 @@ Leia **profile-audit/README.md inteiro** (raiz do projeto) — autossuficiente, 
 | Campo | Valor |
 |---|---|
 | `CATALOG` | `ideology` |
-| Metadados (fonte) | `backend/src/main/resources/data/ideologies.json` |
-| Perfis salvos (destino) | `backend/src/main/resources/data/ideology-profiles.json` (chave `ideologyId`) |
+| Metadados (fonte) | `backend/data/ideologies.json` |
+| Perfis salvos (destino) | `backend/data/ideology-profiles.json` (chave `ideologyId`) |
 | Campos usados no prompt | `id`, `name`, `category`, `description` |
 | `phrase` | não entra no prompt, mas precisa continuar coerente com o vetor depois da reauditoria |
 | `religions` | não entra no prompt, mas é revisado a cada lote (ver Execução) |

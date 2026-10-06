@@ -20,7 +20,7 @@ Country scope means affiliation with Brazilian political history and public life
 Brazilian imperial rulers remain relevant Brazilian profiles. A reference to Brazil in a foreign
 figure's biography does not qualify that figure; Dom Manuel I, for example, is excluded.
 
-The explicit registry is [brazil-catalogue.json](../backend/src/main/resources/data/elections/brazil-catalogue.json):
+The explicit registry is [brazil-catalogue.json](../backend/data/elections/brazil-catalogue.json):
 
 - `countryCode: BR`
 - `electionId: brazil-2026`
@@ -173,7 +173,7 @@ additional figures onto the election axes remain separate future work.
 - [backend/src/main/java/com/twelveaxes/controller/ElectionController.java](../backend/src/main/java/com/twelveaxes/controller/ElectionController.java)
 - [backend/src/main/java/com/twelveaxes/model/BrazilCatalogue.java](../backend/src/main/java/com/twelveaxes/model/BrazilCatalogue.java)
 - [backend/src/main/java/com/twelveaxes/service/BrazilCatalogueService.java](../backend/src/main/java/com/twelveaxes/service/BrazilCatalogueService.java)
-- [backend/src/main/resources/data/elections/brazil-catalogue.json](../backend/src/main/resources/data/elections/brazil-catalogue.json)
+- [backend/data/elections/brazil-catalogue.json](../backend/data/elections/brazil-catalogue.json)
 - [backend/src/test/java/com/twelveaxes/BrazilCatalogueTest.java](../backend/src/test/java/com/twelveaxes/BrazilCatalogueTest.java)
 - [colinha-eleitoral/BRAZIL-ONLY.md](BRAZIL-ONLY.md)
 - [colinha-eleitoral/MODEL-BRAZIL-2026.md](MODEL-BRAZIL-2026.md)

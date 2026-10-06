@@ -5,7 +5,7 @@ import { religionAllows, religionVisibility } from '../scripts/profile-match.mjs
 import { profileReligion } from '../scripts/pole-icons.mjs';
 
 const readData = (file) =>
-  JSON.parse(readFileSync(fileURLToPath(new URL(`../../backend/src/main/resources/data/${file}`, import.meta.url)), 'utf8'));
+  JSON.parse(readFileSync(fileURLToPath(new URL(`../../backend/data/${file}`, import.meta.url)), 'utf8'));
 
 describe('religionAllows (porte de ReligionFilter.java)', () => {
   it('mostra perfis sem religião para qualquer preferência', () => {

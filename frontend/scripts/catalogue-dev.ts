@@ -15,7 +15,7 @@ export function catalogueDevPlugin(): Plugin {
     configureServer(server) {
       const root = server.config.root;
       const scripts = join(root, 'scripts');
-      const data = resolve(root, '../backend/src/main/resources/data');
+      const data = resolve(root, '../backend/data');
       const output = join(root, 'node_modules/.cache/brazil-pages');
       let generation: Promise<unknown> | undefined;
 

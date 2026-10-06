@@ -19,7 +19,7 @@ import requests
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
-DATA = ROOT / "backend/src/main/resources/data/personalities.json"
+DATA = ROOT / "backend/data/personalities.json"
 PUBLIC = ROOT / "frontend/public"
 MAX_WIDTH = 480
 HEADERS = {"User-Agent": "12axes-portrait-fetcher/1.0 (https://github.com/andreruperto/12axes)"}
