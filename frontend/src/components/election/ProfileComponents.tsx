@@ -1,4 +1,5 @@
 import { useId, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { LANG } from '../../i18n';
 import type { Axis } from '../../types/quiz';
 import presentation from '../../utils/electionPresentation.cjs';
@@ -18,18 +19,20 @@ export interface CandidateProfile
 
 export const profileText = LANG === 'pt' ?
 {
-    yourProfile: 'Seu perfil', axes: 'Seu perfil nos 12 eixos', candidateAxes: 'Perfil nos 12 eixos',
+    yourProfile: 'Seu perfil', axes: 'Os 12 eixos', candidateAxes: 'Perfil nos 12 eixos',
+    aboutResult: 'Sobre o resultado', detailedComparison: 'Comparação detalhada',
     quickInfo: 'Informações rápidas', fullProfile: 'Ver perfil completo', compatibility: 'Compatibilidade',
-    portraitMissing: 'Retrato indisponível', note: 'Cada percentual representa sua posição entre os dois polos, não intenção de voto.',
+    portraitMissing: 'Retrato indisponível', note: 'O perfil é uma estimativa descritiva, não uma filiação partidária. Cada percentual representa sua posição entre os dois polos, não intenção de voto.',
     compare: 'Você, Lula e Flávio nos mesmos eixos', exact: 'Os valores exatos estão disponíveis em cada eixo.',
     you: 'Você', questionnaire: 'Faça o teste', start: 'Começar',
     questionnaireDescription: 'Responda às perguntas e descubra onde você se posiciona nos 12 eixos políticos.',
     formats: 'Escolha a duração do questionário', begin: 'Começar questionário', traits: 'Características do perfil'
 } :
 {
-    yourProfile: 'Your profile', axes: 'Your profile across the 12 axes', candidateAxes: 'Profile across the 12 axes',
+    yourProfile: 'Your profile', axes: 'The 12 axes', candidateAxes: 'Profile across the 12 axes',
+    aboutResult: 'About the result', detailedComparison: 'Detailed comparison',
     quickInfo: 'Quick information', fullProfile: 'View full profile', compatibility: 'Compatibility',
-    portraitMissing: 'Portrait unavailable', note: 'Each percentage represents your position between the two poles, not voting intention.',
+    portraitMissing: 'Portrait unavailable', note: 'The profile is a descriptive estimate, not a party affiliation. Each percentage represents your position between the two poles, not voting intention.',
     compare: 'You, Lula and Flávio on the same axes', exact: 'Exact values remain available on every axis.',
     you: 'You', questionnaire: 'Take the test', start: 'Start',
     questionnaireDescription: 'Answer the questions and discover where you stand on the 12 political axes.',
@@ -45,9 +48,9 @@ export function candidatePage(identifier: string)
 
 
 
-export function IdeologyHeader({ scores }: { scores?: Record<string, number> })
+export function IdeologyHeader({ scores, compact = false }: { scores?: Record<string, number>; compact?: boolean })
 {
-    return <div dangerouslySetInnerHTML={{ __html: presentation.ideologyHeaderMarkup(scores, LANG) }} />;
+    return <div dangerouslySetInnerHTML={{ __html: presentation.ideologyHeaderMarkup(scores, LANG, compact) }} />;
 }
 
 
@@ -116,10 +119,12 @@ export function CandidateCard({ candidate, compatibility }: { candidate: Candida
 
 export function ProfileCard({ axes, scores, identifier = 'seu-perfil', illustrative = false }: { axes: Axis[]; scores: Record<string, number>; identifier?: string; illustrative?: boolean })
 {
-    return <section className="user-profile" id={identifier} aria-labelledby={`${identifier}-title`}>
-        {illustrative ? <h3 id={`${identifier}-title`}>{profileText.yourProfile}</h3> : <h1 id={`${identifier}-title`}>{profileText.yourProfile}</h1>}
-        <IdeologyHeader scores={scores} />
-        <p className="profile-note">{profileText.note}</p>
+    const classification = presentation.classificationLabels(scores, LANG);
+    return <section className="user-profile" id={identifier} aria-labelledby={`${identifier}-title`}
+        style={{ '--ideology-color': classification.color, '--ideology-background': classification.background } as CSSProperties}>
+        {illustrative ? <h3 className="profile-summary-label" id={`${identifier}-title`}>{profileText.yourProfile}</h3> : <h2 className="profile-summary-label" id={`${identifier}-title`}>{profileText.yourProfile}</h2>}
+        <IdeologyHeader scores={scores} compact />
+        <details className="profile-method-note"><summary>{profileText.aboutResult}</summary><p className="profile-note">{profileText.note}</p></details>
         <h2>{profileText.axes}</h2>
         <AxisProfile axes={axes} scores={scores} explainUser />
     </section>;

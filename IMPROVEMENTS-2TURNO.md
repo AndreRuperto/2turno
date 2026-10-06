@@ -10,13 +10,17 @@ O cabeçalho oferece início, fazer o teste, ambos os candidatos, metodologia e 
 
 | Família | Cor principal | Fundo |
 |---|---|---|
-| Esquerda | `#923448` | `#f8e9ee` |
-| Centro-esquerda | `#376146` | `#eaf1e8` |
+| Esquerda | `#a51d2d` | `#fbeaec` |
+| Centro-esquerda | `#b04444` | `#fcf0ee` |
 | Centro | `#555b61` | `#eef0f2` |
 | Centro-direita | `#216172` | `#e8f3f5` |
 | Direita | `#304e91` | `#eaf0fc` |
 
 O centro usa cinza neutro. Os nomes acompanham todas as cores. A fonte única é `familyLabels` em `electionPresentation.cjs`, compartilhada com os cabeçalhos estáticos de candidatos, resultados e badges. Os cartões de candidatos usam a mesma cor na borda; os marcadores da comparação usam a cor da família de cada perfil, preservando nomes e símbolos. Os subtipos não alteram a cor da família.
+
+O topo agora usa as fotografias existentes de Lula e Flávio como fundo, com uma sobreposição escura para preservar o contraste do texto. No resultado, o fundo da página e do perfil usa a tonalidade clara da família política do usuário; bordas, marcadores e ações usam sua cor principal. O tema é removido ao retornar ao início. As barras e comparações usam duas colunas em desktop e tablet, uma em celular, com percentuais junto aos polos e explicações recolhíveis.
+
+O cabeçalho do perfil foi simplificado: família e subtipo aparecem sem um segundo cartão ou borda interna, e a explicação fica em “Sobre o resultado”. A comparação de usuário, Lula e Flávio começa recolhida em “Comparação detalhada”, com abertura por clique ou teclado. Esses ajustes foram integrados à nova escala de perguntas e ao avanço automático do commit remoto `62f4871`; o conflito nas regras CSS de foco foi resolvido preservando ambos os conjuntos de mudanças. A integração passou por 85 testes frontend, lint, build e testes de navegador nos dois idiomas em desktop, tablet e celular.
 
 ## Os 12 pares exibidos
 

@@ -108,6 +108,8 @@ export default function ElectionApp()
   const [comparison, setComparison] = useState<ElectionComparison | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const userScores = comparison ? Object.fromEntries(comparison.axes.map(entry => [entry.axis.id, entry.userScore])) : undefined;
+  const userClassification = userScores ? presentation.classificationLabels(userScores, LANG) : null;
   const path = window.location.pathname.replace(/\.html$/, '').replace(/\/+$/, '') || '/';
   const available = ['/', '/br', '/en', '/results', '/en/results', '/240questions'].includes(path);
 
@@ -121,6 +123,22 @@ export default function ElectionApp()
   {
     if (window.location.hash === '#teste') setChoosingFormat(true);
   }, []);
+
+  useEffect(() =>
+  {
+    if (userClassification)
+    {
+      document.body.dataset.politicalFamily = userClassification.family;
+      document.body.style.setProperty('--result-background', userClassification.background);
+      document.body.style.setProperty('--result-color', userClassification.color);
+    }
+    return () =>
+    {
+      delete document.body.dataset.politicalFamily;
+      document.body.style.removeProperty('--result-background');
+      document.body.style.removeProperty('--result-color');
+    };
+  }, [userClassification?.family, userClassification?.background, userClassification?.color]);
 
   async function startQuiz()
   {
@@ -229,6 +247,13 @@ export default function ElectionApp()
         {busy && <p role="status">{text.loading}</p>}
         {!quiz && !comparison && <>
           <section className="home-hero">
+            <div className="home-hero-portraits" aria-hidden="true">
+              {site.candidates.map(candidate => <div className="hero-candidate" key={candidate.id}>
+                <img src={candidate.portrait} alt="" width="480" height="640" fetchPriority="high" />
+                <span>{candidate.name}</span>
+              </div>)}
+              <span className="hero-versus">×</span>
+            </div>
             <div className="home-hero-text">
               <p className="election-kicker">{text.runoff}</p>
               <h1>{text.heading}</h1>
@@ -288,7 +313,7 @@ export default function ElectionApp()
               : <button type="button" disabled={busy || Object.keys(answers).length !== quiz.questions.length} onClick={finishQuiz}>{text.finish}</button>}
           </div>
         </section>}
-        {comparison && <section>
+        {comparison && <section className="election-results">
           <h1>{text.results}</h1>
           <p>{comparison.closestCandidateIds.length === 2 ? text.tie : `${text.closest} ${comparison.candidates[0].name}`}</p>
           <ProfileCard axes={comparison.axes.map(entry => entry.axis)}
@@ -301,14 +326,15 @@ export default function ElectionApp()
             const scores = Object.fromEntries(comparison.axes.map(entry => [entry.axis.id, entry.candidateScores[match.id]]));
             return <CandidateCard key={match.id} candidate={{ ...candidate, scores }} compatibility={match.compatibility} />;
           })}</div>
-          <section className="comparison-section" aria-labelledby="comparison-title">
-            <h2 id="comparison-title">{profileText.compare}</h2>
+          <details className="comparison-section detailed-comparison">
+            <summary>{profileText.detailedComparison}</summary>
+            <h2>{profileText.compare}</h2>
             <p>{profileText.exact}</p>
-            {comparison.axes.map(entry => <ComparisonAxis key={entry.axis.id} axis={entry.axis} markers={[
-              { name: profileText.you, symbol: '★', score: entry.userScore, color: presentation.classificationLabels(Object.fromEntries(comparison.axes.map(axis => [axis.axis.id, axis.userScore])), LANG).color },
+            <div className="comparison-profile">{comparison.axes.map(entry => <ComparisonAxis key={entry.axis.id} axis={entry.axis} markers={[
+              { name: profileText.you, symbol: '★', score: entry.userScore, color: userClassification?.color },
               ...profiles.candidates.map(candidate => ({ name: candidate.name, symbol: String(candidate.number), score: entry.candidateScores[candidate.id], color: presentation.classificationLabels(candidate.scores, LANG).color }))
-            ]} />)}
-          </section>
+            ]} />)}</div>
+          </details>
           <p>{text.disclaimer}</p>
           <a href={`${languagePrefix}/election-methodology`}>{text.methodology}</a>
           <div className="election-actions"><button type="button" onClick={() => setComparison(null)}>{text.restart}</button></div>

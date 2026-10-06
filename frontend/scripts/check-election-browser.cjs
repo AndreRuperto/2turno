@@ -24,6 +24,11 @@ async function checkHome(page, language, width)
     const exampleResponse = page.waitForResponse(response => response.url().includes('/brazil-2026/compare?') && response.status() === 200);
     await page.goto(website + (language === 'en' ? '/en' : '/'));
     await page.locator('.home-options').waitFor();
+    assert.equal(await page.locator('.home-hero-portraits img').count(), 2);
+    for (const image of await page.locator('.home-hero-portraits img').all())
+    {
+        assert.ok(await image.evaluate(portrait => portrait.complete && portrait.naturalWidth > 0));
+    }
     assert.equal(await page.locator('.home-options > article').count(), 3);
     assert.equal(await page.locator('select').count(), 0);
     const boxes = await page.locator('.home-options > article').evaluateAll(cards => cards.map(card => card.getBoundingClientRect().toJSON()));
@@ -79,11 +84,12 @@ async function checkHome(page, language, width)
     assert.ok(await information.evaluate(button => button === document.activeElement));
     await checkLayout(page);
     await page.screenshot({ path: join(screenshotDirectory, 'home-' + language + '-' + width + '.png'), fullPage: true });
+    await page.locator('.home-hero').screenshot({ path: join(screenshotDirectory, 'hero-' + language + '-' + width + '.png') });
 }
 
 
 
-async function checkResults(page, language, answer)
+async function checkResults(page, language, answer, themeScore)
 {
     await page.locator('.questionnaire-card button').click();
     await page.locator('input[value="short"]').check();
@@ -100,12 +106,48 @@ async function checkResults(page, language, answer)
         await page.locator('[data-answer="' + answer + '"]').click();
         if (index < 35) await page.getByRole('button', { name: language === 'pt' ? 'Próxima' : 'Next', exact: true }).click();
     }
+    if (themeScore !== undefined)
+    {
+        const themedResult = await page.evaluate(async ({ score, identifiers, language }) =>
+        {
+            const response = await window.fetch('/api/elections/brazil-2026/compare?lang=' + language,
+            {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ modelId: 'brazil-presidential-2026-v2', scores: Object.fromEntries(identifiers.map(identifier => [identifier, score])) })
+            });
+            if (!response.ok) throw new Error('Cannot calculate theme verification profile');
+            return response.json();
+        }, { score: themeScore, identifiers: presentation.axisIdentifiers, language });
+        await page.route('**/brazil-2026/results?*', route => route.fulfill({ json: themedResult }));
+    }
+    const resultResponse = page.waitForResponse(response => response.url().includes('/brazil-2026/results?') && response.status() === 200);
     await page.getByRole('button', { name: language === 'pt' ? 'Comparar respostas' : 'Compare answers', exact: true }).click();
     await page.locator('#seu-perfil').waitFor();
+    const result = await (await resultResponse).json();
+    const scores = Object.fromEntries(result.axes.map(entry => [entry.axis.id, entry.userScore]));
+    const expected = presentation.classificationLabels(scores, language);
+    if (themeScore !== undefined) assert.equal(expected.family, themeScore === 100 ? 'left' : 'right');
+    assert.equal(await page.locator('body').getAttribute('data-political-family'), expected.family);
+    assert.equal(await page.locator('body').evaluate(body => window.getComputedStyle(body).backgroundColor),
+        await page.locator('#seu-perfil .ideology-header').evaluate(header => window.getComputedStyle(header).backgroundColor));
+    const axisBoxes = await page.locator('#seu-perfil .profile-axis').evaluateAll(cards => cards.map(card => card.getBoundingClientRect().toJSON()));
+    if (page.viewportSize().width > 650) assert.ok(Math.abs(axisBoxes[0].y - axisBoxes[1].y) < 1);
+    else assert.ok(axisBoxes[1].y > axisBoxes[0].y);
+    assert.ok(axisBoxes.every(box => box.height < 280), 'Axis cards should stay compact');
     assert.equal(await page.locator('#seu-perfil .profile-axis').count(), 12);
     assert.equal(await page.locator('#seu-perfil .axis-explanation').count(), 12);
     assert.equal(await page.locator('.comparison-axis').count(), 12);
     assert.equal(await page.locator('.comparison-marker').count(), 36);
+    assert.equal(await page.locator('.detailed-comparison').getAttribute('open'), null);
+    assert.equal(await page.locator('.comparison-axis').first().isVisible(), false);
+    const comparisonToggle = page.locator('.detailed-comparison > summary');
+    await comparisonToggle.focus();
+    await page.keyboard.press('Enter');
+    assert.equal(await page.locator('.comparison-axis').first().isVisible(), true);
+    await checkLayout(page);
+    await page.keyboard.press('Enter');
+    assert.equal(await page.locator('.comparison-axis').first().isVisible(), false);
+    assert.equal(await page.locator('#seu-perfil .ideology-header .profile-note').count(), 0);
     assert.equal(await page.locator('.candidate-compatibility').count(), 2);
     const percentages = await page.locator('#seu-perfil .axis-pole-labels').allTextContents();
     for (const label of percentages)
@@ -120,6 +162,10 @@ async function checkResults(page, language, answer)
     }
     await checkLayout(page);
     await page.screenshot({ path: join(screenshotDirectory, 'results-' + language + '-' + page.viewportSize().width + '.png'), fullPage: true });
+    await page.getByRole('button', { name: language === 'pt' ? 'Começar novamente' : 'Start again', exact: true }).click();
+    await page.locator('.home-options').waitFor();
+    assert.equal(await page.locator('body').getAttribute('data-political-family'), null);
+    if (themeScore !== undefined) await page.unroute('**/brazil-2026/results?*');
 }
 
 
@@ -195,7 +241,7 @@ async function main()
                 const errors = [];
                 page.on('pageerror', error => errors.push(error.message));
                 await checkHome(page, language, width);
-                await checkResults(page, language, width === 1280 ? 'NEUTRAL' : 'STRONGLY_AGREE');
+                await checkResults(page, language, width === 1280 ? 'NEUTRAL' : 'STRONGLY_AGREE', width === 768 ? (language === 'pt' ? 100 : 0) : undefined);
                 await checkCandidatePages(page, language);
                 assert.deepEqual(errors, []);
                 await context.close();

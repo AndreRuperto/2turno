@@ -2,8 +2,8 @@ const axisIdentifiers = ['coordenacao', 'protecao_social', 'tributacao', 'provis
 
 const familyLabels =
 {
-    left: ['Esquerda', 'Left', '#923448', '#f8e9ee'],
-    'centre-left': ['Centro-esquerda', 'Centre-left', '#376146', '#eaf1e8'],
+    left: ['Esquerda', 'Left', '#a51d2d', '#fbeaec'],
+    'centre-left': ['Centro-esquerda', 'Centre-left', '#b04444', '#fcf0ee'],
     centre: ['Centro', 'Centre', '#555b61', '#eef0f2'],
     'centre-right': ['Centro-direita', 'Centre-right', '#216172', '#e8f3f5'],
     right: ['Direita', 'Right', '#304e91', '#eaf0fc'],
@@ -93,14 +93,14 @@ function classificationLabels(scores, language = 'pt')
 
 
 
-function ideologyHeaderMarkup(scores, language = 'pt')
+function ideologyHeaderMarkup(scores, language = 'pt', compact = false)
 {
     const classification = classificationLabels(scores, language);
     const note = language === 'en'
         ? 'Calculated from the twelve-axis profile. A descriptive estimate, not a party label.'
         : 'Calculado a partir do perfil nos doze eixos. Uma estimativa descritiva, não uma filiação partidária.';
-    return `<header class="ideology-header" data-family="${classification.family}" data-subtype="${classification.subtype}" style="--ideology-color:${classification.color};--ideology-background:${classification.background}">
-<p class="ideology-family">${classification.familyLabel}</p><h2>${classification.subtypeLabel}</h2><p class="profile-note">${note}</p></header>`;
+    return `<header class="ideology-header${compact ? ' ideology-header-compact' : ''}" data-family="${classification.family}" data-subtype="${classification.subtype}" style="--ideology-color:${classification.color};--ideology-background:${classification.background}">
+<p class="ideology-family">${classification.familyLabel}</p><h2>${classification.subtypeLabel}</h2>${compact ? '' : `<p class="profile-note">${note}</p>`}</header>`;
 }
 
 
@@ -139,7 +139,7 @@ function axisProfileMarkup(axes, scores, language = 'pt', explainUser = false)
 {
     return `<div class="axis-profile">${axes.map(axis => `<article class="profile-axis" data-axis="${escapeHtml(axis.id)}">
 <h3>${escapeHtml(axis.label)}</h3>${axisBarMarkup(axis, scores?.[axis.id], language)}
-${explainUser ? `<p class="axis-explanation">${escapeHtml(axisExplanation(axis.id, scores?.[axis.id], language))}</p>` : ''}</article>`).join('')}</div>`;
+${explainUser ? `<details class="axis-guidance"><summary>${language === 'en' ? 'How to interpret' : 'Como interpretar'}</summary><p class="axis-explanation">${escapeHtml(axisExplanation(axis.id, scores?.[axis.id], language))}</p></details>` : ''}</article>`).join('')}</div>`;
 }
 
 
@@ -152,7 +152,7 @@ function comparisonAxisMarkup(axis, markers, language = 'pt')
         return pair ? [{ ...marker, pair }] : [];
     });
     const accessible = escapeHtml(valid.map(marker => `${marker.name}: ${axis.leftPole} ${marker.pair.left}%, ${axis.rightPole} ${marker.pair.right}%`).join('; '));
-    const pins = valid.map((marker, index) => `<span class="comparison-marker marker-${index}" style="left:${marker.pair.position}%;top:${index * 32}px${/^#[0-9a-f]{6}$/i.test(marker.color || '') ? `;background:${marker.color};box-shadow:0 0 0 1px ${marker.color}` : ''}" aria-hidden="true"><b>${escapeHtml(marker.symbol)}</b></span>`).join('');
+    const pins = valid.map((marker, index) => `<span class="comparison-marker marker-${index}" style="left:${marker.pair.position}%;top:${index * 26}px${/^#[0-9a-f]{6}$/i.test(marker.color || '') ? `;background:${marker.color};box-shadow:0 0 0 1px ${marker.color}` : ''}" aria-hidden="true"><b>${escapeHtml(marker.symbol)}</b></span>`).join('');
     const values = markers.map(marker =>
     {
         const pair = percentagePair(marker.score);
