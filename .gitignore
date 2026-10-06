@@ -1,0 +1,48 @@
+# Java
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.npm-cache/
+.tools/
+
+# Local env
+.env
+.env.local
+frontend/.env
+frontend/.env.local
+*.log
+.claude/*.json
+.claude/*.lock
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Analytics
+analytics/
+
+# Python (ferramentas de auditoria)
+__pycache__/
+*.pyc
+
+# Superpowers (specs/plans gerados pelo plugin)
+docs/superpowers/
+.claude/skills/superpowers*/
+.codex-run
+
+# Materiais de referência visual
+docs/
+
+# Artefatos de screenshots do Playwright MCP
+.playwright-mcp/
+
+# PDFs e texto extraído dos planos de governo (baixar de planodegoverno2026.com.br)
+colinha-eleitoral/planos-de-governo/
+
+# Local assistant session logs
+/claude-sessions/

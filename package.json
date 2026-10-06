@@ -1,0 +1,12 @@
+{
+  "name": "2turno",
+  "private": true,
+  "description": "Atalhos para rodar o 2 Turno localmente; as dependências ficam em frontend/ e backend/.",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:prod-api": "node scripts/dev.mjs --prod-api"
+  }
+}
