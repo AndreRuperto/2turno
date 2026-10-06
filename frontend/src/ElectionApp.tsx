@@ -16,6 +16,26 @@ import { selectAllQuestionsBalanced, selectAndBalanceQuestions } from './utils/q
 
 const languagePrefix = LANG === 'en' ? '/en' : '';
 const AUTO_ADVANCE_KEY = '2turno-auto-advance';
+const LANGUAGE_PROGRESS_KEY = '2turno-language-progress';
+
+interface LanguageProgress
+{
+  modelId?: string;
+  variant: QuizVariant;
+  choosingFormat: boolean;
+  answers: Record<string, AnswerValue>;
+  questionIndex: number;
+  questionIds: string[];
+  comparison: ElectionComparison | null;
+}
+
+
+
+function readLanguageProgress(): LanguageProgress | null
+{
+  try { return JSON.parse(window.sessionStorage.getItem(LANGUAGE_PROGRESS_KEY) ?? 'null'); }
+  catch { return null; }
+}
 
 function readAutoAdvance(): boolean
 {
@@ -98,6 +118,7 @@ const text = LANG === 'pt' ? {
 
 export default function ElectionApp()
 {
+  const [savedProgress] = useState(readLanguageProgress);
   const [choosingFormat, setChoosingFormat] = useState(false);
   const [variant, setVariant] = useState<QuizVariant>('extended');
   const [model, setModel] = useState<ElectionQuiz | null>(null);
@@ -107,7 +128,7 @@ export default function ElectionApp()
   const [autoAdvance, setAutoAdvance] = useState(readAutoAdvance);
   const advanceTimer = useRef<number | null>(null);
   const [comparison, setComparison] = useState<ElectionComparison | null>(null);
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState(Boolean(savedProgress));
   const [error, setError] = useState<string | null>(null);
   const userScores = comparison ? Object.fromEntries(comparison.axes.map(entry => [entry.axis.id, entry.userScore])) : undefined;
   const userClassification = userScores ? presentation.classificationLabels(userScores, LANG) : null;
@@ -124,6 +145,52 @@ export default function ElectionApp()
   {
     if (window.location.hash === '#teste') setChoosingFormat(true);
   }, []);
+
+  useEffect(() =>
+  {
+    let cancelled = false;
+    async function restoreProgress()
+    {
+      const saved = savedProgress;
+      if (!saved) return;
+      setBusy(true);
+      try
+      {
+        const response = await fetchElectionQuiz(saved.variant);
+        if (saved.modelId && saved.modelId !== response.modelId) throw new Error(text.unavailable);
+        const translatedQuestions = saved.questionIds.flatMap(identifier =>
+          response.quiz.questions.filter(question => question.id === identifier));
+        if (translatedQuestions.length !== saved.questionIds.length) throw new Error(text.unavailable);
+        if (cancelled) return;
+        setModel(response);
+        setVariant(saved.variant);
+        setChoosingFormat(saved.choosingFormat);
+        setAnswers(saved.answers);
+        setQuestionIndex(saved.questionIndex);
+        if (saved.comparison)
+        {
+          setComparison({ ...saved.comparison, axes: saved.comparison.axes.map((entry: ElectionComparison['axes'][number]) =>
+            ({ ...entry, axis: response.quiz.axes.find(axis => axis.id === entry.axis.id) ?? entry.axis })) });
+        }
+        else if (translatedQuestions.length) setQuiz({ ...response.quiz, questions: translatedQuestions });
+        window.sessionStorage.removeItem(LANGUAGE_PROGRESS_KEY);
+      }
+      catch (failure) { if (!cancelled) setError((failure as Error).message); }
+      finally { if (!cancelled) setBusy(false); }
+    }
+    void restoreProgress();
+    return () => { cancelled = true; };
+  }, [savedProgress]);
+
+
+
+  function preserveLanguageProgress()
+  {
+    window.sessionStorage.setItem(LANGUAGE_PROGRESS_KEY, JSON.stringify({
+      modelId: model?.modelId, variant, choosingFormat, answers, questionIndex,
+      questionIds: quiz?.questions.map(question => question.id) ?? [], comparison
+    }));
+  }
 
   useEffect(() =>
   {
@@ -239,14 +306,14 @@ export default function ElectionApp()
         <a href={`${languagePrefix || '/'}#teste`} onClick={() => { setQuiz(null); setComparison(null); setChoosingFormat(true); }}>{educationTranslations[LANG].quizLink}</a>
         {site.candidates.map(candidate => <a key={candidate.id} href={candidatePage(candidate.id)}>{candidate.name}</a>)}
         <a href={`${languagePrefix}/election-methodology`}>{text.methodology}</a>
-        <a href={LANG === 'pt' ? '/en' : '/'} lang={LANG === 'pt' ? 'en' : 'pt-BR'}>{LANG === 'pt' ? 'English' : 'Português'}</a>
+        <a href={LANG === 'pt' ? '/en' : '/'} onClick={preserveLanguageProgress} lang={LANG === 'pt' ? 'en' : 'pt-BR'}>{LANG === 'pt' ? 'English' : 'Português'}</a>
       </nav>
     </header>
     <main>
       {!available ? <section><h1>{text.unavailable}</h1><a href={languagePrefix || '/'}>{text.leave}</a></section> : <>
         {error && <p role="alert">{error}</p>}
         {busy && <p role="status">{text.loading}</p>}
-        {!quiz && !comparison && <>
+        {!quiz && !comparison && !busy && <>
           <section className="home-hero">
             <div className="home-hero-portraits" aria-hidden="true">
               {site.candidates.map(candidate => <div className="hero-candidate" key={candidate.id}>

@@ -103,6 +103,16 @@ async function checkResults(page, language, answer, themeScore)
     await page.getByText('2 / 36', { exact: true }).waitFor();
     await toggle.click();
     assert.equal(await toggle.getAttribute('aria-checked'), 'false');
+    const questionBeforeSwitch = await page.locator('#scale-question-title').innerText();
+    await page.locator('[data-answer="AGREE"]').click();
+    await page.getByRole('link', { name: language === 'pt' ? 'English' : 'Português', exact: true }).click();
+    await page.getByText('2 / 36', { exact: true }).waitFor();
+    assert.equal(await page.locator('[data-answer="AGREE"]').getAttribute('aria-checked'), 'true');
+    assert.notEqual(await page.locator('#scale-question-title').innerText(), questionBeforeSwitch);
+    await page.getByRole('link', { name: language === 'pt' ? 'Português' : 'English', exact: true }).click();
+    await page.getByText('2 / 36', { exact: true }).waitFor();
+    assert.equal(await page.locator('#scale-question-title').innerText(), questionBeforeSwitch);
+    assert.equal(await page.locator('[data-answer="AGREE"]').getAttribute('aria-checked'), 'true');
     assert.equal(await page.getByRole('radio').count(), 5);
     for (const label of await page.locator('.scale-label').all())
     {
@@ -184,12 +194,22 @@ async function checkResults(page, language, answer, themeScore)
     }
     await checkLayout(page);
     await page.screenshot({ path: join(screenshotDirectory, 'results-' + language + '-' + page.viewportSize().width + '.png'), fullPage: true });
+    const compatibilityBeforeSwitch = await page.locator('.candidate-compatibility strong').allTextContents();
+    const axisLabelBeforeSwitch = await page.locator('#seu-perfil .profile-axis').first().innerText();
+    await page.getByRole('link', { name: language === 'pt' ? 'English' : 'Português', exact: true }).click();
+    await page.locator('#seu-perfil').waitFor();
+    assert.deepEqual(await page.locator('.candidate-compatibility strong').allTextContents(), compatibilityBeforeSwitch);
+    assert.notEqual(await page.locator('#seu-perfil .profile-axis').first().innerText(), axisLabelBeforeSwitch);
+    await page.getByRole('link', { name: language === 'pt' ? 'Português' : 'English', exact: true }).click();
+    await page.locator('#seu-perfil').waitFor();
+    assert.deepEqual(await page.locator('.candidate-compatibility strong').allTextContents(), compatibilityBeforeSwitch);
+    assert.equal(await page.locator('#seu-perfil .profile-axis').first().innerText(), axisLabelBeforeSwitch);
     await page.getByRole('button', { name: language === 'pt' ? 'Compartilhar resultado' : 'Share result', exact: true }).click();
     const preview = page.locator('.share-result-preview');
     await preview.waitFor();
     await preview.evaluate(image => image.decode());
     assert.equal(await preview.evaluate(image => image.naturalWidth), 1080);
-    assert.equal(await preview.evaluate(image => image.naturalHeight), 2800);
+    assert.equal(await preview.evaluate(image => image.naturalHeight), 1920);
     const downloadReady = page.waitForEvent('download');
     await page.getByRole('link', { name: language === 'pt' ? 'Baixar cartão' : 'Download card', exact: true }).click();
     const download = await downloadReady;
