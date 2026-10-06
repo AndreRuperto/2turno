@@ -25,6 +25,8 @@ async function checkHome(page, language, width)
     await page.goto(website + (language === 'en' ? '/en' : '/'));
     await page.locator('.home-options').waitFor();
     assert.equal(await page.locator('.home-hero-portraits img').count(), 2);
+    assert.equal(await page.locator('.hero-versus').innerText(), 'VS');
+    assert.equal(await page.locator('.hero-versus').evaluate(label => window.getComputedStyle(label).pointerEvents), 'none');
     for (const image of await page.locator('.home-hero-portraits img').all())
     {
         assert.ok(await image.evaluate(portrait => portrait.complete && portrait.naturalWidth > 0));
@@ -101,6 +103,26 @@ async function checkResults(page, language, answer, themeScore)
     await page.getByText('2 / 36', { exact: true }).waitFor();
     await toggle.click();
     assert.equal(await toggle.getAttribute('aria-checked'), 'false');
+    assert.equal(await page.getByRole('radio').count(), 5);
+    for (const label of await page.locator('.scale-label').all())
+    {
+        assert.equal(await label.isVisible(), true);
+        assert.ok((await label.innerText()).trim().length > 0);
+    }
+    await page.locator('[data-answer="NEUTRAL"]').focus();
+    await page.keyboard.press('ArrowUp');
+    assert.equal(await page.locator('[data-answer="AGREE"]').getAttribute('aria-checked'), 'true');
+    assert.equal(await page.locator('.scale-point.selected .answer-selection').innerText(), '✓');
+    await page.locator('.scale-point.selected').hover();
+    await page.waitForFunction(() =>
+    {
+        const selected = document.querySelector('.scale-point.selected');
+        if (!selected) return false;
+        const style = window.getComputedStyle(selected);
+        return style.backgroundColor === style.borderTopColor && style.color === 'rgb(255, 255, 255)';
+    });
+    await checkLayout(page);
+    await page.locator('.scale-question').screenshot({ path: join(screenshotDirectory, 'question-' + language + '-' + page.viewportSize().width + '.png') });
     for (let index = 1; index < 36; index += 1)
     {
         await page.locator('[data-answer="' + answer + '"]').click();
@@ -162,6 +184,18 @@ async function checkResults(page, language, answer, themeScore)
     }
     await checkLayout(page);
     await page.screenshot({ path: join(screenshotDirectory, 'results-' + language + '-' + page.viewportSize().width + '.png'), fullPage: true });
+    await page.getByRole('button', { name: language === 'pt' ? 'Compartilhar resultado' : 'Share result', exact: true }).click();
+    const preview = page.locator('.share-result-preview');
+    await preview.waitFor();
+    await preview.evaluate(image => image.decode());
+    assert.equal(await preview.evaluate(image => image.naturalWidth), 1080);
+    assert.equal(await preview.evaluate(image => image.naturalHeight), 2800);
+    const downloadReady = page.waitForEvent('download');
+    await page.getByRole('link', { name: language === 'pt' ? 'Baixar cartão' : 'Download card', exact: true }).click();
+    const download = await downloadReady;
+    assert.equal(download.suggestedFilename(), '2turno-result.png');
+    await download.saveAs(join(screenshotDirectory, 'share-' + language + '-' + page.viewportSize().width + '.png'));
+    await page.keyboard.press('Escape');
     await page.getByRole('button', { name: language === 'pt' ? 'Começar novamente' : 'Start again', exact: true }).click();
     await page.locator('.home-options').waitFor();
     assert.equal(await page.locator('body').getAttribute('data-political-family'), null);

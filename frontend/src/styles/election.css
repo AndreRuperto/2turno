@@ -31,15 +31,18 @@
 .election-app .home-hero
 {
   position: relative; isolation: isolate; display: flex; align-items: center;
-  min-height: 440px; margin-block: 0 8px; padding: 40px;
-  border-radius: 26px; overflow: hidden; background: #102e24; color: #fff;
+  min-height: 480px; margin-block: 0 8px; padding: 40px;
+  border-radius: 26px; overflow: hidden; background: #0b241c; color: #fff;
+  box-shadow: 0 24px 60px -36px #102e2480;
 }
 .home-hero-portraits { position: absolute; z-index: -2; inset: 0 0 0 42%; display: grid; grid-template-columns: 1fr 1fr; }
 .hero-candidate { position: relative; min-width: 0; overflow: hidden; }
-.hero-candidate img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; border-radius: 0; }
-.hero-candidate > span { position: absolute; bottom: 22px; left: 0; right: 0; text-align: center; color: #fff; font-weight: 700; text-shadow: 0 1px 6px #000; }
-.home-hero::after { content: ''; position: absolute; z-index: -1; inset: 0; background: linear-gradient(90deg, #102e24 0%, #102e24 40%, transparent 50%), linear-gradient(0deg, #102e24b3, transparent 35%); }
-.hero-versus { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: #102e24; color: #fff; font-size: 28px; border: 1px solid #ffffff80; }
+.hero-candidate img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; border-radius: 0; filter: contrast(1.08) saturate(.9); }
+.hero-candidate::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, #0b241c 0%, #0b241c70 25%, transparent 60%); }
+.hero-candidate > span { position: absolute; z-index: 1; bottom: 28px; left: 12px; right: 12px; text-align: center; color: #fff; font-family: var(--font-display); font-size: clamp(15px, 1.6vw, 20px); font-weight: 700; letter-spacing: .04em; text-shadow: 0 2px 8px #000; }
+.home-hero::after { content: ''; position: absolute; z-index: -1; inset: 0; background: linear-gradient(90deg, #0b241c 0%, #0b241c 38%, transparent 53%); }
+.home-hero-portraits::after { content: ''; position: absolute; left: 50%; top: -10%; height: 120%; width: 3px; transform: rotate(7deg); background: linear-gradient(0deg, transparent, #ead5a6, #fff5db, #ead5a6, transparent); box-shadow: 0 0 24px #fff1c080; pointer-events: none; }
+.hero-versus { position: absolute; z-index: 2; left: 50%; top: 53%; transform: translate(-50%, -50%) rotate(-7deg); color: #fff2cd; font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: clamp(48px, 6vw, 76px); line-height: 1; letter-spacing: -.08em; text-shadow: 0 4px 0 #0b241c, 0 0 24px #0b241c, 0 4px 24px #000; pointer-events: none; }
 .home-hero-text { max-width: 40%; }
 .home-hero-text h1 { margin-block: 8px 16px; line-height: 1.1; color: #fff; }
 .home-hero-text p:last-child { margin: 0; font-size: 1.05rem; line-height: 1.65; color: #f0f3ed; }
@@ -50,11 +53,11 @@ body[data-political-family] .election-header a, body[data-political-family] .ele
 .election-results .election-actions button { background: var(--result-color); }
 @media (max-width: 900px)
 {
-  .election-app .home-hero { display: block; min-height: 0; padding: 290px 26px 30px; }
-  .home-hero-portraits { inset: 0 0 auto; height: 280px; }
-  .home-hero::after { background: linear-gradient(0deg, #102e24 0%, #102e24 44%, #102e2400 80%); }
-  .hero-candidate > span { bottom: 26px; }
-  .hero-versus { top: 40%; }
+  .election-app .home-hero { display: block; min-height: 0; padding: 330px 26px 30px; }
+  .home-hero-portraits { inset: 0 0 auto; height: 310px; }
+  .home-hero::after { background: none; }
+  .hero-candidate > span { bottom: 24px; }
+  .hero-versus { top: 58%; }
   .home-hero-text { max-width: none; }
 }
 .election-kicker { margin: 0; font-weight: 600; color: var(--ink-700); }
@@ -73,3 +76,6 @@ body[data-political-family] .election-header a, body[data-political-family] .ele
 @media (max-width: 560px) {
   .election-actions.quiz-navigation .auto-advance-toggle { order: -1; width: 100%; justify-content: center; }
 }
+
+.share-result-preview { display: block; width: 100%; height: auto; margin: 16px 0; }
+.share-result-dialog { max-width: 640px; }

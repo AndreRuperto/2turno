@@ -114,7 +114,7 @@
     {
       "id": "br2026_coordenacao_2",
       "axisId": "coordenacao",
-      "text": "A escolha dos setores econômicos que devem crescer deve ficar principalmente com as empresas, sem prioridades definidas pelo governo.",
+      "text": "As decisões sobre quais setores econômicos devem crescer devem caber principalmente às empresas, sem prioridades setoriais definidas pelo governo.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "escolha-setores",
@@ -132,7 +132,7 @@
     {
       "id": "br2026_coordenacao_4",
       "axisId": "coordenacao",
-      "text": "Os preços dos combustíveis devem acompanhar o mercado internacional, sem medidas do governo para suavizar as variações.",
+      "text": "Os preços dos combustíveis devem acompanhar as variações do mercado internacional, sem intervenções do governo para suavizar os reajustes.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "precos-combustiveis",
@@ -204,7 +204,7 @@
     {
       "id": "br2026_protecao_social_6",
       "axisId": "protecao_social",
-      "text": "Se houver falta de dinheiro no orçamento, as regras dos benefícios sociais devem ser revistas para conter despesas.",
+      "text": "Quando os recursos do orçamento forem insuficientes, as regras dos benefícios sociais devem ser revistas para adequar as despesas aos recursos disponíveis.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "ajuste-beneficios",
@@ -222,7 +222,7 @@
     {
       "id": "br2026_tributacao_2",
       "axisId": "tributacao",
-      "text": "A prioridade tributária deve ser reduzir a carga total de impostos, em vez de redistribuir a cobrança entre grupos de renda.",
+      "text": "A política tributária deve priorizar a redução da carga total de impostos em relação à redistribuição da cobrança entre grupos de renda.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "carga-total",
@@ -384,7 +384,7 @@
     {
       "id": "br2026_direitos_sociais_2",
       "axisId": "direitos_sociais",
-      "text": "A legislação sobre aborto deve continuar limitada às situações que já são permitidas por lei.",
+      "text": "A legislação sobre aborto deve manter os limites das situações atualmente permitidas por lei.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "aborto-legislacao",
@@ -429,7 +429,7 @@
     {
       "id": "br2026_laicidade_1",
       "axisId": "laicidade",
-      "text": "As leis devem ser justificadas por razões públicas, sem depender da doutrina de uma religião.",
+      "text": "As leis devem ser justificadas por razões públicas acessíveis a pessoas de diferentes crenças, sem depender de uma doutrina religiosa específica.",
       "agreePole": "LEFT",
       "weight": 1,
       "topic": "fundamento-leis",
@@ -438,7 +438,7 @@
     {
       "id": "br2026_laicidade_2",
       "axisId": "laicidade",
-      "text": "Referências religiosas devem ter papel explícito na orientação das prioridades do governo.",
+      "text": "Valores religiosos devem ter um papel explícito na definição das prioridades do governo.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "referencia-religiosa",
@@ -447,7 +447,7 @@
     {
       "id": "br2026_laicidade_3",
       "axisId": "laicidade",
-      "text": "O governo deve tratar todas as religiões e as pessoas sem religião de forma igual.",
+      "text": "O governo deve aplicar os mesmos critérios às diferentes religiões e às pessoas sem religião.",
       "agreePole": "LEFT",
       "weight": 1,
       "topic": "igualdade-crencas",
@@ -456,7 +456,7 @@
     {
       "id": "br2026_laicidade_4",
       "axisId": "laicidade",
-      "text": "O compromisso com valores religiosos deve ser um critério relevante na escolha de autoridades públicas.",
+      "text": "O compromisso com valores religiosos deve ser um dos critérios relevantes na escolha de autoridades públicas.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "nomeacoes-religiosas",
@@ -465,7 +465,7 @@
     {
       "id": "br2026_laicidade_5",
       "axisId": "laicidade",
-      "text": "Serviços públicos devem atender as pessoas sem exigir adesão a práticas religiosas.",
+      "text": "O acesso aos serviços públicos deve ser garantido independentemente da participação em práticas religiosas.",
       "agreePole": "LEFT",
       "weight": 1,
       "topic": "atendimento-laico",
@@ -474,7 +474,7 @@
     {
       "id": "br2026_laicidade_6",
       "axisId": "laicidade",
-      "text": "Escolas públicas devem poder oferecer ensino de uma religião específica quando houver demanda das famílias.",
+      "text": "Escolas públicas devem poder oferecer ensino de uma tradição religiosa específica quando solicitado pelas famílias.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "ensino-confessional",
@@ -555,7 +555,7 @@
     {
       "id": "br2026_justica_penal_3",
       "axisId": "justica_penal",
-      "text": "Para condenados por crimes hediondos, como estupro, a passagem para regimes menos restritivos deve continuar possível conforme a lei.",
+      "text": "A progressão para regimes menos restritivos deve continuar possível para condenados por crimes hediondos que atendam aos critérios legais.",
       "agreePole": "LEFT",
       "weight": 1,
       "topic": "progressao-pena",
@@ -564,7 +564,7 @@
     {
       "id": "br2026_justica_penal_4",
       "axisId": "justica_penal",
-      "text": "A prioridade da política prisional deve ser construir mais vagas para ampliar o encarceramento.",
+      "text": "A política prisional deve priorizar a construção de novas vagas para ampliar a capacidade de encarceramento.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "vagas-prisionais",
@@ -582,7 +582,7 @@
     {
       "id": "br2026_justica_penal_6",
       "axisId": "justica_penal",
-      "text": "As forças policiais devem ter mais margem para decidir sobre o uso da força, com menos regras federais detalhadas.",
+      "text": "As forças policiais devem ter maior autonomia operacional nas decisões sobre o uso da força, com regras federais menos detalhadas.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "controle-forca",
@@ -591,7 +591,7 @@
     {
       "id": "br2026_ambiente_1",
       "axisId": "ambiente",
-      "text": "Obras com grande impacto devem passar por estudos ambientais completos, mesmo que a licença demore mais.",
+      "text": "Obras de grande impacto devem passar por estudos ambientais completos, com o tempo necessário para sua análise, mesmo que o licenciamento demore mais.",
       "agreePole": "LEFT",
       "weight": 1,
       "topic": "licenciamento-estudos",

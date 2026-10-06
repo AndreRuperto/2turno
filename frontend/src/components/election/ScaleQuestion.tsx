@@ -2,8 +2,8 @@ import { useState, type CSSProperties, type KeyboardEvent } from 'react';
 import type { AnswerOption, AnswerValue, Axis, Question } from '../../types/quiz';
 import { InfoSheet } from '../results/InfoSheet';
 
-// Da esquerda para a direita, como as réguas do hero: discordância total → concordância total.
-const SCALE: AnswerValue[] = ['STRONGLY_DISAGREE', 'DISAGREE', 'NEUTRAL', 'AGREE', 'STRONGLY_AGREE'];
+// As opções começam com concordância total e seguem até discordância total.
+const SCALE: AnswerValue[] = ['STRONGLY_AGREE', 'AGREE', 'NEUTRAL', 'DISAGREE', 'STRONGLY_DISAGREE'];
 
 export interface ScaleQuestionText
 {
@@ -11,6 +11,7 @@ export interface ScaleQuestionText
   helpAria: string;
   scaleAria: string;
   example: string;
+  instruction: string;
 }
 
 interface ScaleQuestionProps
@@ -30,8 +31,7 @@ interface ScaleQuestionProps
   onSelect: (answer: AnswerValue) => void;
 }
 
-// Pergunta do 2 Turno: a resposta é um ponto numa régua de cinco posições, a mesma linguagem visual
-// da logo e do hero. Cada posição é um rádio de verdade (clique, Tab, setas e leitor de tela).
+// Cada cartão representa um nível de concordância, com rótulo sempre visível e navegação por setas.
 export function ScaleQuestion({ question, axis, index, total, answered, options, selected, disabled = false,
   axisDescription, agreeHint, example, text, onSelect }: ScaleQuestionProps)
 {
@@ -39,12 +39,10 @@ export function ScaleQuestion({ question, axis, index, total, answered, options,
   const labels = Object.fromEntries(options.map(option => [option.id, option.label])) as Record<AnswerValue, string>;
   const selectedIndex = selected ? SCALE.indexOf(selected) : -1;
   const poleColor = axis && (question.agreePole === 'LEFT' ? axis.leftColor : axis.rightColor);
-  // Posição de 0 a 100 na escala; na tela, os pontos ficam entre 10% e 90% da largura.
-  const position = selectedIndex < 0 ? 50 : selectedIndex * 25;
 
   function move(event: KeyboardEvent<HTMLButtonElement>, current: number)
   {
-    const step = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 }[event.key];
+    const step = { ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1, ArrowDown: 1 }[event.key];
     if (step === undefined || disabled) return;
     event.preventDefault();
     const next = Math.min(SCALE.length - 1, Math.max(0, current + step));
@@ -69,15 +67,7 @@ export function ScaleQuestion({ question, axis, index, total, answered, options,
     </button>}
 
     <div className="scale" role="radiogroup" aria-label={text.scaleAria}>
-      <div className="scale-ends" aria-hidden="true">
-        <span>{labels.STRONGLY_DISAGREE}</span>
-        <span>{labels.STRONGLY_AGREE}</span>
-      </div>
-      <div className="scale-track">
-        <span className="scale-line" aria-hidden="true" />
-        <span className="scale-center" aria-hidden="true" />
-        {selectedIndex >= 0 && <span className="scale-fill" aria-hidden="true"
-          style={{ left: `${10 + Math.min(position, 50) * 0.8}%`, width: `${Math.abs(position - 50) * 0.8}%` }} />}
+      <p className="answer-instruction">{text.instruction}</p>
         <div className="scale-points">
           {SCALE.map((answer, pointIndex) =>
           {
@@ -87,13 +77,16 @@ export function ScaleQuestion({ question, axis, index, total, answered, options,
               tabIndex={isSelected || (selectedIndex < 0 && answer === 'NEUTRAL') ? 0 : -1}
               className={isSelected ? 'scale-point selected' : 'scale-point'}
               onClick={() => onSelect(answer)} onKeyDown={event => move(event, pointIndex)}>
-              <span className="scale-dot" aria-hidden="true" />
+              <span className="answer-strength" aria-hidden="true">
+                {pointIndex === 2 ? <span className="answer-balanced" /> : [0, 1].map(strength =>
+                  <span key={strength} className={strength < Math.abs(pointIndex - 2) ? 'strength-filled' : ''} />)}
+              </span>
               <span className="scale-label" aria-hidden="true">{labels[answer]}</span>
+              <span className="answer-selection" aria-hidden="true">{isSelected ? '✓' : ''}</span>
             </button>;
           })}
         </div>
-      </div>
-      <p className="scale-current" aria-live="polite">{selected ? labels[selected] : ' '}</p>
+      <p className="scale-current" aria-live="polite">{selected ? labels[selected] : ''}</p>
     </div>
 
     {axis && helpOpen && <InfoSheet titleId="scale-help-title" style={{ '--ac': poleColor } as CSSProperties}

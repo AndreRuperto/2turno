@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ScaleQuestion } from './components/election/ScaleQuestion';
+import { ShareResult } from './components/election/ShareResult';
 import { LANG } from './i18n';
 import { fetchElectionQuiz, submitElectionAnswers } from './services/electionApi';
 import site from './site.json';
@@ -45,7 +46,7 @@ const text = LANG === 'pt' ? {
   next: 'Próxima',
   finish: 'Comparar respostas',
   restart: 'Começar novamente',
-  scale: { help: 'O que está em jogo', helpAria: 'O que está em jogo nesta pergunta: eixo e exemplo', scaleAria: 'Sua resposta', example: 'Na prática:' },
+  scale: { help: 'O que está em jogo', helpAria: 'O que está em jogo nesta pergunta: eixo e exemplo', scaleAria: 'Sua resposta', example: 'Na prática:', instruction: 'Quanto você concorda com esta frase?' },
   autoAdvance: 'Avançar ao responder',
   agreeHint: (pole: string) => `Concordar com esta frase aproxima você de “${pole}”; discordar, do polo oposto.`,
   loading: 'Carregando o quiz…',
@@ -78,7 +79,7 @@ const text = LANG === 'pt' ? {
   next: 'Next',
   finish: 'Compare answers',
   restart: 'Start again',
-  scale: { help: 'What is at stake', helpAria: 'What is at stake in this question: axis and example', scaleAria: 'Your answer', example: 'In practice:' },
+  scale: { help: 'What is at stake', helpAria: 'What is at stake in this question: axis and example', scaleAria: 'Your answer', example: 'In practice:', instruction: 'How much do you agree with this statement?' },
   autoAdvance: 'Advance on answer',
   agreeHint: (pole: string) => `Agreeing with this statement moves you toward “${pole}”; disagreeing, toward the opposite pole.`,
   loading: 'Loading the quiz…',
@@ -252,7 +253,7 @@ export default function ElectionApp()
                 <img src={candidate.portrait} alt="" width="480" height="640" fetchPriority="high" />
                 <span>{candidate.name}</span>
               </div>)}
-              <span className="hero-versus">×</span>
+              <span className="hero-versus">VS</span>
             </div>
             <div className="home-hero-text">
               <p className="election-kicker">{text.runoff}</p>
@@ -337,7 +338,7 @@ export default function ElectionApp()
           </details>
           <p>{text.disclaimer}</p>
           <a href={`${languagePrefix}/election-methodology`}>{text.methodology}</a>
-          <div className="election-actions"><button type="button" onClick={() => setComparison(null)}>{text.restart}</button></div>
+          <div className="election-actions"><ShareResult result={comparison} /><button type="button" onClick={() => setComparison(null)}>{text.restart}</button></div>
         </section>}
       </>}
     </main>

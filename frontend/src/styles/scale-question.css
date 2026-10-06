@@ -1,5 +1,4 @@
-/* Pergunta do 2 Turno: layout aberto (sem cartão) e resposta numa régua de cinco pontos,
-   na mesma linguagem da logo e do hero (linha, traço central pontilhado e pontos de resposta). */
+/* Cinco cartões de resposta: texto explícito, intensidade visual e seleção marcada. */
 .scale-question { padding-top: 8px; }
 .scale-question-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
 .scale-question-topic { display: inline-flex; align-items: center; gap: 10px; font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-700); }
@@ -13,37 +12,33 @@
 .scale-question-help span { display: grid; place-items: center; width: 22px; height: 22px; border: 1.5px solid currentColor; border-radius: 50%; font-size: .8rem; font-weight: 700; text-decoration: none; }
 .scale-question-help:focus-visible { outline: 3px solid #a83039; outline-offset: 3px; border-radius: 6px; }
 
-.scale { margin: 56px 0 24px; }
-.scale-ends { display: none; justify-content: space-between; font-size: .8rem; font-weight: 600; color: var(--ink-500); }
-.scale-track { position: relative; }
-.scale-line, .scale-fill { position: absolute; top: 22px; height: 4px; margin-top: -2px; border-radius: 4px; }
-.scale-line { left: 10%; right: 10%; background: var(--ink-300); }
-.scale-fill { background: var(--green-500); transition: left .25s ease, width .25s ease; }
-.scale-center { position: absolute; left: 50%; top: 0; height: 44px; border-left: 2px dotted var(--ink-400); }
-.scale-points { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); }
-.election-app .scale-point { --answer-color: var(--ink-500); display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 0 4px 6px; border: 0; background: none; color: var(--ink-700); font: inherit; cursor: pointer; }
-.election-app .scale-point:is([data-answer="STRONGLY_DISAGREE"], [data-answer="DISAGREE"]) { --answer-color: var(--red-500); }
-.election-app .scale-point:is([data-answer="AGREE"], [data-answer="STRONGLY_AGREE"]) { --answer-color: var(--green-500); }
-.scale-point:disabled { cursor: default; }
-.scale-dot { display: grid; place-items: center; width: 44px; height: 44px; }
-.scale-dot::after { content: ""; width: 20px; height: 20px; border: 2px solid var(--answer-color); border-radius: 50%; background: var(--paper, #F4F1E8); transition: transform .2s cubic-bezier(.34, 1.56, .64, 1), background .2s, border-color .2s, box-shadow .2s; }
-.scale-point:hover:not(:disabled) .scale-dot::after { border-color: var(--answer-color); transform: scale(1.15); }
-.scale-point.selected .scale-dot::after { width: 26px; height: 26px; border: 0; background: var(--answer-color); box-shadow: 0 0 0 5px var(--paper, #F4F1E8), 0 6px 14px -4px color-mix(in srgb, var(--answer-color) 55%, transparent); animation: scale-land .32s cubic-bezier(.34, 1.56, .64, 1); }
-.scale-label { max-width: 11ch; text-align: center; font-size: .88rem; line-height: 1.3; }
-.scale-point.selected .scale-label { color: var(--text-strong); font-weight: 700; }
-.scale-point:focus-visible { outline: none; }
-.scale-point:focus-visible .scale-dot { outline: 3px solid #a83039; outline-offset: -2px; border-radius: 50%; }
-.scale-current { display: none; margin: 18px 0 0; text-align: center; font-family: var(--font-display); font-weight: 700; color: var(--text-strong); }
-@keyframes scale-land { 0% { transform: translateY(-14px) scale(.6); } 70% { transform: translateY(2px) scale(1.05); } 100% { transform: none; } }
+.scale { margin: 36px 0 24px; }
+.answer-instruction { margin: 0 0 16px; font-size: 15px; font-weight: 600; color: var(--ink-700); }
+.scale-points { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.election-app .scale-point { --answer-color: #555b61; position: relative; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 18px; padding: 16px 48px 16px 18px; min-height: 68px; border: 1px solid var(--ink-100); border-left: 4px solid var(--answer-color); border-radius: 14px; background: var(--surface); color: var(--answer-color); font: inherit; cursor: pointer; text-align: left; transition: transform .15s ease, background .15s ease, box-shadow .15s ease; }
+.election-app .scale-point:is([data-answer="STRONGLY_DISAGREE"], [data-answer="DISAGREE"]) { --answer-color: #9a303b; }
+.election-app .scale-point:is([data-answer="AGREE"], [data-answer="STRONGLY_AGREE"]) { --answer-color: #245c45; }
+.election-app .scale-point:hover:not(:disabled):not(.selected) { transform: translateY(-3px); background: color-mix(in srgb, var(--answer-color) 6%, var(--surface)); box-shadow: 0 8px 20px #102e2410; }
+.election-app .scale-point.selected { background: var(--answer-color); border-color: var(--answer-color); color: #fff; box-shadow: 0 6px 20px color-mix(in srgb, var(--answer-color) 25%, transparent); }
+.scale-point:disabled { opacity: .5; cursor: default; }
+.answer-strength { display: flex; align-items: flex-end; gap: 5px; width: 32px; height: 28px; flex-shrink: 0; }
+.answer-strength > span { width: 9px; height: 16px; border: 2px solid currentColor; border-radius: 3px; opacity: .35; }
+.answer-strength > span:nth-child(2) { height: 26px; }
+.answer-strength > .strength-filled { background: currentColor; opacity: 1; }
+.answer-strength > .answer-balanced { width: 28px; height: 3px; border: 0; border-radius: 2px; background: currentColor; opacity: 1; align-self: center; }
+.scale-label { font-weight: 600; font-size: 16px; line-height: 1.4; }
+.answer-selection { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 22px; height: 22px; border: 1.5px solid currentColor; border-radius: 50%; font-size: 14px; }
+.scale-point:not(.selected) .answer-selection { opacity: .35; }
+.election-app .scale-point:focus-visible { outline: 3px solid var(--answer-color); outline-offset: 4px; }
+.scale-current { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-@media (max-width: 560px) {
+@media (max-width: 560px)
+{
   .election-app .scale-question h2 { margin-top: 28px; }
-  .scale { margin-top: 36px; }
-  .scale-ends { display: flex; margin-bottom: 12px; }
-  .scale-label { display: none; }
-  .scale-current { display: block; }
+  .scale { margin-top: 26px; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .scale-fill, .scale-dot::after, .scale-question-progress span { transition: none; }
-  .scale-point.selected .scale-dot::after { animation: none; }
+@media (prefers-reduced-motion: reduce)
+{
+  .election-app .scale-point, .scale-question-progress span { transition: none; }
+  .election-app .scale-point:hover:not(:disabled) { transform: none; }
 }
