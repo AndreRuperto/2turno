@@ -1,5 +1,5 @@
 /* Pergunta do 2 Turno: layout aberto (sem cartão) e resposta numa régua de cinco pontos,
-   na mesma linguagem da logo e do hero (linha, traço central pontilhado e ponto carmim). */
+   na mesma linguagem da logo e do hero (linha, traço central pontilhado e pontos de resposta). */
 .scale-question { padding-top: 8px; }
 .scale-question-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
 .scale-question-topic { display: inline-flex; align-items: center; gap: 10px; font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-700); }
@@ -21,12 +21,14 @@
 .scale-fill { background: var(--green-500); transition: left .25s ease, width .25s ease; }
 .scale-center { position: absolute; left: 50%; top: 0; height: 44px; border-left: 2px dotted var(--ink-400); }
 .scale-points { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); }
-.election-app .scale-point { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 0 4px 6px; border: 0; background: none; color: var(--ink-700); font: inherit; cursor: pointer; }
+.election-app .scale-point { --answer-color: var(--ink-500); display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 0 4px 6px; border: 0; background: none; color: var(--ink-700); font: inherit; cursor: pointer; }
+.election-app .scale-point:is([data-answer="STRONGLY_DISAGREE"], [data-answer="DISAGREE"]) { --answer-color: var(--red-500); }
+.election-app .scale-point:is([data-answer="AGREE"], [data-answer="STRONGLY_AGREE"]) { --answer-color: var(--green-500); }
 .scale-point:disabled { cursor: default; }
 .scale-dot { display: grid; place-items: center; width: 44px; height: 44px; }
-.scale-dot::after { content: ""; width: 20px; height: 20px; border: 2px solid var(--ink-400); border-radius: 50%; background: var(--paper, #F4F1E8); transition: transform .2s cubic-bezier(.34, 1.56, .64, 1), background .2s, border-color .2s, box-shadow .2s; }
-.scale-point:hover:not(:disabled) .scale-dot::after { border-color: var(--green-500); transform: scale(1.15); }
-.scale-point.selected .scale-dot::after { width: 26px; height: 26px; border: 0; background: var(--red-500, #880912); box-shadow: 0 0 0 5px var(--paper, #F4F1E8), 0 6px 14px -4px rgba(136, 9, 18, .55); animation: scale-land .32s cubic-bezier(.34, 1.56, .64, 1); }
+.scale-dot::after { content: ""; width: 20px; height: 20px; border: 2px solid var(--answer-color); border-radius: 50%; background: var(--paper, #F4F1E8); transition: transform .2s cubic-bezier(.34, 1.56, .64, 1), background .2s, border-color .2s, box-shadow .2s; }
+.scale-point:hover:not(:disabled) .scale-dot::after { border-color: var(--answer-color); transform: scale(1.15); }
+.scale-point.selected .scale-dot::after { width: 26px; height: 26px; border: 0; background: var(--answer-color); box-shadow: 0 0 0 5px var(--paper, #F4F1E8), 0 6px 14px -4px color-mix(in srgb, var(--answer-color) 55%, transparent); animation: scale-land .32s cubic-bezier(.34, 1.56, .64, 1); }
 .scale-label { max-width: 11ch; text-align: center; font-size: .88rem; line-height: 1.3; }
 .scale-point.selected .scale-label { color: var(--text-strong); font-weight: 700; }
 .scale-point:focus-visible { outline: none; }
