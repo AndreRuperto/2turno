@@ -1,12 +1,15 @@
 {
   "name": "2turno",
   "private": true,
-  "description": "Atalhos para rodar o 2 Turno localmente; as dependências ficam em frontend/ e backend/.",
+  "description": "2 Turno: quiz do segundo turno de 2026. As dependências ficam em frontend/; o backend não tem nenhuma.",
   "engines": {
-    "node": ">=20.11"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "node scripts/dev.mjs",
-    "dev:prod-api": "node scripts/dev.mjs --prod-api"
+    "dev:prod-api": "node scripts/dev.mjs --prod-api",
+    "build": "npm ci --include=dev --prefix frontend && npm run build --prefix frontend",
+    "start": "node backend/src/server.js",
+    "test": "npm test --prefix backend && npm test --prefix frontend"
   }
 }

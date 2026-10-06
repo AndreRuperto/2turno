@@ -176,7 +176,8 @@ npm run dev
 | Variável | Lado | Padrão | Uso |
 |----------|------|--------|-----|
 | `PORT` | Backend | `8080` | Porta HTTP |
-| `FRONTEND_ORIGINS` | Backend | `http://localhost:5173,http://127.0.0.1:5173` | Origens permitidas para CORS e para a API, separadas por vírgula |
+| `FRONTEND_ORIGINS` | Backend | `http://localhost:5173,http://127.0.0.1:5173` | Outras origens permitidas na API, separadas por vírgula (a própria origem do site sempre é aceita) |
+| `STATIC_DIR` | Backend | `frontend/dist` | Pasta do site estático servido pelo backend |
 | `API_ORIGIN_ENFORCEMENT` | Backend | `true` | `false` desliga a checagem de origem |
 | `API_REQUIRE_FETCH_METADATA` | Backend | `true` | `false` deixa de exigir `Sec-Fetch-Site` |
 | `API_RATE_LIMIT_ENABLED` | Backend | `true` | `false` desliga o limite por IP |
@@ -200,12 +201,22 @@ O teste de navegador usa `http://127.0.0.1:5173` por padrão. Se o Vite estiver 
 
 ## Deploy
 
-| Parte | Configuração |
-|-------|--------------|
-| Backend | `backend/Dockerfile` (imagem `node:22-alpine`; serve em qualquer host com Docker). Há também um `render.yaml` herdado do 12 Axes |
-| Frontend | `frontend/vercel.json`, saída em `frontend/dist` |
+O site está em **https://2turno.up.railway.app**, no Railway, num serviço só.
 
-Em produção, o backend precisa de `FRONTEND_ORIGINS` com o domínio do frontend, e o frontend precisa de `VITE_API_URL` apontando para o backend. Todo push e pull request roda o CI em `.github/workflows/ci.yml`.
+O [`railway.json`](railway.json) na raiz configura tudo: o Railway roda `npm run build` (instala e compila o frontend) e depois `npm start`, que sobe o backend Node servindo **o site e a API no mesmo domínio**. Por isso não precisa de `FRONTEND_ORIGINS` nem de `VITE_API_URL`. O healthcheck é `/api/health`, e o Railway define a `PORT` sozinho.
+
+No painel do Railway, o **Root Directory** fica vazio (a raiz do repositório). Para rodar localmente do mesmo jeito que em produção:
+
+```bash
+npm run build --prefix frontend
+npm start                      # site + API em http://localhost:8080
+```
+
+O backend serve o `frontend/dist` com URLs sem `.html`, redirecionamentos de URLs antigas e cache por tipo de arquivo ([`backend/src/static.js`](backend/src/static.js)). Se `frontend/dist` não existir, ele serve só a API. O [`backend/Dockerfile`](backend/Dockerfile) continua disponível para subir só a API em outro lugar.
+
+Para trocar de domínio, mude `website` em `frontend/src/site.json` e as URLs em `frontend/election.html` (canonical, og:url e og:image).
+
+Todo push e pull request roda o CI em `.github/workflows/ci.yml`.
 
 ## Origem: 12 Axes
 

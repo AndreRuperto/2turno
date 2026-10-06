@@ -3,6 +3,7 @@ import { createServer } from 'node:http';
 import { gzipSync } from 'node:zlib';
 import { pathToFileURL } from 'node:url';
 import { HttpError, loadElection } from './election.js';
+import { createStaticHandler, defaultStaticDirectory } from './static.js';
 
 const ELECTION_PREFIX = '/api/elections/brazil-2026';
 const HEALTH_PATH = '/api/health';
@@ -76,8 +77,9 @@ function clientIp(request)
 
 
 
-export function createApp(config = readConfig(), election = loadElection())
+export function createApp(config = readConfig(), election = loadElection(), staticDirectory = defaultStaticDirectory())
 {
+  const handleStatic = staticDirectory ? createStaticHandler(staticDirectory) : null;
   const windows = new Map();
   let acceptedCount = 0;
 
@@ -129,6 +131,15 @@ export function createApp(config = readConfig(), election = loadElection())
     return window.startedAt + RATE_WINDOW_MILLIS - now;
   }
 
+  // Quando o próprio backend serve o site, a página e a API têm a mesma origem.
+  function allowedOrigin(origin, request)
+  {
+    if (!origin) return false;
+    if (config.allowedOrigins.has(origin)) return true;
+    const host = (request.headers['x-forwarded-host'] ?? request.headers.host ?? '').split(',')[0].trim().toLowerCase();
+    return host !== '' && origin.replace(/^https?:\/\//, '') === host;
+  }
+
   // Origin pode ser forjado por um cliente de servidor: isto é barreira, não tranca. Exigir também
   // User-Agent e Sec-Fetch-Site (todo navegador moderno manda) encarece quem forja só o Origin.
   function originBlockReason(request)
@@ -138,9 +149,9 @@ export function createApp(config = readConfig(), election = loadElection())
     const origin = request.headers.origin;
     if (origin?.trim())
     {
-      if (!config.allowedOrigins.has(normalizeOrigin(origin))) return 'origin_not_allowed';
+      if (!allowedOrigin(normalizeOrigin(origin), request)) return 'origin_not_allowed';
     }
-    else if (!config.allowedOrigins.has(originOf(request.headers.referer ?? '')))
+    else if (!allowedOrigin(originOf(request.headers.referer ?? ''), request))
     {
       return 'no_origin';
     }
@@ -213,7 +224,11 @@ export function createApp(config = readConfig(), election = loadElection())
     try
     {
       if (path === HEALTH_PATH) return send(request, response, 200, { status: 'ok' });
-      if (!path.startsWith('/api/')) throw new HttpError(404, 'Recurso não encontrado.');
+      if (!path.startsWith('/api/'))
+      {
+        if (handleStatic) return handleStatic(request, response);
+        throw new HttpError(404, 'Recurso não encontrado.');
+      }
 
       // Preflight CORS: barato e vem junto de cada POST legítimo, então não passa pelos limites.
       if (request.method === 'OPTIONS')
@@ -273,7 +288,9 @@ export function startServer(config = readConfig())
   const server = createServer(createApp(config));
   server.listen(config.port, () =>
   {
-    console.info(`2 Turno API em http://localhost:${config.port}`);
+    console.info(`2 Turno em http://localhost:${config.port}`);
+    const site = defaultStaticDirectory();
+    console.info(site ? `Servindo o site de ${site}` : 'Sem frontend/dist: servindo só a API');
     if (!config.originEnforcement) console.warn('API_ORIGIN_ENFORCEMENT=false: /api/** está aberto');
     else console.info(`Origens permitidas: ${[...config.allowedOrigins].join(', ')}`);
   });

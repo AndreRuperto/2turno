@@ -9,7 +9,7 @@ import { join, resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
 const windows = process.platform === 'win32';
-const productionApi = 'https://one2axes-backend.onrender.com';
+const productionApi = 'https://2turno.up.railway.app';
 const useProductionApi = process.argv.includes('--prod-api');
 const children = [];
 
