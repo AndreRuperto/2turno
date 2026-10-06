@@ -10,7 +10,15 @@
     "/logo-2turno.png",
     "/hero-desktop.webp",
     "/hero-mobile.webp",
-    "/og-image.png"
+    "/og-image.png",
+    "/extremist-fight-poster.webp",
+    "/historical-portraits/mussolini.jpg",
+    "/historical-portraits/mao.jpg",
+    "/historical-portraits/kim-jong-un.jpg",
+    "/historical-portraits/hitler.jpg",
+    "/historical-portraits/stalin.jpg",
+    "/historical-portraits/pol-pot.jpg",
+    "/historical-portraits/franco.jpg"
   ],
   "candidates": [
     {

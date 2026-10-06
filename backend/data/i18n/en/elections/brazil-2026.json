@@ -7,96 +7,96 @@
       "label": "Economic coordination",
       "leftPole": "Active industrial policy",
       "rightPole": "Market coordination",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "protecao_social",
       "label": "Welfare and budgets",
       "leftPole": "Expanded social protection",
       "rightPole": "Restraint in social spending",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "tributacao",
       "label": "Taxation",
       "leftPole": "Greater progressivity",
       "rightPole": "Broad tax cuts",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "provisao_publica",
       "label": "Public services and enterprises",
       "leftPole": "Public provision and ownership",
       "rightPole": "Private provision and concessions",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "trabalho",
       "label": "Labour relations",
       "leftPole": "Statutory protections",
       "rightPole": "Negotiated flexibility",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "direitos_sociais",
       "label": "Social rights and traditions",
       "leftPole": "Expanded social rights",
       "rightPole": "Traditional social norms",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "laicidade",
       "label": "Religion and the state",
       "leftPole": "Secular public decisions",
       "rightPole": "Religious references in politics",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "armas",
       "label": "Firearms",
       "leftPole": "Restricted civilian access",
       "rightPole": "Expanded civilian access",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "justica_penal",
       "label": "Criminal justice",
       "leftPole": "Reintegration and procedural safeguards",
       "rightPole": "Expanded sentences and incarceration",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "ambiente",
       "label": "Environment",
       "leftPole": "Priority for environmental protection",
       "rightPole": "Flexibility in resource use",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "diplomacia_eleitoral",
       "label": "Foreign policy",
       "leftPole": "Multilateral cooperation",
       "rightPole": "Autonomy and bilateral agreements",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "contrapesos",
       "label": "Checks and balances",
       "leftPole": "Broader judicial oversight",
       "rightPole": "Greater discretion for elected branches",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     }
   ],
   "questions": [

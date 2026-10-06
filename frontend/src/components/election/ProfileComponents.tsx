@@ -117,13 +117,15 @@ export function CandidateCard({ candidate, compatibility }: { candidate: Candida
 
 
 
-export function ProfileCard({ axes, scores, identifier = 'seu-perfil', illustrative = false }: { axes: Axis[]; scores: Record<string, number>; identifier?: string; illustrative?: boolean })
+export function ProfileCard({ axes, scores, identifier = 'seu-perfil', illustrative = false, classificationOverride }: { axes: Axis[]; scores: Record<string, number>; identifier?: string; illustrative?: boolean; classificationOverride?: ReturnType<typeof presentation.classificationLabels> })
 {
-    const classification = presentation.classificationLabels(scores, LANG);
+    const classification = classificationOverride ?? presentation.classificationLabels(scores, LANG);
     return <section className="user-profile" id={identifier} aria-labelledby={`${identifier}-title`}
         style={{ '--ideology-color': classification.color, '--ideology-background': classification.background } as CSSProperties}>
         {illustrative ? <h3 className="profile-summary-label" id={`${identifier}-title`}>{profileText.yourProfile}</h3> : <h2 className="profile-summary-label" id={`${identifier}-title`}>{profileText.yourProfile}</h2>}
-        <IdeologyHeader scores={scores} compact />
+        {classificationOverride ? <header className="ideology-header" data-family={classification.family} data-subtype={classification.subtype}>
+            <p className="ideology-family">{classification.familyLabel}</p><h2>{classification.subtypeLabel}</h2>
+        </header> : <IdeologyHeader scores={scores} compact />}
         <details className="profile-method-note"><summary>{profileText.aboutResult}</summary><p className="profile-note">{profileText.note}</p></details>
         <h2>{profileText.axes}</h2>
         <AxisProfile axes={axes} scores={scores} explainUser />

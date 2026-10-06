@@ -5,7 +5,7 @@ module.exports =
 [
     { ignores: ['node_modules/**', 'dist/**', 'public/**'] },
     {
-        files: ['src/utils/electionPresentation.cjs', 'scripts/*election*.cjs', 'scripts/*brazil*.cjs', 'eslint.config.cjs'],
+        files: ['src/utils/election*.cjs', 'src/utils/extremistMode.cjs', 'scripts/*election*.cjs', 'scripts/*brazil*.cjs', 'eslint.config.cjs'],
         languageOptions:
         {
             ecmaVersion: 'latest',
@@ -15,7 +15,7 @@ module.exports =
         rules: javascript.configs.recommended.rules
     },
     {
-        files: ['src/ElectionApp.tsx', 'src/components/election/**/*.tsx', 'src/components/results/InfoSheet.tsx', 'src/utils/electionPresentation.test.ts', 'vite.config.ts'],
+        files: ['src/ElectionApp.tsx', 'src/components/election/**/*.tsx', 'src/components/results/InfoSheet.tsx', 'src/utils/election*.test.ts', 'src/utils/extremistMode.test.ts', 'vite.config.ts'],
         languageOptions: { parser: typescript.parser, parserOptions: { ecmaFeatures: { jsx: true } } },
         plugins: { '@typescript-eslint': typescript.plugin },
         rules:

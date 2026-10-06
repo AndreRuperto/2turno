@@ -60,9 +60,10 @@ function writePage(path, title, description, content, language)
 <link rel="canonical" href="${site.website}${path}"><link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/election-profile.css">
-</head><body><header><a class="brand" href="${prefix || '/'}"><img src="/logo-2turno.png" alt="${site.name}" width="166" height="38"></a><nav><a href="${prefix || '/'}">${text.quiz}</a>${candidateLinks}
+<script>try{if(localStorage.getItem('2turno-extremist-mode')==='true')document.documentElement.dataset.extremistMode='true'}catch{}</script>
+</head><body><a class="skip-link" href="#main-content">${language === 'en' ? 'Skip to content' : 'Pular para o conteúdo'}</a><header><a class="brand" href="${prefix || '/'}"><img src="/logo-2turno.png" alt="${site.name}" width="166" height="38"></a><nav aria-label="${language === 'en' ? 'Navigation' : 'Navegação'}"><a href="${prefix || '/'}">${text.quiz}</a>${candidateLinks}
 <a href="${prefix}/election-methodology">${text.methodology}</a><a href="${translatedPath}">${text.switchLanguage}</a></nav></header>
-<main>${content}</main><footer>${site.name} · ${text.runoff}</footer></body></html>`;
+<main id="main-content" tabindex="-1">${content}</main><footer>${site.name} · ${text.runoff}</footer></body></html>`;
   const destination = join(outputDirectory, `${path.replace(/^\//, '')}.html`);
   mkdirSync(dirname(destination), { recursive: true });
   writeFileSync(destination, html);
@@ -159,7 +160,7 @@ function writeMethodology(language)
 
 function copyPublicFile(source, destinationPath = source)
 {
-  if (!/^\/(?:personalities\/portraits\/[a-z0-9-]+\.(?:jpg|jpeg|png|webp)|[a-z0-9-]+\.(?:png|ico|webp))$/.test(source))
+  if (!/^\/(?:(?:personalities\/portraits|historical-portraits)\/[a-z0-9-]+\.(?:jpg|jpeg|png|webp)|[a-z0-9-]+\.(?:png|ico|webp))$/.test(source))
   {
     throw new Error(`Invalid public asset path: ${source}`);
   }
@@ -175,7 +176,7 @@ function copyPublicFile(source, destinationPath = source)
 function generate()
 {
   mkdirSync(outputDirectory, { recursive: true });
-  const styles = 'body{max-width:1100px;margin:auto;padding:24px 16px;background:#f4f1e8;color:#1a1a18;font:16px/1.6 system-ui}header,nav{display:flex;gap:20px;flex-wrap:wrap;align-items:center}header{justify-content:space-between;margin-bottom:32px}.brand{display:inline-flex;text-decoration:none}.brand img{display:block;height:38px;width:auto;border-radius:0;object-fit:contain}a{color:#102e24}small{display:block;color:#5b5a55}.intro{display:flex;gap:24px;align-items:center;flex-wrap:wrap}.ballot{font-weight:700;font-size:1.2rem}img{object-fit:cover;border-radius:50%}.table{overflow:auto}table{border-collapse:collapse;width:100%;background:#fbf9f3}th,td{text-align:left;vertical-align:top;padding:14px;border-bottom:1px solid #e2ddcf}th small{font-weight:normal}.bar{display:block;position:relative;width:100px;height:6px;margin-top:8px;border-radius:3px;background:linear-gradient(90deg,#2f6dc0,#cf5a22)}.bar i{position:absolute;top:-4px;width:4px;height:14px;margin-left:-2px;background:#1a1a18}footer{margin-top:40px;border-top:1px solid #e2ddcf;padding-top:16px}';
+  const styles = 'body{max-width:1100px;margin:auto;padding:24px 16px;background:#f4f1e8;color:#1a1a18;font:16px/1.6 system-ui}header,nav{display:flex;gap:20px;flex-wrap:wrap;align-items:center}header{justify-content:space-between;margin-bottom:32px}.brand{display:inline-flex;text-decoration:none}.brand img{display:block;height:38px;width:auto;border-radius:0;object-fit:contain}a{color:#102e24}small{display:block;color:#5b5a55}.intro{display:flex;gap:24px;align-items:center;flex-wrap:wrap}.ballot{font-weight:700;font-size:1.2rem}img{object-fit:cover;border-radius:50%}.table{overflow:auto}table{border-collapse:collapse;width:100%;background:#fbf9f3}th,td{text-align:left;vertical-align:top;padding:14px;border-bottom:1px solid #e2ddcf}th small{font-weight:normal}.bar{display:block;position:relative;width:100px;height:6px;margin-top:8px;border-radius:3px;background:linear-gradient(90deg,#a51d2d,#304e91)}.bar i{position:absolute;top:-4px;width:4px;height:14px;margin-left:-2px;background:#1a1a18}footer{margin-top:40px;border-top:1px solid #e2ddcf;padding-top:16px}';
   writeFileSync(join(outputDirectory, 'election-profile.css'), styles + readFileSync(join(frontendDirectory, 'src/styles/profile.css'), 'utf8'));
   for (const language of ['pt', 'en'])
   {

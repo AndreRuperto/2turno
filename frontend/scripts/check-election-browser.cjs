@@ -1,4 +1,5 @@
 const { chromium } = require('playwright');
+const { AxeBuilder } = require('@axe-core/playwright');
 const assert = require('node:assert/strict');
 const { mkdirSync } = require('node:fs');
 const { join } = require('node:path');
@@ -7,6 +8,14 @@ const presentation = require('../src/utils/electionPresentation.cjs');
 
 const website = process.env.ELECTION_TEST_URL || 'http://127.0.0.1:5173';
 const screenshotDirectory = join(__dirname, '../node_modules/.cache/election-browser');
+
+
+
+async function checkAccessibility(page)
+{
+    const report = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+    assert.deepEqual(report.violations.map(violation => ({ id: violation.id, targets: violation.nodes.map(node => ({ target: node.target, summary: node.failureSummary })) })), []);
+}
 
 
 
@@ -132,6 +141,7 @@ async function checkResults(page, language, answer, themeScore)
         return style.backgroundColor === style.borderTopColor && style.color === 'rgb(255, 255, 255)';
     });
     await checkLayout(page);
+    await checkAccessibility(page);
     await page.locator('.scale-question').screenshot({ path: join(screenshotDirectory, 'question-' + language + '-' + page.viewportSize().width + '.png') });
     for (let index = 1; index < 36; index += 1)
     {
@@ -165,7 +175,7 @@ async function checkResults(page, language, answer, themeScore)
     const axisBoxes = await page.locator('#seu-perfil .profile-axis').evaluateAll(cards => cards.map(card => card.getBoundingClientRect().toJSON()));
     if (page.viewportSize().width > 650) assert.ok(Math.abs(axisBoxes[0].y - axisBoxes[1].y) < 1);
     else assert.ok(axisBoxes[1].y > axisBoxes[0].y);
-    assert.ok(axisBoxes.every(box => box.height < 280), 'Axis cards should stay compact');
+    assert.ok(axisBoxes.every(box => box.height < (page.viewportSize().width <= 360 ? 380 : 280)), 'Axis cards should allow readable wrapping at narrow widths');
     assert.equal(await page.locator('#seu-perfil .profile-axis').count(), 12);
     assert.equal(await page.locator('#seu-perfil .axis-explanation').count(), 12);
     assert.equal(await page.locator('.comparison-axis').count(), 12);
@@ -204,12 +214,20 @@ async function checkResults(page, language, answer, themeScore)
     await page.locator('#seu-perfil').waitFor();
     assert.deepEqual(await page.locator('.candidate-compatibility strong').allTextContents(), compatibilityBeforeSwitch);
     assert.equal(await page.locator('#seu-perfil .profile-axis').first().innerText(), axisLabelBeforeSwitch);
+    await checkAccessibility(page);
     await page.getByRole('button', { name: language === 'pt' ? 'Compartilhar resultado' : 'Share result', exact: true }).click();
     const preview = page.locator('.share-result-preview');
     await preview.waitFor();
     await preview.evaluate(image => image.decode());
     assert.equal(await preview.evaluate(image => image.naturalWidth), 1080);
-    assert.equal(await preview.evaluate(image => image.naturalHeight), 1920);
+    assert.equal(await preview.evaluate(image => image.naturalHeight), 1800);
+    await page.getByRole('dialog').evaluate(dialog => Promise.all(dialog.getAnimations({ subtree: true }).map(animation => animation.finished.catch(() => undefined))));
+    await checkAccessibility(page);
+    const dialogBounds = await page.getByRole('dialog').boundingBox();
+    assert.ok(dialogBounds.y >= 0 && dialogBounds.y + dialogBounds.height <= page.viewportSize().height + 1, 'Share dialog fits viewport');
+    assert.ok((await preview.getAttribute('alt')).includes('Lula'));
+    assert.ok(!(await preview.getAttribute('alt')).toLowerCase().includes('12axes'));
+    await page.getByRole('dialog').screenshot({ path: join(screenshotDirectory, 'share-dialog-' + language + '-' + page.viewportSize().width + '.png') });
     const downloadReady = page.waitForEvent('download');
     await page.getByRole('link', { name: language === 'pt' ? 'Baixar cartão' : 'Download card', exact: true }).click();
     const download = await downloadReady;
@@ -288,13 +306,14 @@ async function main()
     {
         for (const language of ['pt', 'en'])
         {
-            for (const width of [1280, 768, 390])
+            for (const width of [1280, 768, 390, 320, 568])
             {
                 const context = await browser.newContext();
                 const page = await context.newPage();
                 const errors = [];
                 page.on('pageerror', error => errors.push(error.message));
                 await checkHome(page, language, width);
+                if (width === 568) await page.setViewportSize({ width, height: 320 });
                 await checkResults(page, language, width === 1280 ? 'NEUTRAL' : 'STRONGLY_AGREE', width === 768 ? (language === 'pt' ? 100 : 0) : undefined);
                 await checkCandidatePages(page, language);
                 assert.deepEqual(errors, []);

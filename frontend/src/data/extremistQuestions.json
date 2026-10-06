@@ -1,0 +1,362 @@
+[
+  {
+    "id": "radical_01",
+    "axisId": "coordenacao",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "Toda propriedade privada de empresas deve ser abolida e transferida ao Estado.",
+      "en": "All private ownership of businesses should be abolished and transferred to the state."
+    }
+  },
+  {
+    "id": "radical_02",
+    "axisId": "coordenacao",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "O Estado deve definir a produção e os preços de todos os setores da economia.",
+      "en": "The state should set production and prices across every sector of the economy."
+    }
+  },
+  {
+    "id": "radical_03",
+    "axisId": "coordenacao",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "O Estado deve ser proibido de planejar a economia ou subsidiar qualquer indústria.",
+      "en": "The state should be forbidden from planning the economy or subsidising any industry."
+    }
+  },
+  {
+    "id": "radical_04",
+    "axisId": "protecao_social",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "Todos os benefícios sociais financiados por impostos devem ser extintos.",
+      "en": "All tax-funded welfare benefits should be abolished."
+    }
+  },
+  {
+    "id": "radical_05",
+    "axisId": "protecao_social",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "Toda pessoa deve receber renda pública suficiente para viver, mesmo sem trabalhar.",
+      "en": "Everyone should receive enough public income to live on, even without working."
+    }
+  },
+  {
+    "id": "radical_06",
+    "axisId": "protecao_social",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "O governo deve eliminar a previdência pública, mesmo para quem não pode poupar.",
+      "en": "The government should eliminate public pensions, even for people unable to save."
+    }
+  },
+  {
+    "id": "radical_07",
+    "axisId": "tributacao",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "Fortunas acima de um limite legal devem ser confiscadas e redistribuídas.",
+      "en": "Wealth above a legal limit should be confiscated and redistributed."
+    }
+  },
+  {
+    "id": "radical_08",
+    "axisId": "tributacao",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "Heranças de grandes patrimônios devem ser integralmente transferidas ao Estado.",
+      "en": "Inheritances from large estates should be transferred entirely to the state."
+    }
+  },
+  {
+    "id": "radical_09",
+    "axisId": "tributacao",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "Impostos sobre renda e patrimônio devem ser abolidos, mesmo que serviços públicos desapareçam.",
+      "en": "Income and wealth taxes should be abolished, even if public services disappear."
+    }
+  },
+  {
+    "id": "radical_10",
+    "axisId": "provisao_publica",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "Saúde, educação e abastecimento de água devem ser totalmente privatizados.",
+      "en": "Healthcare, education and water supply should be completely privatised."
+    }
+  },
+  {
+    "id": "radical_11",
+    "axisId": "provisao_publica",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "Toda empresa que presta um serviço essencial deve ser estatizada sem opção privada.",
+      "en": "Every business providing an essential service should be nationalised, with no private alternative."
+    }
+  },
+  {
+    "id": "radical_12",
+    "axisId": "provisao_publica",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "O Estado nunca deve ser proprietário de empresas, mesmo em setores estratégicos.",
+      "en": "The state should never own businesses, even in strategic sectors."
+    }
+  },
+  {
+    "id": "radical_13",
+    "axisId": "trabalho",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "A lei deve impor uma semana de vinte horas de trabalho sem redução salarial.",
+      "en": "The law should impose a twenty-hour working week without reducing pay."
+    }
+  },
+  {
+    "id": "radical_14",
+    "axisId": "trabalho",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "Sindicatos devem poder paralisar qualquer atividade por tempo indeterminado.",
+      "en": "Unions should be allowed to shut down any activity indefinitely."
+    }
+  },
+  {
+    "id": "radical_15",
+    "axisId": "trabalho",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "Salário mínimo, limites de jornada e férias obrigatórias devem ser abolidos.",
+      "en": "Minimum wages, working-hour limits and mandatory leave should be abolished."
+    }
+  },
+  {
+    "id": "radical_16",
+    "axisId": "direitos_sociais",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "O Estado deve proibir o casamento entre pessoas do mesmo sexo.",
+      "en": "The state should prohibit marriage between people of the same sex."
+    }
+  },
+  {
+    "id": "radical_17",
+    "axisId": "direitos_sociais",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "A lei deve garantir às pessoas LGBTQ os mesmos direitos civis, mesmo contra normas religiosas tradicionais.",
+      "en": "The law should guarantee LGBTQ people equal civil rights, even against traditional religious norms."
+    }
+  },
+  {
+    "id": "radical_18",
+    "axisId": "direitos_sociais",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "O Estado deve impor regras tradicionais obrigatórias para os papéis de homens e mulheres.",
+      "en": "The state should impose mandatory traditional rules for the roles of men and women."
+    }
+  },
+  {
+    "id": "radical_19",
+    "axisId": "laicidade",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "Toda influência religiosa em leis, escolas públicas e instituições estatais deve ser proibida.",
+      "en": "All religious influence in laws, public schools and state institutions should be prohibited."
+    }
+  },
+  {
+    "id": "radical_20",
+    "axisId": "laicidade",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "O Estado deve proteger a liberdade religiosa de judeus e de todas as demais minorias, mesmo contra a vontade da maioria.",
+      "en": "The state should protect the religious freedom of Jewish people and all other minorities, even against the majority’s wishes."
+    }
+  },
+  {
+    "id": "radical_21",
+    "axisId": "laicidade",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "Uma religião oficial deve controlar as leis e o Estado deve proibir religiões concorrentes.",
+      "en": "An official religion should control the law, and the state should prohibit competing religions."
+    }
+  },
+  {
+    "id": "radical_22",
+    "axisId": "armas",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "Qualquer adulto deve poder comprar armas sem licença ou verificação de antecedentes.",
+      "en": "Any adult should be able to buy firearms without a licence or background check."
+    }
+  },
+  {
+    "id": "radical_23",
+    "axisId": "armas",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "Toda posse civil de armas deve ser proibida, inclusive para defesa pessoal.",
+      "en": "All civilian ownership of firearms should be prohibited, including for self-defence."
+    }
+  },
+  {
+    "id": "radical_24",
+    "axisId": "armas",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "Civis devem poder possuir armas de uso militar sem limites especiais.",
+      "en": "Civilians should be allowed to own military weapons without special restrictions."
+    }
+  },
+  {
+    "id": "radical_25",
+    "axisId": "justica_penal",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "O sistema de prisões deve ser abolido e substituído por medidas de reintegração.",
+      "en": "The prison system should be abolished and replaced with reintegration measures."
+    }
+  },
+  {
+    "id": "radical_26",
+    "axisId": "justica_penal",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "Nenhuma pessoa deve perder garantias processuais, mesmo quando acusada de terrorismo.",
+      "en": "Nobody should lose procedural safeguards, even when accused of terrorism."
+    }
+  },
+  {
+    "id": "radical_27",
+    "axisId": "justica_penal",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "A prisão perpétua sem possibilidade de liberdade deve ser adotada para crimes graves.",
+      "en": "Life imprisonment without any possibility of release should be introduced for serious crimes."
+    }
+  },
+  {
+    "id": "radical_28",
+    "axisId": "ambiente",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "Qualquer área protegida deve poder ser explorada quando gerar lucro econômico.",
+      "en": "Any protected area should be open to exploitation when it generates economic profit."
+    }
+  },
+  {
+    "id": "radical_29",
+    "axisId": "ambiente",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "Toda exploração de petróleo e carvão deve ser encerrada imediatamente, mesmo com custos econômicos severos.",
+      "en": "All oil and coal extraction should end immediately, even at severe economic cost."
+    }
+  },
+  {
+    "id": "radical_30",
+    "axisId": "ambiente",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "Empresas devem poder explorar recursos naturais sem licenciamento ambiental obrigatório.",
+      "en": "Businesses should be allowed to exploit natural resources without mandatory environmental permits."
+    }
+  },
+  {
+    "id": "radical_31",
+    "axisId": "diplomacia_eleitoral",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "O país deve aceitar decisões de instituições internacionais mesmo quando contrariem seu governo.",
+      "en": "The country should accept international institutions’ decisions even when they oppose its government."
+    }
+  },
+  {
+    "id": "radical_32",
+    "axisId": "diplomacia_eleitoral",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "Tratados internacionais de direitos humanos devem prevalecer sobre decisões nacionais.",
+      "en": "International human-rights treaties should take precedence over national decisions."
+    }
+  },
+  {
+    "id": "radical_33",
+    "axisId": "diplomacia_eleitoral",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "O país deve abandonar instituições multilaterais e não aceitar qualquer supervisão externa.",
+      "en": "The country should leave multilateral institutions and accept no external oversight."
+    }
+  },
+  {
+    "id": "radical_34",
+    "axisId": "contrapesos",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "Uma ditadura deve poder substituir eleições quando o governo considerar isso necessário.",
+      "en": "A dictatorship should be allowed to replace elections when the government considers it necessary."
+    }
+  },
+  {
+    "id": "radical_35",
+    "axisId": "contrapesos",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "Tribunais devem poder anular qualquer medida do governo que viole direitos fundamentais.",
+      "en": "Courts should be able to overturn any government measure that violates fundamental rights."
+    }
+  },
+  {
+    "id": "radical_36",
+    "axisId": "contrapesos",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "O governo deve poder censurar críticas políticas na imprensa quando alegar necessidade de estabilidade.",
+      "en": "The government should be allowed to censor political criticism in the press when it claims stability requires it."
+    }
+  },
+  {
+    "id": "radical_37",
+    "axisId": "direitos_sociais",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "A cidadania e os direitos políticos devem depender da origem étnica ou da ascendência de uma pessoa.",
+      "en": "Citizenship and political rights should depend on a person’s ethnicity or ancestry."
+    }
+  },
+  {
+    "id": "radical_38",
+    "axisId": "diplomacia_eleitoral",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "O país deve poder anexar territórios de outros países pela força para ampliar seu poder nacional.",
+      "en": "The country should be allowed to annex other countries’ territory by force to expand national power."
+    }
+  },
+  {
+    "id": "radical_39",
+    "axisId": "contrapesos",
+    "agreePole": "RIGHT",
+    "text": {
+      "pt": "Um único partido e seu líder devem controlar permanentemente o Estado, sem alternância de poder.",
+      "en": "A single party and its leader should permanently control the state, without transfers of power."
+    }
+  },
+  {
+    "id": "radical_40",
+    "axisId": "coordenacao",
+    "agreePole": "LEFT",
+    "text": {
+      "pt": "Todas as terras agrícolas devem ser coletivizadas à força, mesmo contra a vontade dos proprietários.",
+      "en": "All agricultural land should be forcibly collectivized, even against its owners’ wishes."
+    }
+  }
+]

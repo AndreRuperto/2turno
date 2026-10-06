@@ -9,96 +9,96 @@
       "label": "Coordenação econômica",
       "leftPole": "Política industrial ativa",
       "rightPole": "Coordenação pelo mercado",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "protecao_social",
       "label": "Proteção social e orçamento",
       "leftPole": "Ampliação da proteção social",
       "rightPole": "Contenção de gastos sociais",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "tributacao",
       "label": "Tributação",
       "leftPole": "Maior progressividade",
       "rightPole": "Redução geral de impostos",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "provisao_publica",
       "label": "Serviços e empresas públicas",
       "leftPole": "Provisão e controle públicos",
       "rightPole": "Provisão privada e concessões",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "trabalho",
       "label": "Relações de trabalho",
       "leftPole": "Proteção definida em lei",
       "rightPole": "Flexibilidade negociada",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "direitos_sociais",
       "label": "Direitos e costumes",
       "leftPole": "Ampliação de direitos sociais",
       "rightPole": "Preservação de normas tradicionais",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "laicidade",
       "label": "Religião e Estado",
       "leftPole": "Decisões públicas laicas",
       "rightPole": "Referências religiosas na política",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "armas",
       "label": "Armas de fogo",
       "leftPole": "Acesso civil restrito",
       "rightPole": "Acesso civil ampliado",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "justica_penal",
       "label": "Justiça penal",
       "leftPole": "Reintegração e garantias processuais",
       "rightPole": "Penas e encarceramento ampliados",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "ambiente",
       "label": "Meio ambiente",
       "leftPole": "Prioridade à proteção ambiental",
       "rightPole": "Flexibilidade para uso de recursos",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "diplomacia_eleitoral",
       "label": "Política externa",
       "leftPole": "Cooperação multilateral",
       "rightPole": "Autonomia e acordos bilaterais",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     },
     {
       "id": "contrapesos",
       "label": "Equilíbrio entre Poderes",
       "leftPole": "Controle judicial mais amplo",
       "rightPole": "Maior margem dos Poderes eleitos",
-      "leftColor": "#2F6DC0",
-      "rightColor": "#CF5A22"
+      "leftColor": "#A51D2D",
+      "rightColor": "#304E91"
     }
   ],
   "questions": [

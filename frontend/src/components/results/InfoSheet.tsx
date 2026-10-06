@@ -22,6 +22,9 @@ export function InfoSheet({ titleId, style, className, onClose, children }: Info
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     const previousOverflow = document.body.style.overflow;
+    const application = document.getElementById('root');
+    const previouslyInert = application?.hasAttribute('inert');
+    application?.setAttribute('inert', '');
     document.body.style.overflow = 'hidden';
     closeRef.current?.focus();
     const onKey = (event: KeyboardEvent) =>
@@ -31,7 +34,8 @@ export function InfoSheet({ titleId, style, className, onClose, children }: Info
       if (dialog !== dialogs[dialogs.length - 1]) return;
       if (event.key === 'Escape') closeAction.current();
       if (event.key !== 'Tab' || !dialog) return;
-      const controls = Array.from(dialog.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input:not([disabled]), summary, [tabindex="0"]'));
+      const controls = Array.from(dialog.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input:not([disabled]), summary, [tabindex="0"]'))
+        .filter(control => control.getClientRects().length > 0 && !control.closest('[inert]'));
       const first = controls[0];
       const last = controls[controls.length - 1];
       if (event.shiftKey && document.activeElement === first)
@@ -49,6 +53,7 @@ export function InfoSheet({ titleId, style, className, onClose, children }: Info
     return () => {
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = previousOverflow;
+      if (!previouslyInert) application?.removeAttribute('inert');
       previous?.focus();
     };
   }, []);

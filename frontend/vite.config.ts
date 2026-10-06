@@ -31,9 +31,14 @@ export default defineConfig(({ mode }) => {
       enforce: 'pre' as const,
       transform(source: string, identifier: string)
       {
-        if (identifier.split('?')[0].split('\\').join('/').endsWith('/electionPresentation.cjs'))
+        if (identifier.split('?')[0].split('\\').join('/').match(/\/(?:election(?:Presentation|ShareCard|Alignment)|extremistMode)\.cjs$/))
         {
-          return source.replace('module.exports =', 'export default');
+          return source.replace("const presentation = require('./electionPresentation.cjs');", "import presentation from './electionPresentation.cjs';")
+            .replace("const alignment = require('./electionAlignment.cjs');", "import alignment from './electionAlignment.cjs';")
+            .replace("const site = require('../site.json');", "import site from '../site.json';")
+            .replace("const questions = require('../data/extremistQuestions.json');", "import questions from '../data/extremistQuestions.json';")
+            .replace("const historicalProfiles = require('../data/historicalExtremists.json');", "import historicalProfiles from '../data/historicalExtremists.json';")
+            .replace('module.exports =', 'export default');
         }
       }
     }, react(), asyncCssLinkPlugin(), brazilPublicPlugin(), catalogueDevPlugin()],

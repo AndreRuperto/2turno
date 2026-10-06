@@ -1,0 +1,206 @@
+[
+  {
+    "id": "mussolini",
+    "name": "Benito Mussolini",
+    "period": "1925–1943",
+    "description": {
+      "pt": "Fascismo italiano e ditadura de partido único.",
+      "en": "Italian fascism and single-party dictatorship."
+    },
+    "scores": {
+      "authoritarianism": 100,
+      "stateEconomy": 50,
+      "nationalism": 100,
+      "exclusion": null,
+      "collectivism": 0
+    },
+    "sources": [
+      {
+        "title": "USHMM — Fascism",
+        "url": "https://encyclopedia.ushmm.org/content/en/article/fascism-1"
+      }
+    ],
+    "portrait": "/historical-portraits/mussolini.jpg",
+    "shortName": "Mussolini",
+    "biography": {
+      "pt": "Chefiou o governo fascista da Itália de 1922 a 1943.",
+      "en": "Led Italy’s fascist government from 1922 to 1943."
+    }
+  },
+  {
+    "id": "mao",
+    "name": "Mao Tse-tung (Mao Zedong)",
+    "period": "1958–1976",
+    "description": {
+      "pt": "Comunismo maoísta, comunas e controle político autoritário.",
+      "en": "Maoist communism, communes and authoritarian political control."
+    },
+    "scores": {
+      "authoritarianism": 100,
+      "stateEconomy": 100,
+      "nationalism": null,
+      "exclusion": null,
+      "collectivism": 100
+    },
+    "sources": [
+      {
+        "title": "U.S. Office of the Historian — Communes and Great Leap Forward",
+        "url": "https://history.state.gov/historicaldocuments/frus1958-60v19/d258"
+      }
+    ],
+    "portrait": "/historical-portraits/mao.jpg",
+    "shortName": "Mao",
+    "biography": {
+      "pt": "Líder comunista chinês e fundador da República Popular da China em 1949.",
+      "en": "Chinese communist leader and founder of the People’s Republic of China in 1949."
+    }
+  },
+  {
+    "id": "kim-jong-un",
+    "name": "Kim Jong-un",
+    "period": "2012–2014",
+    "description": {
+      "pt": "Regime norte-coreano no período analisado pela comissão da ONU.",
+      "en": "North Korean regime during the period examined by the UN commission."
+    },
+    "scores": {
+      "authoritarianism": 100,
+      "stateEconomy": 100,
+      "nationalism": 100,
+      "exclusion": null,
+      "collectivism": null
+    },
+    "sources": [
+      {
+        "title": "United Nations — Commission of inquiry on the DPRK",
+        "url": "https://digitallibrary.un.org/record/768857/files/S_2014_276-EN.pdf"
+      }
+    ],
+    "portrait": "/historical-portraits/kim-jong-un.jpg",
+    "shortName": "Kim Jong-un",
+    "biography": {
+      "pt": "Assumiu a liderança da Coreia do Norte em 2011.",
+      "en": "Assumed leadership of North Korea in 2011."
+    }
+  },
+  {
+    "id": "hitler",
+    "name": "Adolf Hitler",
+    "period": "1933–1945",
+    "description": {
+      "pt": "Nazismo: ditadura, racismo, antissemitismo e expansionismo.",
+      "en": "Nazism: dictatorship, racism, antisemitism and expansionism."
+    },
+    "scores": {
+      "authoritarianism": 100,
+      "stateEconomy": 50,
+      "nationalism": 100,
+      "exclusion": 100,
+      "collectivism": 0
+    },
+    "sources": [
+      {
+        "title": "USHMM — Fascism",
+        "url": "https://encyclopedia.ushmm.org/content/en/article/fascism-1"
+      },
+      {
+        "title": "USHMM — Nazi racism",
+        "url": "https://encyclopedia.ushmm.org/content/en/article/nazi-racism-an-overview"
+      }
+    ],
+    "portrait": "/historical-portraits/hitler.jpg",
+    "shortName": "Hitler",
+    "biography": {
+      "pt": "Ditador da Alemanha nazista de 1933 a 1945.",
+      "en": "Dictator of Nazi Germany from 1933 to 1945."
+    }
+  },
+  {
+    "id": "stalin",
+    "name": "Joseph Stalin",
+    "period": "1927–1953",
+    "description": {
+      "pt": "Ditadura soviética, planejamento estatal e coletivização forçada.",
+      "en": "Soviet dictatorship, state planning and forced collectivization."
+    },
+    "scores": {
+      "authoritarianism": 100,
+      "stateEconomy": 100,
+      "nationalism": null,
+      "exclusion": null,
+      "collectivism": 100
+    },
+    "sources": [
+      {
+        "title": "Library of Congress — Revelations from the Russian Archives",
+        "url": "https://www.loc.gov/exhibits/archives/intn.html"
+      }
+    ],
+    "portrait": "/historical-portraits/stalin.jpg",
+    "shortName": "Stalin",
+    "biography": {
+      "pt": "Liderou a União Soviética até 1953, impondo uma ditadura e a coletivização forçada.",
+      "en": "Led the Soviet Union until 1953, imposing dictatorship and forced collectivization."
+    }
+  },
+  {
+    "id": "pol-pot",
+    "name": "Pol Pot",
+    "period": "1975–1979",
+    "description": {
+      "pt": "Khmer Vermelho: coletivização forçada e perseguição genocida.",
+      "en": "Khmer Rouge: forced collectivization and genocidal persecution."
+    },
+    "scores": {
+      "authoritarianism": 100,
+      "stateEconomy": 100,
+      "nationalism": null,
+      "exclusion": 100,
+      "collectivism": 100
+    },
+    "sources": [
+      {
+        "title": "ECCC — Democratic Kampuchea regime",
+        "url": "https://timeline.eccc.gov.kh/en/section/the-democratic-kampuchea-regime"
+      }
+    ],
+    "portrait": "/historical-portraits/pol-pot.jpg",
+    "shortName": "Pol Pot",
+    "biography": {
+      "pt": "Liderou o Khmer Vermelho e governou o Camboja de 1975 a 1979.",
+      "en": "Led the Khmer Rouge and ruled Cambodia from 1975 to 1979."
+    }
+  },
+  {
+    "id": "franco",
+    "name": "Francisco Franco",
+    "period": "1939–1975",
+    "description": {
+      "pt": "Ditadura espanhola; a orientação econômica mudou ao longo do regime.",
+      "en": "Spanish dictatorship; economic policy changed over the regime."
+    },
+    "scores": {
+      "authoritarianism": 100,
+      "stateEconomy": 50,
+      "nationalism": null,
+      "exclusion": null,
+      "collectivism": 0
+    },
+    "sources": [
+      {
+        "title": "U.S. Department of State — Spain background",
+        "url": "https://1997-2001.state.gov/background_notes/spain_0697_bgn.html"
+      },
+      {
+        "title": "U.S. Office of the Historian — Franco dictatorship",
+        "url": "https://history.state.gov/historicaldocuments/frus1950v03/d685"
+      }
+    ],
+    "portrait": "/historical-portraits/franco.jpg",
+    "shortName": "Franco",
+    "biography": {
+      "pt": "Ditador espanhol que governou a Espanha de 1939 a 1975.",
+      "en": "Spanish dictator who ruled Spain from 1939 to 1975."
+    }
+  }
+]

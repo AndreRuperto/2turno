@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { HistoricalComparisons } from './components/election/HistoricalComparisons';
 import { ScaleQuestion } from './components/election/ScaleQuestion';
 import { ShareResult } from './components/election/ShareResult';
 import { LANG } from './i18n';
@@ -10,6 +11,8 @@ import { HomeEducation } from './components/election/HomeEducation';
 import educationTranslations from './i18n/electionEducation.json';
 import questionExamples from './i18n/electionQuestionExamples.json';
 import presentation from './utils/electionPresentation.cjs';
+import alignment from './utils/electionAlignment.cjs';
+import radicalMode from './utils/extremistMode.cjs';
 import type { ElectionComparison, ElectionQuiz } from './types/election';
 import type { AnswerValue, QuizPayload, QuizVariant } from './types/quiz';
 import { selectAllQuestionsBalanced, selectAndBalanceQuestions } from './utils/quizSelection';
@@ -27,6 +30,8 @@ interface LanguageProgress
   questionIndex: number;
   questionIds: string[];
   comparison: ElectionComparison | null;
+  modeActive?: boolean;
+  radicalScores?: Record<string, number> | null;
 }
 
 
@@ -36,6 +41,16 @@ function readLanguageProgress(): LanguageProgress | null
   try { return JSON.parse(window.sessionStorage.getItem(LANGUAGE_PROGRESS_KEY) ?? 'null'); }
   catch { return null; }
 }
+
+
+
+function readExtremistPreference(): boolean
+{
+  try { return window.localStorage.getItem('2turno-extremist-mode') === 'true'; }
+  catch { return false; }
+}
+
+
 
 function readAutoAdvance(): boolean
 {
@@ -57,7 +72,7 @@ const text = LANG === 'pt' ? {
   proposals: 'Ver posições por eixo',
   start: 'Fazer o quiz',
   formats: [
-    { name: 'Curto', count: '36 perguntas', time: '~5 min', description: 'Uma visão rápida dos 12 temas.' },
+    { name: 'Curto', count: '40 perguntas', time: '~5 min', description: 'Uma visão rápida dos 12 temas.' },
     { name: 'Completo', count: '60 perguntas', time: '~8 min', description: 'Equilíbrio entre tempo e precisão.' },
     { name: 'Todos os temas', count: '72 perguntas', time: '~10 min', description: 'Todas as perguntas, para o resultado mais preciso.' }
   ],
@@ -80,7 +95,7 @@ const text = LANG === 'pt' ? {
   methodology: 'Metodologia e fontes',
   unavailable: 'Esta página não existe no 2 Turno.',
   leave: 'Voltar ao início',
-  navigation: 'Navegação'
+  navigation: 'Navegação', skip: 'Pular para o conteúdo'
 } : {
   title: '2 Turno — Lula vs. Flávio Bolsonaro',
   heading: 'Lula or Flávio? See who you are closer to.',
@@ -90,7 +105,7 @@ const text = LANG === 'pt' ? {
   proposals: 'See positions by axis',
   start: 'Take the quiz',
   formats: [
-    { name: 'Short', count: '36 questions', time: '~5 min', description: 'A quick look at all 12 topics.' },
+    { name: 'Short', count: '40 questions', time: '~5 min', description: 'A quick look at all 12 topics.' },
     { name: 'Extended', count: '60 questions', time: '~8 min', description: 'A balance between time and precision.' },
     { name: 'All topics', count: '72 questions', time: '~10 min', description: 'Every question, for the most precise result.' }
   ],
@@ -113,25 +128,29 @@ const text = LANG === 'pt' ? {
   methodology: 'Methodology and sources',
   unavailable: 'This page does not exist on 2 Turno.',
   leave: 'Return home',
-  navigation: 'Navigation'
+  navigation: 'Navigation', skip: 'Skip to content'
 };
 
 export default function ElectionApp()
 {
   const [savedProgress] = useState(readLanguageProgress);
+  const [modeActive, setModeActive] = useState(savedProgress?.modeActive ?? readExtremistPreference());
+  const [radicalScores, setRadicalScores] = useState<Record<string, number> | null>(savedProgress?.radicalScores ?? null);
   const [choosingFormat, setChoosingFormat] = useState(false);
   const [variant, setVariant] = useState<QuizVariant>('extended');
   const [model, setModel] = useState<ElectionQuiz | null>(null);
   const [quiz, setQuiz] = useState<QuizPayload | null>(null);
-  const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
+  const [answers, setAnswers] = useState<Record<string, AnswerValue>>(savedProgress?.answers ?? {});
   const [questionIndex, setQuestionIndex] = useState(0);
   const [autoAdvance, setAutoAdvance] = useState(readAutoAdvance);
   const advanceTimer = useRef<number | null>(null);
   const [comparison, setComparison] = useState<ElectionComparison | null>(null);
   const [busy, setBusy] = useState(Boolean(savedProgress));
   const [error, setError] = useState<string | null>(null);
-  const userScores = comparison ? Object.fromEntries(comparison.axes.map(entry => [entry.axis.id, entry.userScore])) : undefined;
-  const userClassification = userScores ? presentation.classificationLabels(userScores, LANG) : null;
+  const radicalAlignment = radicalScores ? alignment.compareProfiles(radicalScores, profiles.candidates, profiles.axes[LANG]) : null;
+  const userScores = radicalScores ?? (comparison ? Object.fromEntries(comparison.axes.map(entry => [entry.axis.id, entry.userScore])) : undefined);
+  const radicalClassification = radicalScores ? radicalMode.classifyRadicalProfile(radicalScores, answers, LANG) : undefined;
+  const userClassification = radicalClassification ?? (userScores ? presentation.classificationLabels(userScores, LANG) : null);
   const path = window.location.pathname.replace(/\.html$/, '').replace(/\/+$/, '') || '/';
   const available = ['/', '/br', '/en', '/results', '/en/results', '/240questions'].includes(path);
 
@@ -156,6 +175,17 @@ export default function ElectionApp()
       setBusy(true);
       try
       {
+        if (saved.modeActive)
+        {
+          const restored = radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG);
+          if (cancelled) return;
+          setChoosingFormat(saved.choosingFormat);
+          setAnswers(saved.answers);
+          setQuestionIndex(saved.questionIndex);
+          if (!saved.radicalScores && saved.questionIds.length) setQuiz(restored);
+          window.sessionStorage.removeItem(LANGUAGE_PROGRESS_KEY);
+          return;
+        }
         const response = await fetchElectionQuiz(saved.variant);
         if (saved.modelId && saved.modelId !== response.modelId) throw new Error(text.unavailable);
         const translatedQuestions = saved.questionIds.flatMap(identifier =>
@@ -186,10 +216,17 @@ export default function ElectionApp()
 
   function preserveLanguageProgress()
   {
-    window.sessionStorage.setItem(LANGUAGE_PROGRESS_KEY, JSON.stringify({
-      modelId: model?.modelId, variant, choosingFormat, answers, questionIndex,
-      questionIds: quiz?.questions.map(question => question.id) ?? [], comparison
-    }));
+    try
+    {
+      window.sessionStorage.setItem(LANGUAGE_PROGRESS_KEY, JSON.stringify({
+        modelId: model?.modelId, variant, choosingFormat, answers, questionIndex,
+        questionIds: quiz?.questions.map(question => question.id) ?? [], comparison, modeActive, radicalScores
+      }));
+    }
+    catch
+    {
+      // Language navigation remains available when browser storage is disabled.
+    }
   }
 
   useEffect(() =>
@@ -208,12 +245,46 @@ export default function ElectionApp()
     };
   }, [userClassification?.family, userClassification?.background, userClassification?.color]);
 
+  useEffect(() =>
+  {
+    if (modeActive) document.documentElement.dataset.extremistMode = 'true';
+    try { window.localStorage.setItem('2turno-extremist-mode', String(modeActive)); }
+    catch { /* The mode remains usable without browser storage. */ }
+    return () => { delete document.documentElement.dataset.extremistMode; };
+  }, [modeActive]);
+
+
+
+  function toggleExtremistMode()
+  {
+    setModeActive(previous => !previous);
+    setRadicalScores(null);
+    setQuiz(null);
+    setComparison(null);
+    setChoosingFormat(false);
+    setQuestionIndex(0);
+    setModel(null);
+    setAnswers({});
+    setError(null);
+  }
+
+
+
   async function startQuiz()
   {
     setBusy(true);
     setError(null);
     try
     {
+      if (modeActive)
+      {
+        setModel(null);
+        setQuiz(radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG));
+        setAnswers({});
+        setQuestionIndex(0);
+        setRadicalScores(null);
+        return;
+      }
       const response = await fetchElectionQuiz(variant);
       setModel(response);
       setQuiz(variant === 'extreme' ? selectAllQuestionsBalanced(response.quiz) : selectAndBalanceQuestions(response.quiz));
@@ -235,7 +306,14 @@ export default function ElectionApp()
 
   async function finishQuiz()
   {
-    if (!quiz || !model) return;
+    if (!quiz) return;
+    if (modeActive)
+    {
+      setRadicalScores(radicalMode.scoreRadicalAnswers(answers));
+      setQuiz(null);
+      return;
+    }
+    if (!model) return;
     setBusy(true);
     setError(null);
     try
@@ -298,23 +376,35 @@ export default function ElectionApp()
   const questionExample = question && (questionExamples[LANG] as Record<string, string>)[question.id];
 
   return <div className="election-app">
+    <a className="skip-link" href="#main-content">{text.skip}</a>
     <header className="election-header">
       <a className="election-brand" href={languagePrefix || '/'}>
         <img src="/logo-2turno.png" alt={site.name} width={166} height={38} />
       </a>
       <nav aria-label={text.navigation}>
-        <a href={`${languagePrefix || '/'}#teste`} onClick={() => { setQuiz(null); setComparison(null); setChoosingFormat(true); }}>{educationTranslations[LANG].quizLink}</a>
+        <a href={`${languagePrefix || '/'}#teste`} onClick={() => { setQuiz(null); setComparison(null); setRadicalScores(null); setChoosingFormat(true); }}>{educationTranslations[LANG].quizLink}</a>
         {site.candidates.map(candidate => <a key={candidate.id} href={candidatePage(candidate.id)}>{candidate.name}</a>)}
         <a href={`${languagePrefix}/election-methodology`}>{text.methodology}</a>
         <a href={LANG === 'pt' ? '/en' : '/'} onClick={preserveLanguageProgress} lang={LANG === 'pt' ? 'en' : 'pt-BR'}>{LANG === 'pt' ? 'English' : 'Português'}</a>
       </nav>
     </header>
-    <main>
+    <main id="main-content" tabIndex={-1}>
       {!available ? <section><h1>{text.unavailable}</h1><a href={languagePrefix || '/'}>{text.leave}</a></section> : <>
         {error && <p role="alert">{error}</p>}
         {busy && <p role="status">{text.loading}</p>}
-        {!quiz && !comparison && !busy && <>
-          <section className="home-hero">
+        {!quiz && !comparison && !radicalScores && !busy && <>
+          <div className="extremist-mode-control">
+            <button type="button" className="extremist-mode-toggle" aria-pressed={modeActive} onClick={toggleExtremistMode}>
+              {LANG === 'pt' ? 'Modo extremista' : 'Extremist mode'} · {modeActive ? 'ON' : 'OFF'}
+            </button>
+            {modeActive && <p>{LANG === 'pt' ? '40 perguntas radicais. Perfil separado do quiz eleitoral.' : '40 radical questions. A profile separate from the election quiz.'}</p>}
+          </div>
+          {modeActive ? <section className="extremist-hero">
+            <img src="/extremist-fight-poster.webp" alt={LANG === 'pt' ? 'Pôster fictício de MMA: Flávio Bolsonaro contra Lula' : 'Fictional MMA fight poster: Flávio Bolsonaro versus Lula'} width="1862" height="845" />
+            <div><p className="election-kicker">2TURNO · {LANG === 'pt' ? 'MODO EXTREMISTA' : 'EXTREMIST MODE'}</p>
+              <h1>{LANG === 'pt' ? 'Ideias no limite. Onde você fica?' : 'Ideas at the limit. Where do you stand?'}</h1>
+              <p>{LANG === 'pt' ? 'Uma experiência opcional com afirmações políticas radicais. A luta é ficção e sátira.' : 'An optional experience with radical political statements. The fight is fiction and satire.'}</p></div>
+          </section> : <section className="home-hero">
             <div className="home-hero-portraits" aria-hidden="true">
               {site.candidates.map(candidate => <div className="hero-candidate" key={candidate.id}>
                 <img src={candidate.portrait} alt="" width="480" height="640" fetchPriority="high" />
@@ -327,17 +417,17 @@ export default function ElectionApp()
               <h1>{text.heading}</h1>
               <p>{text.introduction}</p>
             </div>
-          </section>
+          </section>}
           <div className="home-options" id="teste">
             <article className="questionnaire-card">
               <span className="questionnaire-symbol" aria-hidden="true">12</span>
               <h2>{profileText.questionnaire}</h2>
               <p>{profileText.questionnaireDescription}</p>
-              <button className="profile-link" type="button" disabled={busy} onClick={() => setChoosingFormat(true)}>{profileText.start}</button>
+              <button className="profile-link" type="button" disabled={busy} onClick={() => modeActive ? void startQuiz() : setChoosingFormat(true)}>{profileText.start}</button>
             </article>
             {profiles.candidates.map(candidate => <CandidateCard key={candidate.id} candidate={candidate} />)}
           </div>
-          {choosingFormat && <section className="election-start" aria-label={profileText.formats}>
+          {!modeActive && choosingFormat && <section className="election-start" aria-label={profileText.formats}>
             <fieldset className="format-options">
               <legend>{profileText.formats}</legend>
               {(['short', 'extended', 'extreme'] as const).map((format, index) =>
@@ -360,7 +450,7 @@ export default function ElectionApp()
               {profileText.begin}<span aria-hidden="true"> →</span>
             </button>
           </section>}
-          <HomeEducation />
+          {!modeActive && <HomeEducation />}
         </>}
         {quiz && question && <section>
           <ScaleQuestion key={question.id} question={question} axis={questionAxis}
@@ -378,7 +468,28 @@ export default function ElectionApp()
             </button>
             {questionIndex < quiz.questions.length - 1
               ? <button type="button" disabled={busy || !answers[question.id]} onClick={() => setQuestionIndex(questionIndex + 1)}>{text.next}</button>
-              : <button type="button" disabled={busy || Object.keys(answers).length !== quiz.questions.length} onClick={finishQuiz}>{text.finish}</button>}
+              : <button type="button" disabled={busy || Object.keys(answers).length !== quiz.questions.length} onClick={finishQuiz}>{modeActive ? (LANG === 'pt' ? 'Ver meu perfil' : 'See my profile') : text.finish}</button>}
+          </div>
+        </section>}
+        {radicalScores && <section className="radical-results">
+          <h1>{LANG === 'pt' ? 'Seu perfil no modo extremista' : 'Your extremist-mode profile'}</h1>
+          <p>{LANG === 'pt' ? 'Estas 40 perguntas descrevem preferências sobre políticas radicais. A afinidade com políticos compara seu perfil nos doze eixos com os perfis eleitorais existentes; não representa respostas deles às perguntas radicais.' : 'These 40 questions describe preferences about radical policies. Politician alignment compares your twelve-axis profile with the existing election profiles; it does not represent their answers to these radical questions.'}</p>
+          {radicalAlignment && <section className="radical-alignment" aria-label={LANG === 'pt' ? 'Afinidade com políticos' : 'Politician alignment'}>
+            <h2>{radicalAlignment.closestCandidateIds.length > 1
+              ? (LANG === 'pt' ? 'Empate de afinidade entre os políticos' : 'Equal alignment with both politicians')
+              : (LANG === 'pt' ? 'Você está mais alinhado com ' : 'You are more aligned with ') + radicalAlignment.candidates[0].name}</h2>
+            <p>{LANG === 'pt' ? 'Estimativa de proximidade entre perfis, com o mesmo peso para cada eixo.' : 'Estimated profile similarity, with equal weight for every axis.'}</p>
+            <div className="election-grid">{radicalAlignment.candidates.map(match =>
+            {
+              const candidate = profiles.candidates.find(profile => profile.id === match.id);
+              return candidate ? <CandidateCard key={match.id} candidate={candidate} compatibility={match.compatibility} /> : null;
+            })}</div>
+          </section>}
+          <ProfileCard axes={profiles.axes[LANG]} scores={radicalScores} identifier="radical-profile" classificationOverride={radicalClassification} />
+          <HistoricalComparisons scores={radicalScores} answers={answers} />
+          <div className="election-actions">
+            <button type="button" onClick={() => setRadicalScores(null)}>{text.restart}</button>
+            <button type="button" onClick={toggleExtremistMode}>{LANG === 'pt' ? 'Sair do modo extremista' : 'Exit extremist mode'}</button>
           </div>
         </section>}
         {comparison && <section className="election-results">
