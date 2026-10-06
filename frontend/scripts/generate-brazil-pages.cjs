@@ -55,8 +55,12 @@ function writePage(path, title, description, content, language)
 <title>${escapeHtml(title)} | ${site.name}</title><meta name="description" content="${escapeHtml(description)}">
 <meta property="og:site_name" content="${site.name}"><meta property="og:title" content="${escapeHtml(title)} | ${site.name}">
 <meta property="og:description" content="${escapeHtml(description)}"><meta property="og:url" content="${site.website}${path}">
-<link rel="canonical" href="${site.website}${path}"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/election-profile.css">
-</head><body><header><a class="brand" href="${prefix || '/'}">${site.name}</a><nav><a href="${prefix || '/'}">${text.quiz}</a>${candidateLinks}
+<meta property="og:image" content="${site.website}/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#102E24">
+<link rel="canonical" href="${site.website}${path}"><link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/election-profile.css">
+</head><body><header><a class="brand" href="${prefix || '/'}"><img src="/logo-2turno.png" alt="${site.name}" width="166" height="38"></a><nav><a href="${prefix || '/'}">${text.quiz}</a>${candidateLinks}
 <a href="${prefix}/election-methodology">${text.methodology}</a><a href="${translatedPath}">${text.switchLanguage}</a></nav></header>
 <main>${content}</main><footer>${site.name} · ${text.runoff}</footer></body></html>`;
   const destination = join(outputDirectory, `${path.replace(/^\//, '')}.html`);
@@ -155,7 +159,7 @@ function writeMethodology(language)
 
 function copyPublicFile(source, destinationPath = source)
 {
-  if (!/^\/(?:personalities\/portraits\/[a-z0-9-]+\.(?:jpg|jpeg|png|webp)|[a-z0-9-]+\.(?:png|ico))$/.test(source))
+  if (!/^\/(?:personalities\/portraits\/[a-z0-9-]+\.(?:jpg|jpeg|png|webp)|[a-z0-9-]+\.(?:png|ico|webp))$/.test(source))
   {
     throw new Error(`Invalid public asset path: ${source}`);
   }
@@ -171,7 +175,7 @@ function copyPublicFile(source, destinationPath = source)
 function generate()
 {
   mkdirSync(outputDirectory, { recursive: true });
-  const styles = 'body{max-width:1100px;margin:auto;padding:24px 16px;background:#f4f1e8;color:#1a1a18;font:16px/1.6 system-ui}header,nav{display:flex;gap:20px;flex-wrap:wrap;align-items:center}header{justify-content:space-between;margin-bottom:32px}.brand{font-weight:800;font-size:1.3rem;text-decoration:none}a{color:#102e24}small{display:block;color:#5b5a55}.intro{display:flex;gap:24px;align-items:center;flex-wrap:wrap}.ballot{font-weight:700;font-size:1.2rem}img{object-fit:cover;border-radius:50%}.table{overflow:auto}table{border-collapse:collapse;width:100%;background:#fbf9f3}th,td{text-align:left;vertical-align:top;padding:14px;border-bottom:1px solid #e2ddcf}th small{font-weight:normal}.bar{display:block;position:relative;width:100px;height:6px;margin-top:8px;border-radius:3px;background:linear-gradient(90deg,#2f6dc0,#cf5a22)}.bar i{position:absolute;top:-4px;width:4px;height:14px;margin-left:-2px;background:#1a1a18}footer{margin-top:40px;border-top:1px solid #e2ddcf;padding-top:16px}';
+  const styles = 'body{max-width:1100px;margin:auto;padding:24px 16px;background:#f4f1e8;color:#1a1a18;font:16px/1.6 system-ui}header,nav{display:flex;gap:20px;flex-wrap:wrap;align-items:center}header{justify-content:space-between;margin-bottom:32px}.brand{display:inline-flex;text-decoration:none}.brand img{display:block;height:38px;width:auto;border-radius:0;object-fit:contain}a{color:#102e24}small{display:block;color:#5b5a55}.intro{display:flex;gap:24px;align-items:center;flex-wrap:wrap}.ballot{font-weight:700;font-size:1.2rem}img{object-fit:cover;border-radius:50%}.table{overflow:auto}table{border-collapse:collapse;width:100%;background:#fbf9f3}th,td{text-align:left;vertical-align:top;padding:14px;border-bottom:1px solid #e2ddcf}th small{font-weight:normal}.bar{display:block;position:relative;width:100px;height:6px;margin-top:8px;border-radius:3px;background:linear-gradient(90deg,#2f6dc0,#cf5a22)}.bar i{position:absolute;top:-4px;width:4px;height:14px;margin-left:-2px;background:#1a1a18}footer{margin-top:40px;border-top:1px solid #e2ddcf;padding-top:16px}';
   writeFileSync(join(outputDirectory, 'election-profile.css'), styles + readFileSync(join(frontendDirectory, 'src/styles/profile.css'), 'utf8'));
   for (const language of ['pt', 'en'])
   {
@@ -190,13 +194,14 @@ function generate()
         'Take the quiz and see, axis by axis, whether you are closer to Lula or Flávio Bolsonaro in Brazil’s 2026 runoff, with sources from their government programmes.')
       .replace(`rel="canonical" href="${site.website}/"`, `rel="canonical" href="${site.website}/en"`)
       .replace('content="pt_BR"', 'content="en"')
+      .replace('content="2 Turno: Lula ou Flávio? Compare eixo por eixo."', 'content="2 Turno: Lula or Flávio? Compare axis by axis."')
       .replace(`content="${site.website}/"`, `content="${site.website}/en"`));
     generatedPaths.push('/', '/en');
     const locations = generatedPaths.map(path => `<url><loc>${site.website}${path}</loc></url>`).join('');
     writeFileSync(join(outputDirectory, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${locations}</urlset>`);
     writeFileSync(join(outputDirectory, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site.website}/sitemap.xml\n`);
     site.candidates.forEach(candidate => copyPublicFile(candidate.portraitSource, candidate.portrait));
-    ['/favicon.ico', '/favicon-16x16.png', '/favicon-32x32.png'].forEach(path => copyPublicFile(path));
+    site.brandAssets.forEach(path => copyPublicFile(path));
   }
   process.stdout.write(`${site.name} pages: ${generatedPaths.length}.\n`);
 }

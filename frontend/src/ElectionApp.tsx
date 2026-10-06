@@ -144,7 +144,9 @@ export default function ElectionApp()
 
   return <div className="election-app">
     <header className="election-header">
-      <a className="election-brand" href={languagePrefix || '/'}>{site.name}</a>
+      <a className="election-brand" href={languagePrefix || '/'}>
+        <img src="/logo-2turno.png" alt={site.name} width={166} height={38} />
+      </a>
       <nav aria-label={text.navigation}>
         <a href={`${languagePrefix || '/'}#teste`} onClick={() => { setQuiz(null); setComparison(null); setChoosingFormat(true); }}>{educationTranslations[LANG].quizLink}</a>
         {site.candidates.map(candidate => <a key={candidate.id} href={candidatePage(candidate.id)}>{candidate.name}</a>)}
@@ -157,9 +159,13 @@ export default function ElectionApp()
         {error && <p role="alert">{error}</p>}
         {busy && <p role="status">{text.loading}</p>}
         {!quiz && !comparison && <>
-          <p className="election-kicker">{text.runoff}</p>
-          <h1>{text.heading}</h1>
-          <p>{text.introduction}</p>
+          <section className="home-hero">
+            <div className="home-hero-text">
+              <p className="election-kicker">{text.runoff}</p>
+              <h1>{text.heading}</h1>
+              <p>{text.introduction}</p>
+            </div>
+          </section>
           <div className="home-options" id="teste">
             <article className="questionnaire-card">
               <span className="questionnaire-symbol" aria-hidden="true">12</span>

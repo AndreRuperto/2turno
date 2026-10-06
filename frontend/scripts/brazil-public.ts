@@ -3,10 +3,10 @@ import { join } from 'node:path';
 import type { Plugin } from 'vite';
 import site from '../src/site.json';
 
-// No build, só as fotos dos candidatos e os ícones vão para o dist; o servidor de desenvolvimento espelha isso.
+// No build, só as fotos dos candidatos e os arquivos de marca vão para o dist; o servidor de desenvolvimento espelha isso.
 const assets = new Map<string, string>([
   ...site.candidates.map(candidate => [candidate.portrait, candidate.portraitSource] as [string, string]),
-  ...['/favicon.ico', '/favicon-16x16.png', '/favicon-32x32.png'].map(asset => [asset, asset] as [string, string])
+  ...site.brandAssets.map(asset => [asset, asset] as [string, string])
 ]);
 
 export function brazilPublicPlugin(): Plugin
@@ -40,7 +40,8 @@ export function brazilPublicPlugin(): Plugin
             return;
           }
           const content = await readFile(join(root, 'public', asset.slice(1)));
-          response.setHeader('Content-Type', asset.endsWith('.png') ? 'image/png' : asset.endsWith('.ico') ? 'image/x-icon' : 'image/jpeg');
+          const types: Record<string, string> = { png: 'image/png', ico: 'image/x-icon', webp: 'image/webp' };
+          response.setHeader('Content-Type', types[asset.split('.').pop() ?? ''] ?? 'image/jpeg');
           response.end(content);
         }
         catch (failure)

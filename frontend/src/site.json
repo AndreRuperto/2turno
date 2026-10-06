@@ -2,6 +2,16 @@
   "name": "2 Turno",
   "website": "https://12axes.vercel.app",
   "runoffDate": "2026-10-25",
+  "brandAssets": [
+    "/favicon.ico",
+    "/favicon-16x16.png",
+    "/favicon-32x32.png",
+    "/apple-touch-icon.png",
+    "/logo-2turno.png",
+    "/hero-desktop.webp",
+    "/hero-mobile.webp",
+    "/og-image.png"
+  ],
   "candidates": [
     {
       "id": "lula-da-silva",

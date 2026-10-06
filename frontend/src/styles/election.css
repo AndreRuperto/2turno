@@ -20,5 +20,23 @@
 .election-table th small { display: block; font-weight: normal; min-width: 220px; }
 .election-app footer { border-top: 1px solid var(--line); padding-block: 24px; }
 .election-app label { display: block; }
-.election-brand { font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; text-decoration: none; }
+.election-brand { display: inline-flex; text-decoration: none; }
+.election-brand img { display: block; height: 38px; width: auto; }
+
+/* Abertura: a ilustração tem o mesmo fundo da página (#F4F1E8) e uma área vazia para o texto,
+   à esquerda no desktop e em cima no celular. */
+.election-app .home-hero {
+  display: flex; align-items: center; min-height: clamp(360px, 40vw, 460px); margin-block: 0 8px;
+  background: url('/hero-desktop.webp') right center / contain no-repeat;
+}
+.home-hero-text { max-width: 46%; }
+.home-hero-text h1 { margin-block: 8px 16px; line-height: 1.1; }
+.home-hero-text p:last-child { margin: 0; font-size: 1.05rem; color: var(--ink-700); }
+@media (max-width: 900px) {
+  .election-app .home-hero {
+    display: block; min-height: 0; padding-bottom: min(72%, 400px);
+    background: url('/hero-mobile.webp') center bottom / min(100%, 540px) auto no-repeat;
+  }
+  .home-hero-text { max-width: none; }
+}
 .election-kicker { margin: 0; font-weight: 600; color: var(--ink-700); }
