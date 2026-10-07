@@ -2,8 +2,9 @@ import { useState, type CSSProperties, type KeyboardEvent } from 'react';
 import type { AnswerOption, AnswerValue, Axis, Question } from '../../types/quiz';
 import { InfoSheet } from '../results/InfoSheet';
 
-// As opções começam com concordância total e seguem até discordância total.
-const SCALE: AnswerValue[] = ['STRONGLY_AGREE', 'AGREE', 'NEUTRAL', 'DISAGREE', 'STRONGLY_DISAGREE'];
+// As opções começam com discordância total e seguem até concordância total. As primeiras opções
+// tendem a ser escolhidas com mais frequência; começar pelo "concordo" puxaria as respostas para ele.
+const SCALE: AnswerValue[] = ['STRONGLY_DISAGREE', 'DISAGREE', 'NEUTRAL', 'AGREE', 'STRONGLY_AGREE'];
 
 export interface ScaleQuestionText
 {

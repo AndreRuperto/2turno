@@ -130,7 +130,7 @@ async function checkResults(page, language, answer, themeScore)
     }
     await page.locator('[data-answer="NEUTRAL"]').focus();
     await page.keyboard.press('ArrowUp');
-    assert.equal(await page.locator('[data-answer="AGREE"]').getAttribute('aria-checked'), 'true');
+    assert.equal(await page.locator('[data-answer="DISAGREE"]').getAttribute('aria-checked'), 'true');
     assert.equal(await page.locator('.scale-point.selected .answer-selection').innerText(), '✓');
     await page.locator('.scale-point.selected').hover();
     await page.waitForFunction(() =>
