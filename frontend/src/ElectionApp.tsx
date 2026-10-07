@@ -16,6 +16,7 @@ import radicalMode from './utils/extremistMode.cjs';
 import type { ElectionComparison, ElectionQuiz } from './types/election';
 import type { AnswerValue, QuizPayload, QuizVariant } from './types/quiz';
 import { selectAllQuestionsBalanced, selectAndBalanceQuestions } from './utils/quizSelection';
+import { answeredElectionCount, clearElectionProgress, loadElectionProgress, restoreElectionQuiz, saveElectionProgress } from './utils/electionProgress';
 
 const languagePrefix = LANG === 'en' ? '/en' : '';
 const AUTO_ADVANCE_KEY = '2turno-auto-advance';
@@ -72,7 +73,7 @@ const text = LANG === 'pt' ? {
   proposals: 'Ver posições por eixo',
   start: 'Fazer o quiz',
   formats: [
-    { name: 'Curto', count: '40 perguntas', time: '~5 min', description: 'Uma visão rápida dos 12 temas.' },
+    { name: 'Curto', count: '36 perguntas', time: '~5 min', description: 'Uma visão rápida dos 12 temas.' },
     { name: 'Completo', count: '60 perguntas', time: '~8 min', description: 'Equilíbrio entre tempo e precisão.' },
     { name: 'Todos os temas', count: '72 perguntas', time: '~10 min', description: 'Todas as perguntas, para o resultado mais preciso.' }
   ],
@@ -83,6 +84,15 @@ const text = LANG === 'pt' ? {
   restart: 'Começar novamente',
   scale: { help: 'O que está em jogo', helpAria: 'O que está em jogo nesta pergunta: eixo e exemplo', scaleAria: 'Sua resposta', example: 'Na prática:', instruction: 'Quanto você concorda com esta frase?' },
   autoAdvance: 'Avançar ao responder',
+  resume: {
+    eyebrow: 'Quiz em andamento',
+    extremistEyebrow: 'Modo extremista em andamento',
+    title: 'Continue de onde parou',
+    body: (answered: number, total: number) => `Você já respondeu ${answered} de ${total} perguntas. Suas respostas estão guardadas neste navegador.`,
+    continue: 'Continuar',
+    discard: 'Começar de novo',
+    unavailable: 'As perguntas mudaram desde a sua última visita, então não dá para continuar. Comece um novo quiz.'
+  },
   agreeHint: (pole: string) => `Concordar com esta frase aproxima você de “${pole}”; discordar, do polo oposto.`,
   loading: 'Carregando o quiz…',
   results: 'Suas respostas, Lula e Flávio Bolsonaro',
@@ -105,7 +115,7 @@ const text = LANG === 'pt' ? {
   proposals: 'See positions by axis',
   start: 'Take the quiz',
   formats: [
-    { name: 'Short', count: '40 questions', time: '~5 min', description: 'A quick look at all 12 topics.' },
+    { name: 'Short', count: '36 questions', time: '~5 min', description: 'A quick look at all 12 topics.' },
     { name: 'Extended', count: '60 questions', time: '~8 min', description: 'A balance between time and precision.' },
     { name: 'All topics', count: '72 questions', time: '~10 min', description: 'Every question, for the most precise result.' }
   ],
@@ -116,6 +126,15 @@ const text = LANG === 'pt' ? {
   restart: 'Start again',
   scale: { help: 'What is at stake', helpAria: 'What is at stake in this question: axis and example', scaleAria: 'Your answer', example: 'In practice:', instruction: 'How much do you agree with this statement?' },
   autoAdvance: 'Advance on answer',
+  resume: {
+    eyebrow: 'Quiz in progress',
+    extremistEyebrow: 'Extremist mode in progress',
+    title: 'Pick up where you left off',
+    body: (answered: number, total: number) => `You have answered ${answered} of ${total} questions. Your answers are saved in this browser.`,
+    continue: 'Continue',
+    discard: 'Start over',
+    unavailable: 'The questions have changed since your last visit, so the quiz cannot be resumed. Please start a new one.'
+  },
   agreeHint: (pole: string) => `Agreeing with this statement moves you toward “${pole}”; disagreeing, toward the opposite pole.`,
   loading: 'Loading the quiz…',
   results: 'Your answers, Lula and Flávio Bolsonaro',
@@ -147,6 +166,9 @@ export default function ElectionApp()
   const [comparison, setComparison] = useState<ElectionComparison | null>(null);
   const [busy, setBusy] = useState(Boolean(savedProgress));
   const [error, setError] = useState<string | null>(null);
+  // Quiz deixado pela metade em outra visita (ou antes de voltar ao início).
+  const [pendingProgress, setPendingProgress] = useState(loadElectionProgress);
+  const onHome = !quiz && !comparison && !radicalScores;
   const radicalAlignment = radicalScores ? alignment.compareProfiles(radicalScores, profiles.candidates, profiles.axes[LANG]) : null;
   const userScores = radicalScores ?? (comparison ? Object.fromEntries(comparison.axes.map(entry => [entry.axis.id, entry.userScore])) : undefined);
   const radicalClassification = radicalScores ? radicalMode.classifyRadicalProfile(radicalScores, answers, LANG) : undefined;
@@ -214,6 +236,24 @@ export default function ElectionApp()
 
 
 
+  // Guarda o andamento a cada resposta: em outra visita, o início oferece continuar de onde parou.
+  useEffect(() =>
+  {
+    if (!quiz || !Object.keys(answers).length) return;
+    saveElectionProgress({
+      mode: modeActive ? 'extremist' : 'election', variant: quiz.variant,
+      questionIds: quiz.questions.map(entry => entry.id), answers, questionIndex
+    });
+  }, [quiz, answers, questionIndex, modeActive]);
+
+  // Ao voltar ao início no meio do quiz (pelo menu, por exemplo), o aviso reaparece.
+  useEffect(() =>
+  {
+    if (onHome) setPendingProgress(loadElectionProgress());
+  }, [onHome]);
+
+
+
   function preserveLanguageProgress()
   {
     try
@@ -272,6 +312,8 @@ export default function ElectionApp()
 
   async function startQuiz()
   {
+    clearElectionProgress();
+    setPendingProgress(null);
     setBusy(true);
     setError(null);
     try
@@ -310,6 +352,7 @@ export default function ElectionApp()
     if (modeActive)
     {
       setRadicalScores(radicalMode.scoreRadicalAnswers(answers));
+      clearElectionProgress();
       setQuiz(null);
       return;
     }
@@ -323,6 +366,7 @@ export default function ElectionApp()
         variant: quiz.variant,
         answers: quiz.questions.map(question => ({ questionId: question.id, answer: answers[question.id] }))
       });
+      clearElectionProgress();
       setComparison(result);
       setQuiz(null);
     }
@@ -334,6 +378,54 @@ export default function ElectionApp()
     {
       setBusy(false);
     }
+  }
+
+  // Põe na tela o quiz guardado: mesmo modo, mesmas perguntas na mesma ordem, respostas e posição.
+  async function resumeProgress()
+  {
+    const saved = pendingProgress;
+    if (!saved) return;
+    setBusy(true);
+    setError(null);
+    try
+    {
+      const extremist = saved.mode === 'extremist';
+      const response = extremist ? null : await fetchElectionQuiz(saved.variant);
+      const restored = restoreElectionQuiz(response?.quiz ?? radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG), saved);
+      if (!restored)
+      {
+        clearElectionProgress();
+        setPendingProgress(null);
+        setError(text.resume.unavailable);
+        return;
+      }
+      setModeActive(extremist);
+      setModel(response);
+      setVariant(saved.variant);
+      setRadicalScores(null);
+      setComparison(null);
+      setChoosingFormat(false);
+      setAnswers(saved.answers);
+      setQuestionIndex(Math.min(saved.questionIndex, restored.questions.length - 1));
+      setQuiz(restored);
+    }
+    catch (failure)
+    {
+      setError((failure as Error).message);
+    }
+    finally
+    {
+      setBusy(false);
+    }
+  }
+
+
+
+  function discardProgress()
+  {
+    clearElectionProgress();
+    setPendingProgress(null);
+    setError(null);
   }
 
   // Troca de pergunta (botões, novo quiz ou saída) cancela um avanço automático pendente.
@@ -392,7 +484,21 @@ export default function ElectionApp()
       {!available ? <section><h1>{text.unavailable}</h1><a href={languagePrefix || '/'}>{text.leave}</a></section> : <>
         {error && <p role="alert">{error}</p>}
         {busy && <p role="status">{text.loading}</p>}
-        {!quiz && !comparison && !radicalScores && !busy && <>
+        {onHome && !busy && <>
+          {pendingProgress && <section className="resume-card" aria-labelledby="resume-title">
+            <div className="resume-body">
+              <p className="resume-eyebrow">{pendingProgress.mode === 'extremist' ? text.resume.extremistEyebrow : text.resume.eyebrow}</p>
+              <h2 id="resume-title">{text.resume.title}</h2>
+              <p className="resume-text">{text.resume.body(answeredElectionCount(pendingProgress), pendingProgress.questionIds.length)}</p>
+              <div className="resume-bar" aria-hidden="true">
+                <span style={{ width: `${Math.max(2, Math.round(answeredElectionCount(pendingProgress) / pendingProgress.questionIds.length * 100))}%` }} />
+              </div>
+            </div>
+            <div className="resume-actions">
+              <button className="resume-continue" type="button" onClick={() => void resumeProgress()}>{text.resume.continue}<span aria-hidden="true">→</span></button>
+              <button className="resume-discard" type="button" onClick={discardProgress}>{text.resume.discard}</button>
+            </div>
+          </section>}
           <div className="extremist-mode-control">
             <button type="button" className="extremist-mode-toggle" aria-pressed={modeActive} onClick={toggleExtremistMode}>
               {LANG === 'pt' ? 'Modo extremista' : 'Extremist mode'} · {modeActive ? 'ON' : 'OFF'}
