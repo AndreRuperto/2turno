@@ -275,6 +275,7 @@ function createElection(models)
     return {
       modelId: model.modelId,
       asOf: model.asOf,
+      proposals: model.proposals,
       quiz: {
         title: model.title,
         description: model.description,
