@@ -106,15 +106,15 @@
     },
     {
       "id": "br2026_coordenacao_2",
-      "text": "Decisions about which economic sectors should grow should primarily rest with businesses, without government-defined sector priorities."
+      "text": "Which economic sectors grow should be decided by the choices of businesses and consumers, not by government priorities."
     },
     {
       "id": "br2026_coordenacao_3",
-      "text": "Government procurement should favour domestic products to develop Brazilian industry, even at higher cost."
+      "text": "Government purchases should favour products made in Brazil, even if they cost more."
     },
     {
       "id": "br2026_coordenacao_4",
-      "text": "Fuel prices should follow international market fluctuations, without government intervention to smooth adjustments."
+      "text": "Fuel price adjustments should pass on international market fluctuations directly, including when prices rise."
     },
     {
       "id": "br2026_coordenacao_5",
@@ -122,7 +122,7 @@
     },
     {
       "id": "br2026_coordenacao_6",
-      "text": "Requirements for starting and running businesses should be reduced while retaining product safety rules."
+      "text": "The government should reduce the requirements for starting and running a business, while keeping product safety rules."
     },
     {
       "id": "br2026_protecao_social_1",
@@ -142,7 +142,7 @@
     },
     {
       "id": "br2026_protecao_social_5",
-      "text": "The government should extend social benefits to eligible families that are currently outside the programmes."
+      "text": "The government should enrol in social programmes the families who are entitled to benefits but do not yet receive them."
     },
     {
       "id": "br2026_protecao_social_6",
@@ -162,7 +162,7 @@
     },
     {
       "id": "br2026_tributacao_4",
-      "text": "The government should prioritise consumption-tax cuts even without raising taxes on high incomes."
+      "text": "Cutting taxes on consumption should take priority over raising taxes on the highest incomes."
     },
     {
       "id": "br2026_tributacao_5",
@@ -210,7 +210,7 @@
     },
     {
       "id": "br2026_trabalho_4",
-      "text": "New contract types should make it easier to hire young workers and people over 50, even with rules that differ from the standard labour code."
+      "text": "There should be contracts with different rules from the standard labour code (CLT) to make it easier to hire young people and people over 50."
     },
     {
       "id": "br2026_trabalho_5",
@@ -218,19 +218,19 @@
     },
     {
       "id": "br2026_trabalho_6",
-      "text": "Platform work should retain flexible contracts, with social protection without requiring every platform to use standard employment contracts."
+      "text": "App drivers and couriers should remain self-employed, with their own social protection instead of standard employment contracts (CLT)."
     },
     {
       "id": "br2026_direitos_sociais_1",
-      "text": "The government should maintain specific policies against discrimination toward LGBT people."
+      "text": "The government should maintain programmes and agencies specifically for LGBT people."
     },
     {
       "id": "br2026_direitos_sociais_2",
-      "text": "Abortion legislation should retain the limits of the situations currently permitted by law."
+      "text": "Abortion should remain allowed only in the cases already set out in law."
     },
     {
       "id": "br2026_direitos_sociais_3",
-      "text": "Racial quotas in education should be retained to reduce inequalities."
+      "text": "Racial quotas for access to education should be kept."
     },
     {
       "id": "br2026_direitos_sociais_4",
@@ -242,7 +242,7 @@
     },
     {
       "id": "br2026_direitos_sociais_6",
-      "text": "Sexuality education in schools should require prior parental permission."
+      "text": "Parents or guardians should give prior permission for their children to attend lessons on sexuality."
     },
     {
       "id": "br2026_laicidade_1",
@@ -258,7 +258,7 @@
     },
     {
       "id": "br2026_laicidade_4",
-      "text": "Commitment to religious values should be one of the relevant criteria when selecting public officials."
+      "text": "Commitment to religious values should be one of the criteria when choosing officials such as ministers and higher-court judges."
     },
     {
       "id": "br2026_laicidade_5",
@@ -294,7 +294,7 @@
     },
     {
       "id": "br2026_justica_penal_1",
-      "text": "Prisons should expand education and work opportunities to support reintegration."
+      "text": "Prisons should offer more places for study and work to people serving sentences."
     },
     {
       "id": "br2026_justica_penal_2",
@@ -306,7 +306,7 @@
     },
     {
       "id": "br2026_justica_penal_4",
-      "text": "Prison policy should prioritize building additional spaces to increase incarceration capacity."
+      "text": "Prison policy should prioritise building new prisons, so that more convicts serve their sentences in closed custody."
     },
     {
       "id": "br2026_justica_penal_5",
@@ -318,7 +318,7 @@
     },
     {
       "id": "br2026_ambiente_1",
-      "text": "Projects with major impacts should undergo full environmental studies, allowing the time needed for assessment even if licensing takes longer."
+      "text": "High-impact projects should undergo full environmental studies even if licensing takes longer."
     },
     {
       "id": "br2026_ambiente_2",
@@ -358,11 +358,11 @@
     },
     {
       "id": "br2026_diplomacia_eleitoral_5",
-      "text": "Brazil should participate in international coalitions addressing hunger and climate change."
+      "text": "Brazil should participate in international coalitions on hunger and climate change."
     },
     {
       "id": "br2026_diplomacia_eleitoral_6",
-      "text": "Brazil should avoid international commitments that limit its discretion over domestic policy."
+      "text": "Brazil should preserve its autonomy by avoiding international commitments that limit decisions on its domestic policies."
     },
     {
       "id": "br2026_contrapesos_1",
@@ -370,7 +370,7 @@
     },
     {
       "id": "br2026_contrapesos_2",
-      "text": "The Supreme Court should have fewer powers and focus on constitutional cases."
+      "text": "The Supreme Court should focus on constitutional questions, leaving other kinds of cases to the rest of the judiciary."
     },
     {
       "id": "br2026_contrapesos_3",
@@ -386,7 +386,41 @@
     },
     {
       "id": "br2026_contrapesos_6",
-      "text": "Fewer organisations should be authorised to challenge laws directly before the Supreme Court."
+      "text": "The right to challenge laws directly before the Supreme Court should be limited to a smaller group of institutions."
+    }
+  ],
+  "proposals": [
+    {
+      "id": "br2026_star_escolas_civico_militares",
+      "text": "The federal government should support expanding public schools following the civic-military model."
+    },
+    {
+      "id": "br2026_star_adesao_ocde",
+      "text": "Brazil should seek to become a member of the OECD."
+    },
+    {
+      "id": "br2026_star_licenca_prazo",
+      "text": "An environmental licence should be granted if the applicant meets the legal requirements and the environmental authority neither decides nor responds within the deadline."
+    },
+    {
+      "id": "br2026_star_classificacao_faccoes",
+      "text": "Criminal factions should be officially classified as terrorist organisations."
+    },
+    {
+      "id": "br2026_star_conteudo_local_datacenters",
+      "text": "The installation of data centres in Brazil should include local content requirements."
+    },
+    {
+      "id": "br2026_star_regulacao_redes",
+      "text": "The government should expand the regulation of social media and digital platforms."
+    },
+    {
+      "id": "br2026_star_assentamentos_reforma_agraria",
+      "text": "The government should continue settling encamped families through land reform."
+    },
+    {
+      "id": "br2026_star_cameras_corporais",
+      "text": "The federal government should expand incentives for police forces to use body cameras."
     }
   ]
 }

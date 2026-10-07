@@ -205,11 +205,11 @@ All statements below are new election questions. LEFT agreement increases the fi
 | Identifier | Statement | Agreement favors | Lula | Flávio |
 | --- | --- | --- | --- | --- |
 | `br2026_coordenacao_1` | O governo deve oferecer crédito com juros reduzidos para desenvolver setores industriais escolhidos como estratégicos. | LEFT | AGREE | DISAGREE |
-| `br2026_coordenacao_2` | A escolha dos setores econômicos que devem crescer deve ficar principalmente com as empresas, sem prioridades definidas pelo governo. | RIGHT | DISAGREE | AGREE |
-| `br2026_coordenacao_3` | Compras do governo devem dar preferência a produtos nacionais para desenvolver a indústria brasileira, mesmo com custo maior. | LEFT | STRONGLY_AGREE | NEUTRAL † |
-| `br2026_coordenacao_4` | Os preços dos combustíveis devem acompanhar o mercado internacional, sem medidas do governo para suavizar as variações. | RIGHT | STRONGLY_DISAGREE | NEUTRAL † |
+| `br2026_coordenacao_2` | Os setores da economia que vão crescer devem ser definidos pelas escolhas de empresas e consumidores, e não por prioridades do governo. | RIGHT | DISAGREE | AGREE |
+| `br2026_coordenacao_3` | Compras do governo devem dar preferência a produtos fabricados no Brasil, mesmo que custem mais. | LEFT | STRONGLY_AGREE | NEUTRAL † |
+| `br2026_coordenacao_4` | Os reajustes dos combustíveis devem repassar diretamente as variações do mercado internacional, inclusive nas altas. | RIGHT | STRONGLY_DISAGREE | NEUTRAL † |
 | `br2026_coordenacao_5` | O governo deve definir metas de produção e inovação para orientar investimentos em setores estratégicos. | LEFT | AGREE | DISAGREE |
-| `br2026_coordenacao_6` | As exigências para abrir e manter empresas devem ser reduzidas, mantendo as regras de segurança dos produtos. | RIGHT | AGREE | STRONGLY_AGREE |
+| `br2026_coordenacao_6` | O governo deve reduzir as exigências para abrir e manter empresas, preservando as regras de segurança dos produtos. | RIGHT | AGREE | STRONGLY_AGREE |
 
 ### Proteção social e orçamento
 
@@ -219,17 +219,17 @@ All statements below are new election questions. LEFT agreement increases the fi
 | `br2026_protecao_social_2` | O crescimento dos gastos com benefícios sociais deve ficar abaixo do crescimento da arrecadação para reduzir a dívida pública. | RIGHT | DISAGREE | AGREE |
 | `br2026_protecao_social_3` | Programas de transferência de renda devem ser mantidos enquanto a família permanecer em situação de pobreza. | LEFT | AGREE | AGREE |
 | `br2026_protecao_social_4` | Ao conseguir emprego, a família deve sair gradualmente dos programas de transferência de renda, com prazo de transição. | RIGHT | AGREE | AGREE |
-| `br2026_protecao_social_5` | O governo deve ampliar a cobertura dos benefícios sociais para alcançar famílias elegíveis que ainda estão fora dos programas. | LEFT | AGREE | AGREE |
-| `br2026_protecao_social_6` | Se houver falta de dinheiro no orçamento, as regras dos benefícios sociais devem ser revistas para conter despesas. | RIGHT | DISAGREE | AGREE |
+| `br2026_protecao_social_5` | O governo deve incluir nos programas sociais as famílias que têm direito aos benefícios, mas ainda não os recebem. | LEFT | AGREE | AGREE |
+| `br2026_protecao_social_6` | Quando os recursos do orçamento forem insuficientes, as regras dos benefícios sociais devem ser revistas para adequar as despesas aos recursos disponíveis. | RIGHT | DISAGREE | AGREE |
 
 ### Tributação
 
 | Identifier | Statement | Agreement favors | Lula | Flávio |
 | --- | --- | --- | --- | --- |
 | `br2026_tributacao_1` | A redução do imposto de renda de quem ganha menos deve ser compensada com maior cobrança sobre rendas muito altas. | LEFT | STRONGLY_AGREE | NEUTRAL † |
-| `br2026_tributacao_2` | A prioridade tributária deve ser reduzir a carga total de impostos, em vez de redistribuir a cobrança entre grupos de renda. | RIGHT | DISAGREE | STRONGLY_AGREE |
+| `br2026_tributacao_2` | A política tributária deve priorizar a redução da carga total de impostos em relação à redistribuição da cobrança entre grupos de renda. | RIGHT | DISAGREE | STRONGLY_AGREE |
 | `br2026_tributacao_3` | Lucros e dividendos recebidos por pessoas de renda muito alta devem contribuir para um imposto de renda mínimo. | LEFT | STRONGLY_AGREE | NEUTRAL † |
-| `br2026_tributacao_4` | O governo deve priorizar cortes nos impostos sobre consumo, mesmo sem aumentar a cobrança sobre altas rendas. | RIGHT | NEUTRAL | STRONGLY_AGREE |
+| `br2026_tributacao_4` | Reduzir os impostos sobre o consumo deve ter prioridade sobre aumentar o imposto das rendas mais altas. | RIGHT | NEUTRAL | STRONGLY_AGREE |
 | `br2026_tributacao_5` | O governo deve fechar benefícios tributários usados principalmente por pessoas de alta renda, ainda que isso aumente a cobrança sobre elas. | LEFT | AGREE | NEUTRAL † |
 | `br2026_tributacao_6` | Reduzir impostos pagos por empresas deve ser prioridade em relação a ampliar a tributação das rendas mais altas. | RIGHT | DISAGREE | AGREE |
 
@@ -251,31 +251,31 @@ All statements below are new election questions. LEFT agreement increases the fi
 | `br2026_trabalho_1` | A lei deve reduzir a jornada semanal e garantir dois dias de descanso, sem reduzir salários. | LEFT | STRONGLY_AGREE | DISAGREE |
 | `br2026_trabalho_2` | Trabalhadores e empresas devem ter mais liberdade para negociar a jornada, respeitando os direitos básicos da Constituição. | RIGHT | DISAGREE | STRONGLY_AGREE |
 | `br2026_trabalho_3` | O salário mínimo deve ter aumentos reais definidos por uma regra nacional, além da reposição da inflação. | LEFT | STRONGLY_AGREE | NEUTRAL † |
-| `br2026_trabalho_4` | Novas formas de contrato devem facilitar a contratação de jovens e pessoas acima de 50 anos, mesmo com regras diferentes das da CLT. | RIGHT | DISAGREE | STRONGLY_AGREE |
+| `br2026_trabalho_4` | Devem existir contratos com regras diferentes das da CLT para facilitar a contratação de jovens e de pessoas com mais de 50 anos. | RIGHT | DISAGREE | STRONGLY_AGREE |
 | `br2026_trabalho_5` | O governo deve fiscalizar contratos de pessoa jurídica para impedir que substituam empregos que deveriam ter proteção da CLT. | LEFT | STRONGLY_AGREE | NEUTRAL † |
-| `br2026_trabalho_6` | O trabalho por aplicativos deve manter contratos flexíveis, com proteção social sem obrigar todas as plataformas a contratar pela CLT. | RIGHT | AGREE | STRONGLY_AGREE |
+| `br2026_trabalho_6` | Motoristas e entregadores de aplicativo devem continuar autônomos, com proteção social própria em vez de contrato pela CLT. | RIGHT | AGREE | STRONGLY_AGREE |
 
 ### Direitos e costumes
 
 | Identifier | Statement | Agreement favors | Lula | Flávio |
 | --- | --- | --- | --- | --- |
-| `br2026_direitos_sociais_1` | O governo deve manter políticas específicas para combater a discriminação contra pessoas LGBT. | LEFT | STRONGLY_AGREE | NEUTRAL † |
-| `br2026_direitos_sociais_2` | A legislação sobre aborto deve continuar limitada às situações que já são permitidas por lei. | RIGHT | NEUTRAL † | AGREE |
-| `br2026_direitos_sociais_3` | As cotas raciais no acesso à educação devem ser mantidas como medida de redução de desigualdades. | LEFT | STRONGLY_AGREE | NEUTRAL † |
+| `br2026_direitos_sociais_1` | O governo deve manter programas e órgãos específicos voltados à população LGBT. | LEFT | STRONGLY_AGREE | NEUTRAL † |
+| `br2026_direitos_sociais_2` | O aborto deve continuar permitido apenas nos casos que a lei já prevê. | RIGHT | NEUTRAL † | AGREE |
+| `br2026_direitos_sociais_3` | As cotas raciais no acesso à educação devem ser mantidas. | LEFT | STRONGLY_AGREE | NEUTRAL † |
 | `br2026_direitos_sociais_4` | A participação em categorias femininas do esporte deve ser definida pelo sexo de nascimento. | RIGHT | NEUTRAL † | STRONGLY_AGREE |
 | `br2026_direitos_sociais_5` | As políticas públicas devem reconhecer diferentes formas de família, incluindo casais do mesmo sexo. | LEFT | AGREE | NEUTRAL † |
-| `br2026_direitos_sociais_6` | Os conteúdos sobre sexualidade nas escolas devem depender de autorização prévia dos responsáveis. | RIGHT | NEUTRAL † | AGREE |
+| `br2026_direitos_sociais_6` | Os pais ou responsáveis devem autorizar previamente a participação dos filhos em aulas sobre sexualidade. | RIGHT | NEUTRAL † | AGREE |
 
 ### Religião e Estado
 
 | Identifier | Statement | Agreement favors | Lula | Flávio |
 | --- | --- | --- | --- | --- |
-| `br2026_laicidade_1` | As leis devem ser justificadas por razões públicas, sem depender da doutrina de uma religião. | LEFT | AGREE | NEUTRAL † |
-| `br2026_laicidade_2` | Referências religiosas devem ter papel explícito na orientação das prioridades do governo. | RIGHT | NEUTRAL † | AGREE |
-| `br2026_laicidade_3` | O governo deve tratar todas as religiões e as pessoas sem religião de forma igual. | LEFT | AGREE | AGREE |
-| `br2026_laicidade_4` | O compromisso com valores religiosos deve ser um critério relevante na escolha de autoridades públicas. | RIGHT | NEUTRAL † | NEUTRAL † |
-| `br2026_laicidade_5` | Serviços públicos devem atender as pessoas sem exigir adesão a práticas religiosas. | LEFT | NEUTRAL † | NEUTRAL † |
-| `br2026_laicidade_6` | Escolas públicas devem poder oferecer ensino de uma religião específica quando houver demanda das famílias. | RIGHT | NEUTRAL † | NEUTRAL † |
+| `br2026_laicidade_1` | As leis devem ser justificadas por razões públicas acessíveis a pessoas de diferentes crenças, sem depender de uma doutrina religiosa específica. | LEFT | AGREE | NEUTRAL † |
+| `br2026_laicidade_2` | Valores religiosos devem ter um papel explícito na definição das prioridades do governo. | RIGHT | NEUTRAL † | AGREE |
+| `br2026_laicidade_3` | O governo deve aplicar os mesmos critérios às diferentes religiões e às pessoas sem religião. | LEFT | AGREE | AGREE |
+| `br2026_laicidade_4` | O compromisso com valores religiosos deve ser um dos critérios na escolha de autoridades como ministros e juízes de tribunais superiores. | RIGHT | NEUTRAL † | NEUTRAL † |
+| `br2026_laicidade_5` | O acesso aos serviços públicos deve ser garantido independentemente da participação em práticas religiosas. | LEFT | NEUTRAL † | NEUTRAL † |
+| `br2026_laicidade_6` | Escolas públicas devem poder oferecer ensino de uma tradição religiosa específica quando solicitado pelas famílias. | RIGHT | NEUTRAL † | NEUTRAL † |
 
 ### Armas de fogo
 
@@ -292,12 +292,12 @@ All statements below are new election questions. LEFT agreement increases the fi
 
 | Identifier | Statement | Agreement favors | Lula | Flávio |
 | --- | --- | --- | --- | --- |
-| `br2026_justica_penal_1` | O sistema prisional deve ampliar estudo e trabalho para favorecer a reintegração de quem cumpre pena. | LEFT | AGREE | NEUTRAL † |
+| `br2026_justica_penal_1` | Os presídios devem oferecer mais vagas de estudo e trabalho para quem cumpre pena. | LEFT | AGREE | NEUTRAL † |
 | `br2026_justica_penal_2` | A idade para responder criminalmente como adulto deve cair de 18 para 16 anos. | RIGHT | DISAGREE | STRONGLY_AGREE |
-| `br2026_justica_penal_3` | Para condenados por crimes hediondos, como estupro, a passagem para regimes menos restritivos deve continuar possível conforme a lei. | LEFT | AGREE | STRONGLY_DISAGREE |
-| `br2026_justica_penal_4` | A prioridade da política prisional deve ser construir mais vagas para ampliar o encarceramento. | RIGHT | NEUTRAL | STRONGLY_AGREE |
+| `br2026_justica_penal_3` | A progressão para regimes menos restritivos deve continuar possível para condenados por crimes hediondos que atendam aos critérios legais. | LEFT | AGREE | STRONGLY_DISAGREE |
+| `br2026_justica_penal_4` | A política prisional deve priorizar a construção de novos presídios, para que mais condenados cumpram pena em regime fechado. | RIGHT | NEUTRAL | STRONGLY_AGREE |
 | `br2026_justica_penal_5` | Para crimes sem violência, penas alternativas à prisão devem ser ampliadas. | LEFT | AGREE | DISAGREE |
-| `br2026_justica_penal_6` | As forças policiais devem ter mais margem para decidir sobre o uso da força, com menos regras federais detalhadas. | RIGHT | STRONGLY_DISAGREE | STRONGLY_AGREE |
+| `br2026_justica_penal_6` | As forças policiais devem ter maior autonomia operacional nas decisões sobre o uso da força, com regras federais menos detalhadas. | RIGHT | STRONGLY_DISAGREE | STRONGLY_AGREE |
 
 ### Meio ambiente
 
@@ -318,19 +318,19 @@ All statements below are new election questions. LEFT agreement increases the fi
 | `br2026_diplomacia_eleitoral_2` | A política externa deve priorizar acordos diretos entre países em vez de compromissos com grandes blocos. | RIGHT | DISAGREE | AGREE |
 | `br2026_diplomacia_eleitoral_3` | O Brasil deve aprofundar a integração política e econômica com os países da América do Sul. | LEFT | STRONGLY_AGREE | NEUTRAL † |
 | `br2026_diplomacia_eleitoral_4` | O Brasil deve ter mais liberdade para negociar acordos comerciais fora das regras comuns do Mercosul. | RIGHT | STRONGLY_DISAGREE | NEUTRAL † |
-| `br2026_diplomacia_eleitoral_5` | O Brasil deve participar de coalizões internacionais para enfrentar fome e mudanças climáticas. | LEFT | STRONGLY_AGREE | NEUTRAL † |
-| `br2026_diplomacia_eleitoral_6` | O Brasil deve evitar compromissos internacionais que limitem sua margem de decisão sobre políticas internas. | RIGHT | DISAGREE | DISAGREE |
+| `br2026_diplomacia_eleitoral_5` | O Brasil deve participar de coalizões internacionais sobre fome e mudanças climáticas. | LEFT | STRONGLY_AGREE | NEUTRAL † |
+| `br2026_diplomacia_eleitoral_6` | O Brasil deve preservar sua autonomia, evitando compromissos internacionais que limitem decisões sobre suas políticas internas. | RIGHT | DISAGREE | DISAGREE |
 
 ### Equilíbrio entre Poderes
 
 | Identifier | Statement | Agreement favors | Lula | Flávio |
 | --- | --- | --- | --- | --- |
 | `br2026_contrapesos_1` | Tribunais devem poder suspender atos dos Poderes eleitos que violem a Constituição, mesmo quando tenham apoio popular. | LEFT | AGREE | AGREE |
-| `br2026_contrapesos_2` | O STF deve ter menos competências e concentrar sua atuação no julgamento de questões constitucionais. | RIGHT | NEUTRAL † | STRONGLY_AGREE |
+| `br2026_contrapesos_2` | O STF deve se concentrar nas questões constitucionais, deixando outros tipos de processo para as demais instâncias da Justiça. | RIGHT | NEUTRAL † | STRONGLY_AGREE |
 | `br2026_contrapesos_3` | Um ministro do STF deve poder suspender uma medida em caso urgente, desde que a decisão seja revista rapidamente pelo colegiado. | LEFT | NEUTRAL † | DISAGREE |
 | `br2026_contrapesos_4` | Em disputas sobre políticas públicas, o Judiciário deve deixar maior espaço de decisão para o Congresso e o Executivo. | RIGHT | NEUTRAL † | STRONGLY_AGREE |
 | `br2026_contrapesos_5` | Órgãos de controle devem poder investigar decisões do governo sem autorização prévia de autoridades eleitas. | LEFT | AGREE | AGREE |
-| `br2026_contrapesos_6` | O número de organizações autorizadas a contestar leis diretamente no STF deve ser reduzido. | RIGHT | NEUTRAL † | AGREE |
+| `br2026_contrapesos_6` | O direito de contestar leis diretamente no STF deve ficar com um grupo menor de instituições. | RIGHT | NEUTRAL † | AGREE |
 
 ## Validation and remaining work
 

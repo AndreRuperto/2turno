@@ -114,7 +114,7 @@
     {
       "id": "br2026_coordenacao_2",
       "axisId": "coordenacao",
-      "text": "As decisões sobre quais setores econômicos devem crescer devem caber principalmente às empresas, sem prioridades setoriais definidas pelo governo.",
+      "text": "Os setores da economia que vão crescer devem ser definidos pelas escolhas de empresas e consumidores, e não por prioridades do governo.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "escolha-setores",
@@ -123,7 +123,7 @@
     {
       "id": "br2026_coordenacao_3",
       "axisId": "coordenacao",
-      "text": "Compras do governo devem dar preferência a produtos nacionais para desenvolver a indústria brasileira, mesmo com custo maior.",
+      "text": "Compras do governo devem dar preferência a produtos fabricados no Brasil, mesmo que custem mais.",
       "agreePole": "LEFT",
       "weight": 1,
       "topic": "compras-nacionais",
@@ -132,7 +132,7 @@
     {
       "id": "br2026_coordenacao_4",
       "axisId": "coordenacao",
-      "text": "Os preços dos combustíveis devem acompanhar as variações do mercado internacional, sem intervenções do governo para suavizar os reajustes.",
+      "text": "Os reajustes dos combustíveis devem repassar diretamente as variações do mercado internacional, inclusive nas altas.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "precos-combustiveis",
@@ -150,7 +150,7 @@
     {
       "id": "br2026_coordenacao_6",
       "axisId": "coordenacao",
-      "text": "As exigências para abrir e manter empresas devem ser reduzidas, mantendo as regras de segurança dos produtos.",
+      "text": "O governo deve reduzir as exigências para abrir e manter empresas, preservando as regras de segurança dos produtos.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "regulacao-negocios",
@@ -195,7 +195,7 @@
     {
       "id": "br2026_protecao_social_5",
       "axisId": "protecao_social",
-      "text": "O governo deve ampliar a cobertura dos benefícios sociais para alcançar famílias elegíveis que ainda estão fora dos programas.",
+      "text": "O governo deve incluir nos programas sociais as famílias que têm direito aos benefícios, mas ainda não os recebem.",
       "agreePole": "LEFT",
       "weight": 1,
       "topic": "cobertura-social",
@@ -240,7 +240,7 @@
     {
       "id": "br2026_tributacao_4",
       "axisId": "tributacao",
-      "text": "O governo deve priorizar cortes nos impostos sobre consumo, mesmo sem aumentar a cobrança sobre altas rendas.",
+      "text": "Reduzir os impostos sobre o consumo deve ter prioridade sobre aumentar o imposto das rendas mais altas.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "imposto-consumo",
@@ -348,7 +348,7 @@
     {
       "id": "br2026_trabalho_4",
       "axisId": "trabalho",
-      "text": "Novas formas de contrato devem facilitar a contratação de jovens e pessoas acima de 50 anos, mesmo com regras diferentes das da CLT.",
+      "text": "Devem existir contratos com regras diferentes das da CLT para facilitar a contratação de jovens e de pessoas com mais de 50 anos.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "contratos-especiais",
@@ -366,7 +366,7 @@
     {
       "id": "br2026_trabalho_6",
       "axisId": "trabalho",
-      "text": "O trabalho por aplicativos deve manter contratos flexíveis, com proteção social sem obrigar todas as plataformas a contratar pela CLT.",
+      "text": "Motoristas e entregadores de aplicativo devem continuar autônomos, com proteção social própria em vez de contrato pela CLT.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "autonomia-aplicativos",
@@ -375,7 +375,7 @@
     {
       "id": "br2026_direitos_sociais_1",
       "axisId": "direitos_sociais",
-      "text": "O governo deve manter políticas específicas para combater a discriminação contra pessoas LGBT.",
+      "text": "O governo deve manter programas e órgãos específicos voltados à população LGBT.",
       "agreePole": "LEFT",
       "weight": 1,
       "topic": "politicas-lgbt",
@@ -384,7 +384,7 @@
     {
       "id": "br2026_direitos_sociais_2",
       "axisId": "direitos_sociais",
-      "text": "A legislação sobre aborto deve manter os limites das situações atualmente permitidas por lei.",
+      "text": "O aborto deve continuar permitido apenas nos casos que a lei já prevê.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "aborto-legislacao",
@@ -393,7 +393,7 @@
     {
       "id": "br2026_direitos_sociais_3",
       "axisId": "direitos_sociais",
-      "text": "As cotas raciais no acesso à educação devem ser mantidas como medida de redução de desigualdades.",
+      "text": "As cotas raciais no acesso à educação devem ser mantidas.",
       "agreePole": "LEFT",
       "weight": 1,
       "topic": "cotas-raciais",
@@ -420,7 +420,7 @@
     {
       "id": "br2026_direitos_sociais_6",
       "axisId": "direitos_sociais",
-      "text": "Os conteúdos sobre sexualidade nas escolas devem depender de autorização prévia dos responsáveis.",
+      "text": "Os pais ou responsáveis devem autorizar previamente a participação dos filhos em aulas sobre sexualidade.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "educacao-sexual",
@@ -456,7 +456,7 @@
     {
       "id": "br2026_laicidade_4",
       "axisId": "laicidade",
-      "text": "O compromisso com valores religiosos deve ser um dos critérios relevantes na escolha de autoridades públicas.",
+      "text": "O compromisso com valores religiosos deve ser um dos critérios na escolha de autoridades como ministros e juízes de tribunais superiores.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "nomeacoes-religiosas",
@@ -537,7 +537,7 @@
     {
       "id": "br2026_justica_penal_1",
       "axisId": "justica_penal",
-      "text": "O sistema prisional deve ampliar estudo e trabalho para favorecer a reintegração de quem cumpre pena.",
+      "text": "Os presídios devem oferecer mais vagas de estudo e trabalho para quem cumpre pena.",
       "agreePole": "LEFT",
       "weight": 1,
       "topic": "estudo-prisional",
@@ -564,7 +564,7 @@
     {
       "id": "br2026_justica_penal_4",
       "axisId": "justica_penal",
-      "text": "A política prisional deve priorizar a construção de novas vagas para ampliar a capacidade de encarceramento.",
+      "text": "A política prisional deve priorizar a construção de novos presídios, para que mais condenados cumpram pena em regime fechado.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "vagas-prisionais",
@@ -591,7 +591,7 @@
     {
       "id": "br2026_ambiente_1",
       "axisId": "ambiente",
-      "text": "Obras de grande impacto devem passar por estudos ambientais completos, com o tempo necessário para sua análise, mesmo que o licenciamento demore mais.",
+      "text": "Obras com grande impacto devem passar por estudos ambientais completos, mesmo que a licença demore mais.",
       "agreePole": "LEFT",
       "weight": 1,
       "topic": "licenciamento-estudos",
@@ -681,7 +681,7 @@
     {
       "id": "br2026_diplomacia_eleitoral_5",
       "axisId": "diplomacia_eleitoral",
-      "text": "O Brasil deve participar de coalizões internacionais para enfrentar fome e mudanças climáticas.",
+      "text": "O Brasil deve participar de coalizões internacionais sobre fome e mudanças climáticas.",
       "agreePole": "LEFT",
       "weight": 1,
       "topic": "coalizoes-globais",
@@ -690,7 +690,7 @@
     {
       "id": "br2026_diplomacia_eleitoral_6",
       "axisId": "diplomacia_eleitoral",
-      "text": "O Brasil deve evitar compromissos internacionais que limitem sua margem de decisão sobre políticas internas.",
+      "text": "O Brasil deve preservar sua autonomia, evitando compromissos internacionais que limitem decisões sobre suas políticas internas.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "compromissos-externos",
@@ -708,7 +708,7 @@
     {
       "id": "br2026_contrapesos_2",
       "axisId": "contrapesos",
-      "text": "O STF deve ter menos competências e concentrar sua atuação no julgamento de questões constitucionais.",
+      "text": "O STF deve se concentrar nas questões constitucionais, deixando outros tipos de processo para as demais instâncias da Justiça.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "competencia-stf",
@@ -744,7 +744,7 @@
     {
       "id": "br2026_contrapesos_6",
       "axisId": "contrapesos",
-      "text": "O número de organizações autorizadas a contestar leis diretamente no STF deve ser reduzido.",
+      "text": "O direito de contestar leis diretamente no STF deve ficar com um grupo menor de instituições.",
       "agreePole": "RIGHT",
       "weight": 1,
       "topic": "acesso-contestacao",
@@ -1175,6 +1175,72 @@
           "locator": "pp. 65–66, 69–71"
         }
       }
+    }
+  ],
+  "proposals": [
+    {
+      "id": "br2026_star_escolas_civico_militares",
+      "text": "O governo federal deve apoiar a ampliação de escolas públicas no modelo cívico-militar.",
+      "proponentId": "flavio-bolsonaro",
+      "topic": "escolas-civico-militares",
+      "sourceId": "tse-pl",
+      "sourceLocator": "p. 35"
+    },
+    {
+      "id": "br2026_star_adesao_ocde",
+      "text": "O Brasil deve buscar se tornar membro da OCDE.",
+      "proponentId": "flavio-bolsonaro",
+      "topic": "adesao-ocde",
+      "sourceId": "tse-pl",
+      "sourceLocator": "p. 63"
+    },
+    {
+      "id": "br2026_star_licenca_prazo",
+      "text": "A licença ambiental deve ser concedida se o empreendedor cumprir os requisitos legais e o órgão ambiental não decidir nem se manifestar dentro do prazo.",
+      "proponentId": "flavio-bolsonaro",
+      "topic": "licenca-ambiental-prazo",
+      "sourceId": "tse-pl",
+      "sourceLocator": "pp. 49–50"
+    },
+    {
+      "id": "br2026_star_classificacao_faccoes",
+      "text": "As facções criminosas devem ser classificadas oficialmente como organizações terroristas.",
+      "proponentId": "flavio-bolsonaro",
+      "topic": "classificacao-faccoes",
+      "sourceId": "tse-pl",
+      "sourceLocator": "p. 13"
+    },
+    {
+      "id": "br2026_star_conteudo_local_datacenters",
+      "text": "A instalação de centros de processamento de dados no Brasil deve incluir exigências de conteúdo local.",
+      "proponentId": "lula-da-silva",
+      "topic": "conteudo-local-datacenters",
+      "sourceId": "tse-pt",
+      "sourceLocator": "p. 55"
+    },
+    {
+      "id": "br2026_star_regulacao_redes",
+      "text": "O governo deve ampliar a regulação das redes sociais e das plataformas digitais.",
+      "proponentId": "lula-da-silva",
+      "topic": "regulacao-redes",
+      "sourceId": "tse-pt",
+      "sourceLocator": "p. 16"
+    },
+    {
+      "id": "br2026_star_assentamentos_reforma_agraria",
+      "text": "O governo deve continuar assentando famílias acampadas por meio da reforma agrária.",
+      "proponentId": "lula-da-silva",
+      "topic": "assentamentos-reforma-agraria",
+      "sourceId": "tse-pt",
+      "sourceLocator": "p. 60"
+    },
+    {
+      "id": "br2026_star_cameras_corporais",
+      "text": "O governo federal deve ampliar os incentivos para o uso de câmeras corporais pelas polícias.",
+      "proponentId": "lula-da-silva",
+      "topic": "cameras-corporais-policias",
+      "sourceId": "tse-pt",
+      "sourceLocator": "p. 30"
     }
   ],
   "sources": [

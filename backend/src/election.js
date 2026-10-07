@@ -182,6 +182,11 @@ function candidateView(candidate, english)
 
 
 
+const proposalView = proposal => ({
+  id: proposal.id, text: proposal.text, proponentId: proposal.proponentId,
+  topic: proposal.topic, sourceId: proposal.sourceId, sourceLocator: proposal.sourceLocator
+});
+
 function buildModel(source, english)
 {
   return {
@@ -191,6 +196,7 @@ function buildModel(source, english)
     description: source.description,
     axes: source.axes.map(axisView),
     questions: source.questions.map(questionView),
+    proposals: (source.proposals ?? []).map(proposalView),
     candidates: source.candidates.map(candidate => candidateView(candidate, english)),
     sources: source.sources.map(({ id, title, url, kind, accessedAt }) => ({ id, title, url, kind, accessedAt }))
   };
@@ -208,12 +214,14 @@ function translateModel(portuguese, translation)
   require(sameSet(new Set(translatedQuestions.keys()), new Set(portuguese.questions.map(question => question.id))),
     'Election question translations are incomplete.');
   const translatedAxes = new Map(translation.axes.map(axis => [axis.id, axis]));
+  const translatedProposals = new Map((translation.proposals ?? []).map(p => [p.id, p.text]));
   const english = {
     ...portuguese,
     title: translation.title,
     description: translation.description,
     axes: portuguese.axes.map(axis => translatedAxes.get(axis.id)),
-    questions: portuguese.questions.map(question => ({ ...question, text: translatedQuestions.get(question.id) }))
+    questions: portuguese.questions.map(question => ({ ...question, text: translatedQuestions.get(question.id) })),
+    proposals: (portuguese.proposals ?? []).map(p => ({ ...p, text: translatedProposals.get(p.id) ?? p.text }))
   };
   validateModel(english);
   return buildModel(english, true);
