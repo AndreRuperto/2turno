@@ -34,10 +34,6 @@
 .example-candidates > h3 { margin-top: 0; font-size: 18px; }
 .compatibility-explanation { border-left: 4px solid #376146; margin-top: 28px; padding: 8px 24px; line-height: 1.8; }
 .education-methodology { background: #e8eeea; border-radius: 28px; padding: 40px; }
-@media (min-width: 1200px)
-{
-    .axes-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
 @media (max-width: 1000px)
 {
     .spectrum-grid, .axes-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
