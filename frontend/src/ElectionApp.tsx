@@ -479,6 +479,10 @@ export default function ElectionApp()
         {site.candidates.map(candidate => <a key={candidate.id} href={candidatePage(candidate.id)}>{candidate.name}</a>)}
         <a href={`${languagePrefix}/election-methodology`}>{text.methodology}</a>
         <a href={LANG === 'pt' ? '/en' : '/'} onClick={preserveLanguageProgress} lang={LANG === 'pt' ? 'en' : 'pt-BR'}>{LANG === 'pt' ? 'English' : 'Português'}</a>
+        {/* Só na página inicial: trocar de modo reinicia a tela, e no quiz ou no resultado isso perderia o andamento. */}
+        {available && onHome && !busy && <button type="button" className="extremist-mode-toggle" aria-pressed={modeActive} onClick={toggleExtremistMode}>
+          {LANG === 'pt' ? 'Modo extremista' : 'Extremist mode'} · {modeActive ? 'ON' : 'OFF'}
+        </button>}
       </nav>
     </header>
     <main id="main-content" tabIndex={-1}>
@@ -500,12 +504,6 @@ export default function ElectionApp()
               <button className="resume-discard" type="button" onClick={discardProgress}>{text.resume.discard}</button>
             </div>
           </section>}
-          <div className="extremist-mode-control">
-            <button type="button" className="extremist-mode-toggle" aria-pressed={modeActive} onClick={toggleExtremistMode}>
-              {LANG === 'pt' ? 'Modo extremista' : 'Extremist mode'} · {modeActive ? 'ON' : 'OFF'}
-            </button>
-            {modeActive && <p>{LANG === 'pt' ? '40 perguntas radicais. Perfil separado do quiz eleitoral.' : '40 radical questions. A profile separate from the election quiz.'}</p>}
-          </div>
           {modeActive ? <section className="extremist-hero">
             <img src="/extremist-fight-poster.webp" alt={LANG === 'pt' ? 'Pôster fictício de MMA: Flávio Bolsonaro contra Lula' : 'Fictional MMA fight poster: Flávio Bolsonaro versus Lula'} width="1862" height="845" />
             <div><p className="election-kicker">2TURNO · {LANG === 'pt' ? 'MODO EXTREMISTA' : 'EXTREMIST MODE'}</p>
