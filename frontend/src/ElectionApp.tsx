@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { HistoricalComparisons } from './components/election/HistoricalComparisons';
+import { PlanProposals } from './components/election/PlanProposals';
 import { ScaleQuestion } from './components/election/ScaleQuestion';
 import { ShareResult } from './components/election/ShareResult';
 import { LANG } from './i18n';
@@ -620,6 +621,7 @@ export default function ElectionApp()
               ...profiles.candidates.map(candidate => ({ name: candidate.name, symbol: String(candidate.number), score: entry.candidateScores[candidate.id], color: presentation.classificationLabels(candidate.scores, LANG).color }))
             ]} />)}</div>
           </details>
+          <PlanProposals proposals={model?.proposals ?? []} options={model?.quiz.answerOptions ?? []} />
           <p>{text.disclaimer}</p>
           <a href={`${languagePrefix}/election-methodology`}>{text.methodology}</a>
           <div className="election-actions"><ShareResult result={comparison} /><button type="button" onClick={() => setComparison(null)}>{text.restart}</button></div>

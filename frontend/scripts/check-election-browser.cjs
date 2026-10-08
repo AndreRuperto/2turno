@@ -5,6 +5,7 @@ const { mkdirSync } = require('node:fs');
 const { join } = require('node:path');
 const profiles = require('../src/data/electionProfiles.generated.json');
 const presentation = require('../src/utils/electionPresentation.cjs');
+const site = require('../src/site.json');
 
 const website = process.env.ELECTION_TEST_URL || 'http://127.0.0.1:5173';
 const screenshotDirectory = join(__dirname, '../node_modules/.cache/election-browser');
@@ -96,6 +97,34 @@ async function checkHome(page, language, width)
     await checkLayout(page);
     await page.screenshot({ path: join(screenshotDirectory, 'home-' + language + '-' + width + '.png'), fullPage: true });
     await page.locator('.home-hero').screenshot({ path: join(screenshotDirectory, 'hero-' + language + '-' + width + '.png') });
+}
+
+
+
+async function checkPlanProposals(page, language)
+{
+    const cards = page.locator('.plan-proposals .plan-proposal');
+    assert.equal(await cards.count(), 8);
+    const names = site.candidates.map(candidate => candidate.name);
+    for (const text of await cards.allInnerTexts())
+    {
+        assert.ok(names.every(name => !text.includes(name)), 'The proponent stays hidden before an answer');
+    }
+    const card = cards.first();
+    const reveal = card.locator('.plan-proposal-reveal');
+    await card.locator('input[value="AGREE"]').check();
+    const revealed = await reveal.innerText();
+    assert.ok(revealed.includes(language === 'pt' ? 'Você concorda.' : 'You agree.'));
+    assert.equal(names.filter(name => revealed.includes(name)).length, 2, 'Both plans are named after an answer');
+    assert.match(await reveal.locator('a').getAttribute('href'), /^https:\/\/planodegoverno2026\.com\.br\/planos\/[^#]+\.pdf#page=\d+$/);
+    await card.locator('input[value="DISAGREE"]').check();
+    assert.ok((await reveal.innerText()).includes(language === 'pt' ? 'Você discorda.' : 'You disagree.'));
+    const help = card.locator('.plan-proposal-help');
+    assert.equal(await help.getAttribute('aria-expanded'), 'false');
+    await help.click();
+    assert.equal(await help.getAttribute('aria-expanded'), 'true');
+    assert.ok((await card.locator('.plan-proposal-help-text').innerText()).trim().length > 20);
+    await checkLayout(page);
 }
 
 
@@ -202,6 +231,7 @@ async function checkResults(page, language, answer, themeScore)
         assert.equal(await page.locator('#seu-perfil .ideology-header').getAttribute('data-family'), 'centre');
         assert.equal(await page.locator('#seu-perfil .ideology-header').getAttribute('data-subtype'), 'balanced-centrism');
     }
+    await checkPlanProposals(page, language);
     await checkLayout(page);
     await page.screenshot({ path: join(screenshotDirectory, 'results-' + language + '-' + page.viewportSize().width + '.png'), fullPage: true });
     const compatibilityBeforeSwitch = await page.locator('.candidate-compatibility strong').allTextContents();

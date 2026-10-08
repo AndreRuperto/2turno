@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => {
       enforce: 'pre' as const,
       transform(source: string, identifier: string)
       {
-        if (identifier.split('?')[0].split('\\').join('/').match(/\/(?:election(?:Presentation|ShareCard|Alignment)|extremistMode)\.cjs$/))
+        if (identifier.split('?')[0].split('\\').join('/').match(/\/(?:election(?:Presentation|ShareCard|Alignment|Proposals)|extremistMode)\.cjs$/))
         {
           return source.replace("const presentation = require('./electionPresentation.cjs');", "import presentation from './electionPresentation.cjs';")
             .replace("const alignment = require('./electionAlignment.cjs');", "import alignment from './electionAlignment.cjs';")
