@@ -67,6 +67,10 @@ async function checkHome(page, language, width)
         assert.equal(await card.locator('.education-pole svg.education-pole-icon').count(), 2);
         assert.equal(await card.locator('.education-pole').first().innerText().then(text => text.includes(axis.leftPole)), true);
     }
+    // Três cartões de eixo por linha no desktop, dois no tablet e um no celular.
+    const axisCardBoxes = await page.locator('.axis-explanation-card').evaluateAll(cards => cards.map(card => card.getBoundingClientRect().toJSON()));
+    const axisCardsPerRow = axisCardBoxes.filter(box => Math.abs(box.y - axisCardBoxes[0].y) < 1).length;
+    assert.equal(axisCardsPerRow, width > 1000 ? 3 : width > 650 ? 2 : 1, 'Axis cards per row');
     await page.locator('#exemplo .candidate-compatibility').first().waitFor();
     const example = await (await exampleResponse).json();
     assert.equal(example.scoringMethod, 'mean-absolute-distance-v1');

@@ -41,7 +41,7 @@ Os rótulos são lidos de `electionProfiles.generated.json`, gerado a partir dos
 | Política externa | Cooperação multilateral | Autonomia e acordos bilaterais |
 | Equilíbrio entre Poderes | Controle judicial mais amplo | Maior margem dos Poderes eleitos |
 
-As grades exibem quatro eixos por linha em desktop amplo, três em desktop menor, dois em tablet e um em celular. O espectro usa três, dois ou um cartão por linha.
+As grades exibem três eixos por linha em desktop, dois em tablet e um em celular. O espectro usa três, dois ou um cartão por linha.
 
 ## Exemplo e compatibilidade
 
