@@ -36,6 +36,7 @@ async function main()
                 await page.goto(website + (language === 'en' ? '/en' : '/'));
                 await page.waitForLoadState('networkidle');
                 const toggle = page.locator('.extremist-mode-toggle');
+                assert.equal(await page.locator('.election-header .extremist-mode-toggle').count(), 1, 'The toggle lives in the header');
                 await toggle.click();
                 assert.equal(await toggle.getAttribute('aria-pressed'), 'true');
                 assert.equal(await page.locator('html').getAttribute('data-extremist-mode'), 'true');
@@ -56,6 +57,7 @@ async function main()
                 page.on('request', request => { if (request.url().includes('/api/')) calls.push(request.url()); });
                 await page.locator('.questionnaire-card button').click();
                 await page.getByText('1 / 40', { exact: true }).waitFor();
+                assert.equal(await page.locator('.extremist-mode-toggle').count(), 0, 'The toggle is only offered on the home page');
                 await checkAccess(page);
                 await page.locator('[data-answer="NEUTRAL"]').click();
                 await page.getByRole('link', { name: language === 'pt' ? 'English' : 'Português', exact: true }).click();
