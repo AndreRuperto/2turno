@@ -12,10 +12,17 @@
 .education-grid h3 { font-size: 20px; line-height: 1.4; margin: 16px 0; }
 .education-grid p { font-size: 15px; line-height: 1.75; margin-bottom: 0; }
 .family-indicator { display: block; width: 22px; height: 22px; border-radius: 50%; background: var(--ideology-color); }
-.axis-explanation-card { background: #fbf9f3; }
 .education-number { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: #376146; }
-.education-poles { display: flex; flex-direction: column; gap: 6px; font-weight: 600; color: #263e30; }
-.education-poles > span:nth-child(2) { font-size: 24px; }
+/* Cartões de eixo no formato do 12 Axes: número com o título, um ícone em cada polo e descrição menor. */
+.axis-explanation-card { background: #fbf9f3; padding: 22px; }
+.axis-explanation-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+.axis-explanation-top .education-number { font-size: 13px; font-weight: 600; color: var(--carmim); }
+.education-grid .axis-explanation-top h3 { margin: 0; font-size: 19px; line-height: 1.25; }
+.education-grid .education-poles { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px 8px; margin: 0 0 10px; font-size: 13.5px; font-weight: 600; line-height: 1.4; color: var(--tinta); }
+.education-pole { display: inline-flex; align-items: flex-start; gap: 6px; }
+.education-pole-icon { flex: none; width: 18px; height: 18px; color: var(--floresta); }
+.education-pole-arrow { color: var(--texto-suave); font-weight: 400; }
+.education-grid .axis-explanation-card > p:last-child { font-size: 13.5px; line-height: 1.5; color: var(--texto-suave); }
 .education-dark { background: #102e24; color: #fbf9f3; padding: 40px; border-radius: 28px; }
 .education-dark .education-label, .education-dark .education-number { color: #bbd5be; }
 .education-dark h2, .education-dark h3, .education-dark p { color: inherit; }
@@ -43,6 +50,8 @@
     .election-app .education-section { margin-block: 56px; }
     .spectrum-grid, .axes-grid, .example-layout { grid-template-columns: 1fr; }
     .education-dark, .education-methodology { padding: 28px 22px; }
-    .education-grid p, .education-poles { font-size: 16px; }
+    .education-grid p { font-size: 16px; }
+    .education-grid .education-poles { font-size: 14px; }
+    .education-grid .axis-explanation-card > p:last-child { font-size: 14.5px; }
     .example-layout .axis-pole-labels { font-size: 14px; }
 }

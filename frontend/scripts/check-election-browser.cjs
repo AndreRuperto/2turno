@@ -63,6 +63,9 @@ async function checkHome(page, language, width)
         assert.ok((await card.innerText()).includes(axis.label));
         assert.ok((await card.innerText()).includes(axis.leftPole));
         assert.ok((await card.innerText()).includes(axis.rightPole));
+        // Um ícone por polo, cada um preso ao texto do seu polo.
+        assert.equal(await card.locator('.education-pole svg.education-pole-icon').count(), 2);
+        assert.equal(await card.locator('.education-pole').first().innerText().then(text => text.includes(axis.leftPole)), true);
     }
     await page.locator('#exemplo .candidate-compatibility').first().waitFor();
     const example = await (await exampleResponse).json();
