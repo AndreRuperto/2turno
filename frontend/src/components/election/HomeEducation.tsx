@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { createElement, useEffect, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { LANG } from '../../i18n';
 import translations from '../../i18n/electionEducation.json';
 import profiles from '../../data/electionProfiles.generated.json';
+import { ELECTION_POLE_ICONS } from '../../data/electionPoleIcons';
 import presentation from '../../utils/electionPresentation.cjs';
 import { compareElectionVector } from '../../services/electionApi';
 import type { ElectionComparison } from '../../types/election';
@@ -42,11 +43,30 @@ export function PoliticalSpectrum()
 
 
 
+function AxisPoleIcon({ axisId, side }: { axisId: string; side: 'left' | 'right' })
+{
+    const icon = ELECTION_POLE_ICONS[axisId]?.[side];
+    if (!icon) return null;
+    return <svg className="education-pole-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
+        strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+        {icon.map(([tag, attributes], index) => createElement(tag, { key: index, ...attributes }))}
+    </svg>;
+}
+
+
+
+// Como no 12 Axes: número e título na mesma linha e um ícone em cada polo. A seta fica presa ao
+// polo da esquerda e cada ícone ao seu texto, para nada sobrar sozinho numa linha.
 export function AxisExplanationCard({ axis, index }: { axis: Axis; index: number })
 {
     return <article className="axis-explanation-card" data-axis={axis.id}>
-        <span className="education-number">{String(index + 1).padStart(2, '0')}</span>
-        <h3>{axis.label}</h3><p className="education-poles"><span>{axis.leftPole}</span><span aria-hidden="true">↔</span><span>{axis.rightPole}</span></p>
+        <div className="axis-explanation-top">
+            <span className="education-number">{String(index + 1).padStart(2, '0')}</span><h3>{axis.label}</h3>
+        </div>
+        <p className="education-poles">
+            <span className="education-pole"><AxisPoleIcon axisId={axis.id} side="left" /><span>{axis.leftPole}&nbsp;<span className="education-pole-arrow" aria-hidden="true">↔</span></span></span>
+            <span className="education-pole"><span>{axis.rightPole}</span><AxisPoleIcon axisId={axis.id} side="right" /></span>
+        </p>
         <p>{text.axisDescriptions[axis.id as keyof typeof text.axisDescriptions]}</p>
     </article>;
 }
