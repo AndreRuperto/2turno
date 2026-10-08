@@ -62,7 +62,7 @@ function writePage(path, title, description, content, language)
 <link rel="stylesheet" href="/election-profile.css">
 <script>try{if(localStorage.getItem('2turno-extremist-mode')==='true')document.documentElement.dataset.extremistMode='true'}catch{}</script>
 </head><body><a class="skip-link" href="#main-content">${language === 'en' ? 'Skip to content' : 'Pular para o conteúdo'}</a><header><a class="brand" href="${prefix || '/'}"><img src="/logo-2turno.png" alt="${site.name}" width="166" height="38"></a><nav aria-label="${language === 'en' ? 'Navigation' : 'Navegação'}"><a href="${prefix || '/'}">${text.quiz}</a>${candidateLinks}
-<a href="${prefix}/election-methodology">${text.methodology}</a><a href="${translatedPath}">${text.switchLanguage}</a></nav></header>
+<a href="${prefix}/election-methodology">${text.methodology}</a><a class="language-switch" href="${translatedPath}" lang="${language === 'en' ? 'pt-BR' : 'en'}" aria-label="${text.switchLanguage}">${language === 'en' ? 'PT' : 'EN'}</a></nav></header>
 <main id="main-content" tabindex="-1">${content}</main><footer>${site.name} · ${text.runoff}</footer></body></html>`;
   const destination = join(outputDirectory, `${path.replace(/^\//, '')}.html`);
   mkdirSync(dirname(destination), { recursive: true });

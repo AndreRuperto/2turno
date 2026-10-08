@@ -34,6 +34,7 @@ async function checkHome(page, language, width)
     const exampleResponse = page.waitForResponse(response => response.url().includes('/brazil-2026/compare?') && response.status() === 200);
     await page.goto(website + (language === 'en' ? '/en' : '/'));
     await page.locator('.home-options').waitFor();
+    assert.equal(await page.locator('.election-header .language-switch').innerText(), language === 'pt' ? 'EN' : 'PT');
     assert.equal(await page.locator('.home-hero-portraits img').count(), 2);
     assert.equal(await page.locator('.hero-versus').innerText(), 'VS');
     assert.equal(await page.locator('.hero-versus').evaluate(label => window.getComputedStyle(label).pointerEvents), 'none');
@@ -278,6 +279,7 @@ async function checkCandidatePages(page, language)
     {
         await page.goto(website + (language === 'en' ? '/en' : '') + '/candidatos/' + candidate.id);
         await page.locator('.candidate-page-header').waitFor();
+        assert.equal(await page.locator('body > header .language-switch').innerText(), language === 'pt' ? 'EN' : 'PT');
         const expected = presentation.classificationLabels(candidate.scores, language);
         assert.equal(await page.locator('.ideology-header').getAttribute('data-family'), expected.family);
         assert.equal(await page.locator('.ideology-header h2').innerText(), expected.subtypeLabel);

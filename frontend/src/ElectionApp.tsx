@@ -478,7 +478,8 @@ export default function ElectionApp()
         <a href={`${languagePrefix || '/'}#teste`} onClick={() => { setQuiz(null); setComparison(null); setRadicalScores(null); setChoosingFormat(true); }}>{educationTranslations[LANG].quizLink}</a>
         {site.candidates.map(candidate => <a key={candidate.id} href={candidatePage(candidate.id)}>{candidate.name}</a>)}
         <a href={`${languagePrefix}/election-methodology`}>{text.methodology}</a>
-        <a href={LANG === 'pt' ? '/en' : '/'} onClick={preserveLanguageProgress} lang={LANG === 'pt' ? 'en' : 'pt-BR'}>{LANG === 'pt' ? 'English' : 'Português'}</a>
+        <a className="language-switch" href={LANG === 'pt' ? '/en' : '/'} onClick={preserveLanguageProgress} lang={LANG === 'pt' ? 'en' : 'pt-BR'}
+          aria-label={LANG === 'pt' ? 'English' : 'Português'}>{LANG === 'pt' ? 'EN' : 'PT'}</a>
         {/* Só na página inicial: trocar de modo reinicia a tela, e no quiz ou no resultado isso perderia o andamento. */}
         {available && onHome && !busy && <button type="button" className="extremist-mode-toggle" aria-pressed={modeActive} onClick={toggleExtremistMode}>
           {LANG === 'pt' ? 'Modo extremista' : 'Extremist mode'} · {modeActive ? 'ON' : 'OFF'}
