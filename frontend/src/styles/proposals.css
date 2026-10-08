@@ -1,0 +1,26 @@
+/* Propostas dos planos (página de resultado). Cores neutras: nenhuma cor de família política ou de partido. */
+.plan-proposals { margin: 36px 0 28px; }
+.plan-proposals > h2 { margin: 0 0 8px; }
+.plan-proposals-intro { max-width: 68ch; margin: 0 0 20px; color: var(--ink-700); }
+/* align-items: start evita que a resposta revelada num cartão estique o vizinho de linha. */
+.plan-proposals-list { display: grid; gap: 16px; align-items: start; }
+@media (min-width: 700px) { .plan-proposals-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.plan-proposal { display: grid; gap: 12px; align-content: start; min-width: 0; padding: 18px; border: 1px solid #d6d8ce; border-radius: 14px; background: #fbf9f3; }
+.plan-proposal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.plan-proposal-head h3 { margin: 0; font-size: 1.05rem; line-height: 1.4; overflow-wrap: anywhere; }
+.plan-proposals .plan-proposal-help { flex: none; }
+.plan-proposal-help-text { margin: 0; padding: 10px 12px; border-radius: 10px; background: #fff; color: var(--ink-900); font-size: .95rem; }
+
+/* As regras globais de .election-app para label e input não valem aqui. */
+.plan-proposal-scale { display: flex; flex-wrap: wrap; gap: 8px; }
+.election-app .plan-proposal-option { position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border: 1.5px solid var(--ink-300); border-radius: 999px; background: #fff; color: var(--ink-900); font-size: .92rem; cursor: pointer; }
+.plan-proposals .plan-proposal-option input[type="radio"] { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; opacity: 0; cursor: pointer; }
+.election-app .plan-proposal-option:hover { border-color: var(--ink-700); }
+.election-app .plan-proposal-option.selected { border-color: var(--ink-900); background: var(--ink-900); color: #fff; }
+.election-app .plan-proposal-option:has(input:focus-visible) { outline: 3px solid #a83039; outline-offset: 2px; }
+
+.plan-proposal-reveal:not(:empty) { padding-left: 12px; border-left: 3px solid var(--ink-700); }
+.plan-proposal-reveal p { margin: 0 0 4px; }
+.plan-proposal-reveal a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.plan-proposal-reveal a:focus-visible { outline: 3px solid #a83039; outline-offset: 2px; border-radius: 4px; }

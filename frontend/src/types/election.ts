@@ -1,10 +1,22 @@
 import type { Axis, QuizPayload, QuizVariant, SubmittedAnswer } from './quiz';
 
+export interface ElectionProposal
+{
+  id: string;
+  text: string;
+  proponentId: string;
+  topic: string;
+  sourceId: string;
+  sourceLocator: string;
+}
+
 export interface ElectionQuiz
 {
   modelId: string;
   asOf: string;
   quiz: QuizPayload;
+  /** Propostas dos planos, exibidas no resultado. Opcional para tolerar uma API anterior. */
+  proposals?: ElectionProposal[];
 }
 
 export interface ElectionAnswerRequest

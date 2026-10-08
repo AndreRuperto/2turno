@@ -88,6 +88,27 @@ describe('modelo eleitoral', () =>
       'Industrial policy with local content; simpler business rules; smooths fuel prices.');
   });
 
+  test('o quiz traz as oito propostas dos planos no idioma pedido', () =>
+  {
+    for (const language of ['pt', 'en'])
+    {
+      const quiz = election.getQuiz('short', language);
+      assert.deepEqual(quiz.proposals, election.getModel(language).proposals);
+      assert.equal(quiz.proposals.length, 8);
+    }
+    const portuguese = election.getQuiz('short', 'pt').proposals;
+    const english = election.getQuiz('short', 'en').proposals;
+    portuguese.forEach((original, index) =>
+    {
+      assert.ok(english[index].text.trim() && english[index].text !== original.text);
+      assert.deepEqual({ ...english[index], text: '' }, { ...original, text: '' });
+    });
+    for (const candidate of ['flavio-bolsonaro', 'lula-da-silva'])
+    {
+      assert.equal(portuguese.filter(proposal => proposal.proponentId === candidate).length, 4);
+    }
+  });
+
   test('respostas opostas levam cada eixo ao polo oposto', () =>
   {
     for (const pole of ['LEFT', 'RIGHT'])

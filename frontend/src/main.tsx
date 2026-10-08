@@ -21,6 +21,7 @@ import './styles/election.css';
 import './styles/scale-question.css';
 import './styles/profile.css';
 import './styles/education.css';
+import './styles/proposals.css';
 
 // Depois de um deploy, uma aba aberta pede blocos com hash antigo que não existem mais.
 // Recarrega uma vez para pegar a versão nova; a trava evita laço se o bloco estiver mesmo quebrado.
