@@ -5,6 +5,51 @@ const alignment = require('./electionAlignment.cjs');
 const cardSize = 1080;
 const cardHeight = 1800;
 
+const LULA_ID = 'lula-da-silva';
+const FLAVIO_ID = 'flavio-bolsonaro';
+const PT_RED = '#c0392b';
+const PL_BLUE = '#2b5fa8';
+const BG = '#0d0f14';
+const INK = '#fffaf2';
+const INK_DIM = 'rgba(255,255,242,0.58)';
+const INK_FAINT = 'rgba(255,255,242,0.14)';
+const PAD = 64;
+
+
+
+function wrappedLines(context, value, maxWidth)
+{
+    const lines = [];
+    let line = '';
+    for (const word of value.split(' '))
+    {
+        const next = line ? `${line} ${word}` : word;
+        if (line && context.measureText(next).width > maxWidth) { lines.push(line); line = word; }
+        else line = next;
+    }
+    if (line) lines.push(line);
+    return lines;
+}
+
+
+
+function truncate(context, text, maxWidth)
+{
+    if (context.measureText(text).width <= maxWidth) return text;
+    let s = text;
+    while (s.length > 0 && context.measureText(s + '\u2026').width > maxWidth) s = s.slice(0, -1);
+    return s + '\u2026';
+}
+
+
+
+function fillCircle(context, x, y, radius)
+{
+    context.beginPath();
+    context.arc(x, y, radius, 0, Math.PI * 2);
+    context.fill();
+}
+
 
 
 function shareSummary(result, language = 'pt')
@@ -37,216 +82,290 @@ function shareSummary(result, language = 'pt')
 
 function drawResultCard(context, result, portraits = [], language = 'pt')
 {
-    const text = language === 'pt' ?
+    const isPt = language !== 'en';
+    const uiText =
     {
-        share: 'Compartilhar resultado', download: 'Baixar cartão', title: 'Seu resultado no 2 Turno',
-        you: 'Você', compatibility: 'Compatibilidade', note: 'Estimativa descritiva. Não representa intenção de voto.',
-        axes: 'SEUS 12 EIXOS', closest: 'MAIS PRÓXIMO', tied: 'EMPATE ENTRE OS CANDIDATOS',
-        error: 'Não foi possível gerar o cartão. Tente novamente.', preparing: 'Gerando cartão…'
-    } :
-    {
-        share: 'Share result', download: 'Download card', title: 'Your 2 Turno result',
-        you: 'You', compatibility: 'Compatibility', note: 'Descriptive estimate. Does not represent voting intention.',
-        axes: 'YOUR 12 AXES', closest: 'CLOSEST MATCH', tied: 'TIE BETWEEN THE CANDIDATES',
-        error: 'Could not generate the card. Please try again.', preparing: 'Generating card…'
+        brand: '2 TURNO',
+        myResult: isPt ? 'MEU RESULTADO' : 'MY RESULT',
+        axes: isPt ? 'SEUS 12 EIXOS' : 'YOUR 12 AXES',
+        you: isPt ? 'VOCÊ' : 'YOU',
+        compat: isPt ? 'COMPATIBILIDADE' : 'COMPATIBILITY',
+        balance: isPt ? 'Equilíbrio' : 'Balance',
+        note: isPt ? 'Estimativa descritiva. Não representa intenção de voto.' : 'Descriptive estimate. Does not represent voting intention.',
+        siteUrl: '2TURNO.UP.RAILWAY.APP'
     };
 
+    const summary = shareSummary(result, language);
+    const { classification } = summary;
+    const accentColor = classification.color;
 
+    // Resolve candidates in fixed positions: Lula left, Flávio right
+    const lulaIdx = result.candidates.findIndex(c => c.id === LULA_ID);
+    const flavioIdx = result.candidates.findIndex(c => c.id === FLAVIO_ID);
+    const lulaCand = result.candidates[lulaIdx] ?? result.candidates[0];
+    const flavioCand = result.candidates[flavioIdx] ?? result.candidates[1];
+    const lulaPortrait = portraits[lulaIdx] ?? null;
+    const flavioPortrait = portraits[flavioIdx] ?? null;
+    const lulaName = site.candidates.find(p => p.id === LULA_ID)?.name ?? lulaCand.name;
+    const flavioName = site.candidates.find(p => p.id === FLAVIO_ID)?.name ?? flavioCand.name;
 
-    function wrappedLines(context, value, width)
+    // ── BACKGROUND ──────────────────────────────────────────────────────────────
+    context.fillStyle = BG;
+    context.fillRect(0, 0, cardSize, cardHeight);
+
+    // Soft radial glow at top-right
+    const glow = context.createRadialGradient(cardSize, 0, 0, cardSize, 0, 520);
+    glow.addColorStop(0, accentColor + '28');
+    glow.addColorStop(1, 'transparent');
+    context.fillStyle = glow;
+    context.fillRect(0, 0, cardSize, 520);
+
+    // ── HEADER (y 44–88) ─────────────────────────────────────────────────────────
+    context.fillStyle = INK;
+    context.font = 'bold 40px Sora, sans-serif';
+    context.textAlign = 'left';
+    context.fillText(uiText.brand, PAD, 80);
+
+    context.fillStyle = INK_FAINT;
+    context.fillRect(268, 67, 588, 1);
+
+    context.fillStyle = INK_DIM;
+    context.font = '600 17px Poppins, sans-serif';
+    context.textAlign = 'right';
+    context.fillText(uiText.myResult, cardSize - PAD, 80);
+    context.textAlign = 'left';
+
+    // ── CLASSIFICATION (y 110–270) ───────────────────────────────────────────────
+    context.fillStyle = accentColor;
+    context.font = '600 21px Poppins, sans-serif';
+    context.fillText(classification.familyLabel.toUpperCase(), PAD, 132);
+
+    context.fillStyle = INK;
+    context.font = 'bold 54px Sora, sans-serif';
+    const subtypeLines = wrappedLines(context, classification.subtypeLabel, cardSize - 2 * PAD);
+    subtypeLines.forEach((line, i) => context.fillText(line, PAD, 198 + i * 60));
+
+    // ── PORTRAIT DIVIDE (y 270–690) ──────────────────────────────────────────────
+    const divTop = 270;
+    const divH = 420;
+    const divBottom = divTop + divH; // 690
+    const halfW = cardSize / 2;
+
+    function drawPortraitHalf(portrait, x, w, side)
     {
-        const lines = [];
-        let line = '';
-        for (const word of value.split(' '))
-        {
-            const next = line ? `${line} ${word}` : word;
-            if (line && context.measureText(next).width > width)
-            {
-                lines.push(line);
-                line = word;
-            }
-            else line = next;
-        }
-        lines.push(line);
-        return lines;
-    }
-
-
-
-    function drawWrappedText(context, value, horizontal, vertical, width, lineHeight)
-    {
-        const lines = wrappedLines(context, value, width);
-        lines.forEach((line, index) => context.fillText(line, horizontal, vertical + index * lineHeight));
-        return vertical + lines.length * lineHeight;
-    }
-
-
-
-    function drawPanel(context, horizontal, vertical, width, height)
-    {
+        context.save();
         context.beginPath();
-        context.roundRect(horizontal, vertical, width, height, 30);
-        context.fillStyle = '#00000030';
-        context.fill();
-        context.strokeStyle = '#ffffff24';
-        context.lineWidth = 1;
-        context.stroke();
-    }
+        context.rect(x, divTop, w, divH);
+        context.clip();
 
-
-
-    function drawCardHeader(context, classification)
-    {
-        context.fillStyle = '#ffffff0c';
-        context.beginPath();
-        context.arc(1080, 0, 380, 0, Math.PI * 2);
-        context.fill();
-        context.fillStyle = '#fffaf2';
-        context.font = 'bold 44px Sora, sans-serif';
-        context.fillText('2 TURNO', 64, 100);
-        context.font = '600 22px Poppins, sans-serif';
-        context.textAlign = 'right';
-        context.fillText(text.title.toUpperCase(), 1016, 100);
-        context.textAlign = 'left';
-        context.font = '600 26px Poppins, sans-serif';
-        context.fillText(classification.familyLabel.toUpperCase(), 64, 198);
-        context.font = 'bold 54px Sora, sans-serif';
-        drawWrappedText(context, classification.subtypeLabel, 64, 263, 952, 60);
-    }
-
-
-
-    function drawCandidateHighlights(context, result)
-    {
-        const candidate = result.candidates[0];
-        const portrait = portraits[0];
-        drawPanel(context, 64, 330, 412, 710);
         if (portrait)
         {
-            context.save();
-            context.beginPath();
-            context.roundRect(142, 378, 256, 360, 24);
-            context.clip();
-            const scale = Math.max(256 / portrait.naturalWidth, 360 / portrait.naturalHeight);
-            const width = portrait.naturalWidth * scale;
-            const height = portrait.naturalHeight * scale;
-            context.drawImage(portrait, 142 + (256 - width) / 2, 378 + (360 - height) / 2, width, height);
-            const shade = context.createLinearGradient(0, 560, 0, 1040);
-            shade.addColorStop(0, '#10162200');
-            shade.addColorStop(1, '#101622');
-            context.fillStyle = shade;
-            context.fillRect(64, 330, 412, 710);
-            context.restore();
+            const scale = Math.max(w / portrait.naturalWidth, divH / portrait.naturalHeight);
+            const pw = portrait.naturalWidth * scale;
+            const ph = portrait.naturalHeight * scale;
+            context.drawImage(portrait, x + (w - pw) / 2, divTop + (divH - ph) * 0.06, pw, ph);
         }
-        context.fillStyle = '#fffaf2';
-        context.font = 'bold 72px Sora, sans-serif';
-        context.fillText(`${candidate.compatibility.toFixed(1)}%`, 92, 815);
-        context.font = '600 18px Poppins, sans-serif';
-        drawWrappedText(context, result.closestCandidateIds.length > 1 ? text.tied : text.closest, 92, 858, 350, 24);
-        context.font = 'bold 32px Sora, sans-serif';
-        const nameBottom = drawWrappedText(context, (site.candidates.find(profile => profile.id === candidate.id)?.name || candidate.name), 92, 918, 350, 40);
-        context.font = '22px Poppins, sans-serif';
-        context.fillText(`${candidate.party} · ${candidate.number}`, 92, nameBottom + 18);
-        const other = result.candidates[1];
-        drawPanel(context, 64, 1060, 412, 194);
-        context.fillStyle = '#fffaf2';
+
+        // Multi-stop gradient: top 40% fully visible, darkens in lower 35% where text lives
+        const bottomFade = context.createLinearGradient(0, divTop, 0, divBottom);
+        bottomFade.addColorStop(0,    BG + '00'); // top: transparent
+        bottomFade.addColorStop(0.40, BG + '00'); // 40%: still clear
+        bottomFade.addColorStop(0.65, BG + '96'); // 65%: ~59% dark
+        bottomFade.addColorStop(0.82, BG + 'e4'); // 82%: ~89% dark
+        bottomFade.addColorStop(1,    BG);         // bottom: fully opaque
+        context.fillStyle = bottomFade;
+        context.fillRect(x, divTop, w, divH);
+
+        // Inner-edge vignette toward the divide line
+        const edgeX0 = side === 'left' ? halfW : x + w;
+        const edgeX1 = side === 'left' ? halfW - 64 : x + w - 64;
+        const edgeVign = context.createLinearGradient(edgeX0, 0, edgeX1, 0);
+        edgeVign.addColorStop(0, BG + '70');
+        edgeVign.addColorStop(1, 'transparent');
+        context.fillStyle = edgeVign;
+        context.fillRect(x, divTop, w, divH);
+
+        context.restore();
+    }
+
+    drawPortraitHalf(lulaPortrait, 0, halfW, 'left');
+    drawPortraitHalf(flavioPortrait, halfW, halfW, 'right');
+
+    // The Divide — glowing vertical line
+    context.save();
+    context.shadowBlur = 32;
+    context.shadowColor = accentColor;
+    context.strokeStyle = accentColor;
+    context.lineWidth = 2;
+    context.beginPath();
+    context.moveTo(halfW, divTop);
+    context.lineTo(halfW, divBottom);
+    context.stroke();
+    context.shadowBlur = 10;
+    context.stroke();
+    context.restore();
+
+    // ── CANDIDATE INFO (overlaid at portrait bottom) ──────────────────────────────
+    const partyY = divBottom - 16;
+
+    function drawCandidateInfo(cand, name, align)
+    {
+        const isLeft = align === 'left';
+        const textX = isLeft ? PAD : cardSize - PAD;
+        context.textAlign = align;
+
+        // Party · number
+        context.font = '500 18px Poppins, sans-serif';
+        context.fillStyle = INK_DIM;
+        context.fillText(`${cand.party}\u00a0\u00b7\u00a0${cand.number}`, textX, partyY);
+
+        // Candidate name (may wrap; drawn bottom-up from partyY)
         context.font = 'bold 26px Sora, sans-serif';
-        drawWrappedText(context, (site.candidates.find(profile => profile.id === other.id)?.name || other.name), 92, 1105, 350, 32);
-        context.font = '24px Poppins, sans-serif';
-        context.fillText(`${other.compatibility.toFixed(1)}% · ${text.compatibility}`, 92, 1206);
+        context.fillStyle = INK;
+        const nameLines = wrappedLines(context, name, halfW - PAD - 24);
+        const nameBottomY = partyY - 28;
+        [...nameLines].reverse().forEach((line, i) =>
+            context.fillText(line, textX, nameBottomY - i * 32));
+
+        // "COMPATIBILIDADE" label above name
+        const nameBlockH = nameLines.length * 32;
+        const compatLabelY = nameBottomY - nameBlockH - 14;
+        context.font = '600 13px Poppins, sans-serif';
+        context.fillStyle = INK_DIM;
+        context.fillText(uiText.compat, textX, compatLabelY);
+
+        // Large compatibility %
+        context.font = 'bold 58px Sora, sans-serif';
+        context.fillStyle = INK;
+        context.fillText(`${cand.compatibility.toFixed(1)}%`, textX, compatLabelY - 22);
     }
 
+    drawCandidateInfo(lulaCand, lulaName, 'left');
+    drawCandidateInfo(flavioCand, flavioName, 'right');
+    context.textAlign = 'left';
 
+    // ── AXES SECTION (y 710–1726) ────────────────────────────────────────────────
+    // 2 axes per row → 6 rows of ~155 px → labels at 26 px, very readable
+    const axesTop = 710;
+    const fullBarLeft = PAD;
+    const fullBarWidth = cardSize - 2 * PAD;   // 952
+    const colGap = 40;
+    const colWidth = (fullBarWidth - colGap) / 2;  // 456
+    const rowH = 155;
+    const rowsTop = axesTop + 76;
 
-    function drawUserAxes(context, result)
+    // Section header
+    context.fillStyle = INK_DIM;
+    context.font = '600 20px Poppins, sans-serif';
+    context.fillText(uiText.axes, PAD, axesTop + 40);
+
+    // Legend: ● VOCÊ  ● Lula  ● Flávio  (right-aligned, laid out right→left)
+    const legendItems = [
+        { label: uiText.you, color: INK, r: 7 },
+        { label: lulaName.split(' ')[0], color: PT_RED, r: 6 },
+        { label: flavioName.split(' ')[0], color: PL_BLUE, r: 6 }
+    ];
+    context.font = '500 15px Poppins, sans-serif';
+    let lx = cardSize - PAD;
+    const legendY = axesTop + 40;
+    const legendDotY = legendY - 7;
+    for (let i = legendItems.length - 1; i >= 0; i--)
     {
-        drawPanel(context, 500, 330, 516, 924);
-        context.fillStyle = '#fffaf2';
+        const item = legendItems[i];
+        const tw = context.measureText(item.label).width;
+        context.textAlign = 'right';
+        context.fillStyle = INK_DIM;
+        context.fillText(item.label, lx, legendY);
+        lx -= tw + 10;
+        context.fillStyle = item.color;
+        fillCircle(context, lx, legendDotY, item.r);
+        lx -= item.r + 22;
+    }
+    context.textAlign = 'left';
+
+    // Twelve axis rows, 2 per line
+    result.axes.forEach((entry, index) =>
+    {
+        const col = index % 2;
+        const row = Math.floor(index / 2);
+        const colX = fullBarLeft + col * (colWidth + colGap);
+        const rowY = rowsTop + row * rowH;
+        const trackY = rowY + 72;
+        const dotY = trackY + 4;   // center of 8px track
+
+        const userScore = entry.userScore;
+        const leanLeft = userScore > 50;
+        const isBalanced = userScore === 50;
+        const leanColor = isBalanced ? INK_DIM
+            : leanLeft ? (entry.axis.leftColor || PT_RED)
+            : (entry.axis.rightColor || PL_BLUE);
+        const dominantPct = Math.max(userScore, 100 - userScore).toFixed(0) + '%';
+        const scoreToX = score => colX + colWidth * score / 100;
+
+        // Axis label — truncated to leave room for % badge
         context.font = '600 24px Poppins, sans-serif';
-        context.fillText(text.axes, 530, 384);
-        const colors = ['#ffb25f', '#eb8d9f', '#f3cb6d', '#8ab8df', '#bd9aed', '#ef92a9', '#c3bf82', '#79cbc0', '#8ab1ec', '#a5cb74', '#daac76', '#8dd0cf'];
-        result.axes.forEach((entry, index) =>
-        {
-            const top = 416 + index * 68;
-            const percentages = presentation.percentagePair(entry.userScore);
-            context.fillStyle = '#fffaf2';
-            context.font = '600 22px Poppins, sans-serif';
-            context.fillText(entry.axis.label, 530, top);
-            context.font = '18px Poppins, sans-serif';
-            context.fillStyle = '#ffffffb8';
-            const dominantPole = percentages.left === percentages.right
-                ? (language === 'pt' ? 'Equilíbrio entre os dois polos' : 'Balance between both poles')
-                : percentages.left > percentages.right ? entry.axis.leftPole : entry.axis.rightPole;
-            let descriptionSize = 18;
-            while (context.measureText(dominantPole).width > 456 && descriptionSize > 14)
-            {
-                descriptionSize -= 1;
-                context.font = `${descriptionSize}px Poppins, sans-serif`;
-            }
-            context.fillText(dominantPole, 530, top + 42);
-            context.fillStyle = '#ffffff20';
-            context.fillRect(850, top + 15, 68, 7);
-            context.fillStyle = colors[index];
-            context.fillRect(850, top + 15, 68 * Math.max(percentages.left, percentages.right) / 100, 7);
-            context.font = 'bold 20px Sora, sans-serif';
-            context.textAlign = 'right';
-            context.fillText(`${Math.max(percentages.left, percentages.right).toFixed(1)}%`, 988, top + 24);
-            context.textAlign = 'left';
-        });
-    }
+        const maxLabelW = colWidth - context.measureText(dominantPct).width - 28;
+        context.fillStyle = INK;
+        context.fillText(truncate(context, entry.axis.label, maxLabelW), colX, rowY + 28);
 
+        // Dominant % — right-aligned, colored by direction
+        context.textAlign = 'right';
+        context.fillStyle = leanColor;
+        context.font = '600 18px Poppins, sans-serif';
+        context.fillText(dominantPct, colX + colWidth, rowY + 28);
+        context.textAlign = 'left';
 
+        // Dominant pole name
+        const dominantPole = isBalanced ? uiText.balance
+            : leanLeft ? entry.axis.leftPole : entry.axis.rightPole;
+        context.font = '400 14px Poppins, sans-serif';
+        context.fillStyle = INK_DIM;
+        context.fillText(truncate(context, dominantPole, colWidth * 0.88), colX, rowY + 50);
 
-    function drawAlignmentSummary(context, summary)
-    {
-        drawPanel(context, 64, 1280, 952, 400);
-        context.fillStyle = '#fffaf2';
-        context.font = 'bold 30px Sora, sans-serif';
-        context.fillText(language === 'pt' ? 'ONDE VOCÊ SE APROXIMA E SE DISTANCIA' : 'WHERE YOU ALIGN AND DIFFER', 92, 1334);
-        let fontSize = 28;
-        let lineCount;
-        do
+        // Track
+        context.fillStyle = INK_FAINT;
+        context.fillRect(colX, trackY, colWidth, 8);
+
+        // Colored fill segment: center → user position (shows lean direction)
+        if (!isBalanced)
         {
-            context.font = `${fontSize}px Poppins, sans-serif`;
-            lineCount = summary.alignment.reduce((total, candidate) => total + wrappedLines(context, candidate.statement, 896).length, 0);
-            if (lineCount * 34 + 24 <= 296 || fontSize === 22) break;
-            fontSize -= 2;
-        } while (fontSize >= 22);
-        let vertical = 1382;
-        for (const candidate of summary.alignment)
-        {
-            context.font = `${fontSize}px Poppins, sans-serif`;
-            context.fillStyle = '#fffaf2';
-            vertical = drawWrappedText(context, candidate.statement, 92, vertical, 896, 34) + 24;
+            const fillX = scoreToX(Math.min(userScore, 50));
+            const fillW = scoreToX(Math.max(userScore, 50)) - fillX;
+            context.fillStyle = leanColor + 'a0';
+            context.fillRect(fillX, trackY, fillW, 8);
         }
-    }
 
+        const lulaScore = entry.candidateScores[LULA_ID] ?? 50;
+        const flavioScore = entry.candidateScores[FLAVIO_ID] ?? 50;
 
+        // Candidate dots (drawn below user dot)
+        context.fillStyle = PT_RED;
+        fillCircle(context, scoreToX(lulaScore), dotY, 6);
+        context.fillStyle = PL_BLUE;
+        fillCircle(context, scoreToX(flavioScore), dotY, 6);
 
-    function drawCardFooter(context)
-    {
-        context.fillStyle = '#ffffffb8';
-        context.fillRect(64, 1700, 952, 1);
-        context.font = '16px Poppins, sans-serif';
-        context.fillText(text.note, 64, 1738);
+        // User dot — white, larger, soft glow
+        context.save();
+        context.shadowBlur = 14;
+        context.shadowColor = 'rgba(255,250,242,0.55)';
+        context.fillStyle = INK;
+        fillCircle(context, scoreToX(userScore), dotY, 10);
+        context.restore();
+    });
 
-        context.fillStyle = '#fffaf2';
-        context.font = '600 22px Poppins, sans-serif';
-        context.fillText('2TURNO', 64, 1774);
-    }
-    const summary = shareSummary(result, language);
-    const background = context.createLinearGradient(0, 0, cardSize, cardHeight);
-    background.addColorStop(0, summary.classification.color);
-    background.addColorStop(1, '#101622');
-    context.fillStyle = background;
-    context.fillRect(0, 0, cardSize, cardHeight);
-    drawCardHeader(context, summary.classification);
-    drawCandidateHighlights(context, result);
-    drawUserAxes(context, result);
-    drawAlignmentSummary(context, summary);
-    drawCardFooter(context);
+    // ── FOOTER (y 1726–1786) ─────────────────────────────────────────────────────
+    context.fillStyle = INK_FAINT;
+    context.fillRect(PAD, 1726, fullBarWidth, 1);
+    context.fillStyle = INK_DIM;
+    context.font = '14px Poppins, sans-serif';
+    context.fillText(uiText.note, PAD, 1758);
+    context.fillStyle = INK;
+    context.font = '600 20px Poppins, sans-serif';
+    context.fillText(uiText.siteUrl, PAD, 1786);
+
     return summary;
 }
 
-module.exports = { cardSize, cardHeight, shareSummary, drawResultCard };
 
+
+module.exports = { cardSize, cardHeight, shareSummary, drawResultCard };

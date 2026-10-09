@@ -73,8 +73,11 @@ body[data-political-family] .election-header a, body[data-political-family] .ele
 .election-app .election-actions.quiz-navigation button:first-child:hover:not(:disabled) { background: var(--green-50); }
 /* O toggle aparece também no celular (no 12 Axes ele some abaixo de 760px). */
 .election-actions.quiz-navigation .auto-advance-toggle { display: inline-flex; margin: 0; }
+.election-app .election-actions.quiz-navigation .random-answers { background: transparent; color: var(--text-secondary, #555); border: 1px solid var(--line-strong); font-size: 0.85em; min-width: 0; padding: 8px 12px; }
+.election-app .election-actions.quiz-navigation .random-answers:hover:not(:disabled) { background: var(--surface-2, #f5f5f5); }
 @media (max-width: 560px) {
   .election-actions.quiz-navigation .auto-advance-toggle { order: -1; width: 100%; justify-content: center; }
+  .election-actions.quiz-navigation .random-answers { display: none; }
 }
 
 .share-result-preview { display: block; width: 100%; height: auto; margin: 16px 0; }
