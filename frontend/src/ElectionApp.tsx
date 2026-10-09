@@ -21,6 +21,7 @@ import { answeredElectionCount, clearElectionProgress, loadElectionProgress, res
 
 const languagePrefix = LANG === 'en' ? '/en' : '';
 const AUTO_ADVANCE_KEY = '2turno-auto-advance';
+const ANSWER_VALUES: AnswerValue[] = ['STRONGLY_AGREE', 'AGREE', 'NEUTRAL', 'DISAGREE', 'STRONGLY_DISAGREE'];
 const LANGUAGE_PROGRESS_KEY = '2turno-language-progress';
 
 interface LanguageProgress
@@ -85,6 +86,7 @@ const text = LANG === 'pt' ? {
   restart: 'Começar novamente',
   scale: { help: 'O que está em jogo', helpAria: 'O que está em jogo nesta pergunta: eixo e exemplo', scaleAria: 'Sua resposta', example: 'Na prática:', instruction: 'Quanto você concorda com esta frase?' },
   autoAdvance: 'Avançar ao responder',
+  random: 'Aleatório',
   resume: {
     eyebrow: 'Quiz em andamento',
     extremistEyebrow: 'Modo extremista em andamento',
@@ -127,6 +129,7 @@ const text = LANG === 'pt' ? {
   restart: 'Start again',
   scale: { help: 'What is at stake', helpAria: 'What is at stake in this question: axis and example', scaleAria: 'Your answer', example: 'In practice:', instruction: 'How much do you agree with this statement?' },
   autoAdvance: 'Advance on answer',
+  random: 'Random',
   resume: {
     eyebrow: 'Quiz in progress',
     extremistEyebrow: 'Extremist mode in progress',
@@ -343,6 +346,32 @@ export default function ElectionApp()
     {
       setBusy(false);
     }
+  }
+
+
+
+  async function fillAndFinishRandom()
+  {
+    if (!quiz || !model || modeActive) return;
+    const randomAnswers: Record<string, AnswerValue> = {};
+    for (const question of quiz.questions)
+      randomAnswers[question.id] = ANSWER_VALUES[Math.floor(Math.random() * ANSWER_VALUES.length)];
+    setAnswers(randomAnswers);
+    setBusy(true);
+    setError(null);
+    try
+    {
+      const result = await submitElectionAnswers({
+        modelId: model.modelId,
+        variant: quiz.variant,
+        answers: quiz.questions.map(question => ({ questionId: question.id, answer: randomAnswers[question.id] }))
+      });
+      clearElectionProgress();
+      setComparison(result);
+      setQuiz(null);
+    }
+    catch (failure) { setError((failure as Error).message); }
+    finally { setBusy(false); }
   }
 
 
@@ -572,6 +601,7 @@ export default function ElectionApp()
               <span className="auto-advance-switch" aria-hidden="true" />
               {text.autoAdvance}
             </button>
+            {!modeActive && <button className="random-answers" type="button" disabled={busy} onClick={() => void fillAndFinishRandom()}>{text.random}</button>}
             {questionIndex < quiz.questions.length - 1
               ? <button type="button" disabled={busy || !answers[question.id]} onClick={() => setQuestionIndex(questionIndex + 1)}>{text.next}</button>
               : <button type="button" disabled={busy || Object.keys(answers).length !== quiz.questions.length} onClick={finishQuiz}>{modeActive ? (LANG === 'pt' ? 'Ver meu perfil' : 'See my profile') : text.finish}</button>}

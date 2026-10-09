@@ -29,9 +29,8 @@ describe('Detailed 2 Turno share card', () =>
     it('keeps Portuguese accents and separators valid UTF-8', () =>
     {
         const source = readFileSync(new URL('./electionShareCard.cjs', import.meta.url), 'utf8');
-        expect(source).toContain('ONDE VOCÊ SE APROXIMA E SE DISTANCIA');
-        expect(source).toContain('MAIS PRÓXIMO');
         expect(source).toContain('Não representa intenção de voto.');
+        expect(source).toContain('VOCÊ');
         expect(source).toContain(' · ');
         expect(source).not.toMatch(/Ã[\u0080-\u00BFŠš]|Â·|â€/);
     });
@@ -67,14 +66,18 @@ describe('Detailed 2 Turno share card', () =>
             fillText(value: string) { drawn.push({ value, font: this.font }); },
             measureText(value: string) { return { width: value.length * Number(this.font.match(/(\d+)px/)?.[1] || 32) * .5 }; },
             createLinearGradient() { return { addColorStop() {} }; },
+            createRadialGradient() { return { addColorStop() {} }; },
             beginPath() {},
             roundRect() {},
+            rect() {},
             fill() {},
             fillRect() {},
             save() {},
             restore() {},
             arc() {},
             clip() {},
+            moveTo() {},
+            lineTo() {},
             stroke() {}
         };
         shareCard.drawResultCard(context, resultFixture(), [], language);
@@ -83,7 +86,7 @@ describe('Detailed 2 Turno share card', () =>
         expect(drawn.some(entry => entry.value === '75.0%')).toBe(true);
         expect(shareCard.cardHeight).toBe(1800);
         expect(drawn.some(entry => /CANDIDATOS NOS 12 EIXOS|CANDIDATES ON THE 12 AXES/.test(entry.value))).toBe(false);
-        expect(drawn.some(entry => /ONDE VOCÊ|WHERE YOU/.test(entry.value))).toBe(true);
+        expect(drawn.some(entry => /COMPATIBILIDADE|COMPATIBILITY/.test(entry.value))).toBe(true);
         expect(drawn.some(entry => entry.value === 'Lula')).toBe(true);
         expect(drawn.some(entry => /12axes/i.test(entry.value))).toBe(false);
         expect(drawn.some(entry => entry.value === (language === 'pt' ? 'SEUS 12 EIXOS' : 'YOUR 12 AXES'))).toBe(true);
