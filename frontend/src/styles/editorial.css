@@ -196,7 +196,7 @@ html{scroll-behavior:smooth;scroll-padding-top:88px}
 
 /* support */
 .e-support-box{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
-.e-support-box .e-eyebrow,.e-support-box .e-accent{color:#102e24}
+.e-support-box .e-eyebrow,.e-support-box .e-accent{color:#0F2044}
 .e-privacy{display:flex;gap:10px;align-items:center;margin-top:24px;font-size:14px;background:var(--neutro);border-radius:14px;padding:12px 16px}
 .e-privacy .e-ico{color:var(--floresta);width:20px;height:20px}
 .e-coins{display:grid;gap:12px}
