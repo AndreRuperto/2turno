@@ -1594,7 +1594,7 @@
   aspect-ratio: 1 / 1;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: #f8fafc;
+  background: #0D1A2E;
   border: 1px solid var(--line-strong);
   box-shadow: var(--shadow-sm);
 }
@@ -2009,7 +2009,7 @@
   object-fit: contain;
   border-radius: var(--radius-lg);
   border: 1px solid var(--line-strong);
-  background: #f8fafc;
+  background: #0D1A2E;
 }
 
 .export-country-flag-fallback {
@@ -2017,7 +2017,7 @@
   min-height: 0;
   border-radius: var(--radius-lg);
   border: 1px solid var(--line-strong);
-  background: #f8fafc;
+  background: #0D1A2E;
 }
 
 .export-country-text {
@@ -3130,7 +3130,7 @@
 
 .country-match-visual {
   border-radius: var(--radius-lg);
-  background: #f8fafc;
+  background: #0D1A2E;
 }
 
 .country-match-source {
@@ -6469,7 +6469,7 @@
   aspect-ratio: 1 / 1;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: #f8fafc;
+  background: #0D1A2E;
   border: 1px solid var(--line-strong);
   box-shadow: var(--shadow-sm);
 }
@@ -6884,7 +6884,7 @@
   object-fit: contain;
   border-radius: var(--radius-lg);
   border: 1px solid var(--line-strong);
-  background: #f8fafc;
+  background: #0D1A2E;
 }
 
 .export-country-flag-fallback {
@@ -6892,7 +6892,7 @@
   min-height: 0;
   border-radius: var(--radius-lg);
   border: 1px solid var(--line-strong);
-  background: #f8fafc;
+  background: #0D1A2E;
 }
 
 .export-country-text {
@@ -8005,7 +8005,7 @@
 
 .country-match-visual {
   border-radius: var(--radius-lg);
-  background: #f8fafc;
+  background: #0D1A2E;
 }
 
 .country-match-source {
@@ -11697,7 +11697,7 @@
   gap: 12px;
   font-family: var(--font-body);
   font-size: 13px;
-  color: var(--text-muted, #5B5A55);
+  color: var(--text-muted, #7A96BC);
   font-variant-numeric: tabular-nums;
 }
 .quiz-progress-meta b {
@@ -11713,12 +11713,12 @@
   position: relative;
   flex: 1;
   border-radius: 6px;
-  background: var(--line, #E2DDCF);
+  background: var(--line, #162035);
   overflow: hidden;
   transition: transform .35s ease, background .35s ease;
 }
 .quiz-progress-segs span.now {
-  background: color-mix(in srgb, var(--qp-chumbo) 55%, var(--line, #E2DDCF));
+  background: color-mix(in srgb, var(--qp-chumbo) 55%, var(--line, #162035));
   transform: scaleY(1.5);
 }
 .quiz-progress-segs i {
@@ -11747,7 +11747,7 @@
   font-size: clamp(64px, 12vh, 132px);
   line-height: 1;
   letter-spacing: -.06em;
-  color: #ECE8DC;
+  color: #EEF4FF;
   pointer-events: none;
   user-select: none;
 }
@@ -11774,7 +11774,7 @@
   margin: 0;
   padding: clamp(4px, .7vh, 7px) 16px clamp(4px, .7vh, 7px) 8px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--pole) 14%, #FBF9F3);
+  background: color-mix(in srgb, var(--pole) 14%, #0D1A2E);
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
@@ -11811,7 +11811,7 @@
   background: none;
   font-family: var(--font-body);
   font-size: 13px;
-  color: var(--text-muted, #5B5A55);
+  color: var(--text-muted, #7A96BC);
   cursor: pointer;
 }
 .auto-advance-switch {
@@ -11819,7 +11819,7 @@
   width: 38px;
   height: 22px;
   border-radius: 22px;
-  background: var(--line, #E2DDCF);
+  background: var(--line, #162035);
   transition: background .2s;
   flex: none;
 }
@@ -11834,9 +11834,9 @@
   background: #fff;
   transition: transform .2s;
 }
-.auto-advance-toggle[aria-checked="true"] .auto-advance-switch { background: #102E24; }
+.auto-advance-toggle[aria-checked="true"] .auto-advance-switch { background: #2563EB; }
 .auto-advance-toggle[aria-checked="true"] .auto-advance-switch::after { transform: translateX(16px); }
-.auto-advance-toggle:focus-visible { outline: 3px solid #880912; outline-offset: 3px; border-radius: 8px; }
+.auto-advance-toggle:focus-visible { outline: 3px solid #DC2626; outline-offset: 3px; border-radius: 8px; }
 @media (max-width: 760px) {
   .auto-advance-toggle { display: none; }
 }
@@ -11848,8 +11848,8 @@
    Mesma casca das perguntas comuns; as alternativas levam a letra no ícone e
    o verde da marca, porque não são concordo/discordo. */
 .archetype-option {
-  --answer-color: var(--floresta, #102E24);
-  --answer-soft: color-mix(in srgb, var(--floresta, #102E24) 8%, var(--paper));
+  --answer-color: var(--floresta, #0F2044);
+  --answer-soft: color-mix(in srgb, var(--floresta, #0F2044) 8%, var(--paper));
   min-height: 60px;
   text-align: left;
   line-height: 1.4;

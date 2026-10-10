@@ -4,9 +4,9 @@
 .election-app h1 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3rem); }
 .election-app section { margin-block: 36px; }
 .election-app a { color: var(--green-500); }
-.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help)), .election-app select, .election-app input { padding: 12px; border: 1px solid var(--line-strong); border-radius: 8px; font: inherit; }
-.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help)) { cursor: pointer; background: var(--green-500); color: white; }
-.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help)):disabled { opacity: .5; cursor: default; }
+.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help, .theme-toggle)), .election-app select, .election-app input { padding: 12px; border: 1px solid var(--line-strong); border-radius: 8px; font: inherit; }
+.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help, .theme-toggle)) { cursor: pointer; background: var(--green-500); color: white; }
+.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help, .theme-toggle)):disabled { opacity: .5; cursor: default; }
 .election-start { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
 .election-start .format-options { width: 100%; }
 @media (max-width: 760px) {
@@ -27,26 +27,29 @@
 .election-app label { display: block; }
 .election-brand { display: inline-flex; text-decoration: none; }
 .election-brand img { display: block; height: 38px; width: auto; }
+.theme-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 8px; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--surface); color: #fff; cursor: pointer; transition: background .15s; }
+.theme-toggle:hover { background: var(--accent-soft); }
 
 .election-app .home-hero
 {
   position: relative; isolation: isolate; display: flex; align-items: center;
-  min-height: 480px; margin-block: 0 8px; padding: 40px;
-  border-radius: 26px; overflow: hidden; background: #0b241c; color: #fff;
-  box-shadow: 0 24px 60px -36px #102e2480;
+  min-height: 480px; margin-block: 0 40px; padding: 40px 40px 64px;
+  border-radius: 26px; overflow: hidden; background: #0A1630; color: #fff;
+  box-shadow: 0 24px 60px -36px rgba(0,0,0,0.60);
 }
 .home-hero-portraits { position: absolute; z-index: -2; inset: 0 0 0 42%; display: grid; grid-template-columns: 1fr 1fr; }
 .hero-candidate { position: relative; min-width: 0; overflow: hidden; }
 .hero-candidate img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; border-radius: 0; filter: contrast(1.08) saturate(.9); }
-.hero-candidate::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, #0b241c 0%, #0b241c70 25%, transparent 60%); }
+.hero-candidate::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, #0A1630 0%, #0A163070 25%, transparent 60%); }
 .hero-candidate > span { position: absolute; z-index: 1; bottom: 28px; left: 12px; right: 12px; text-align: center; color: #fff; font-family: var(--font-display); font-size: clamp(15px, 1.6vw, 20px); font-weight: 700; letter-spacing: .04em; text-shadow: 0 2px 8px #000; }
-.home-hero::after { content: ''; position: absolute; z-index: -1; inset: 0; background: linear-gradient(90deg, #0b241c 0%, #0b241c 38%, transparent 53%); }
+.home-hero::after { content: ''; position: absolute; z-index: -1; inset: 0; background: linear-gradient(90deg, #0A1630 0%, #0A1630 38%, transparent 53%); }
 .home-hero-portraits::after { content: ''; position: absolute; left: 50%; top: -10%; height: 120%; width: 3px; transform: rotate(7deg); background: linear-gradient(0deg, transparent, #ead5a6, #fff5db, #ead5a6, transparent); box-shadow: 0 0 24px #fff1c080; pointer-events: none; }
-.hero-versus { position: absolute; z-index: 2; left: 50%; top: 53%; transform: translate(-50%, -50%) rotate(-7deg); color: #fff2cd; font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: clamp(48px, 6vw, 76px); line-height: 1; letter-spacing: -.08em; text-shadow: 0 4px 0 #0b241c, 0 0 24px #0b241c, 0 4px 24px #000; pointer-events: none; }
+.hero-versus { position: absolute; z-index: 2; left: 50%; top: 53%; transform: translate(-50%, -50%) rotate(-7deg); color: #FEF3C7; font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: clamp(48px, 6vw, 76px); line-height: 1; letter-spacing: -.08em; text-shadow: 0 4px 0 #0A1630, 0 0 24px #0A1630, 0 4px 24px #000; pointer-events: none; }
 .home-hero-text { max-width: 40%; }
 .home-hero-text h1 { margin-block: 8px 16px; line-height: 1.1; color: #fff; }
-.home-hero-text p:last-child { margin: 0; font-size: 1.05rem; line-height: 1.65; color: #f0f3ed; }
-.home-hero .election-kicker { color: #d3e3d5; }
+.home-hero-text p:last-of-type { margin: 0; font-size: 1.05rem; line-height: 1.65; color: #EEF2FF; text-align: justify; }
+.home-hero-text .hero-start-button { margin-top: 24px; background: #F59E0B !important; color: #0F2044 !important; }
+.home-hero .election-kicker { color: #C7D5EF; }
 body[data-political-family] { background: var(--result-background); }
 body[data-political-family] .election-header a, body[data-political-family] .election-results > a { color: var(--result-color); }
 .election-results { border-top: 5px solid var(--result-color); padding-top: 20px; }

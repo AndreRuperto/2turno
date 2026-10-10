@@ -1,20 +1,43 @@
-.home-education { margin-top: 80px; }
-.election-app .education-section { margin-block: 80px; scroll-margin-top: 24px; }
+.home-education { margin-top: 0; }
+
+/* ── Todas as seções viram bandas de largura total (exceto #exemplo) ─────── */
+.election-app .education-section:not(#exemplo)
+{
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  box-sizing: border-box;
+  margin-block: 0;
+  padding: 72px max(24px, calc((100vw - 1100px) / 2 + 24px));
+  scroll-margin-top: 24px;
+}
+.election-app .education-section { scroll-margin-top: 24px; }
+
+/* ── Seção de candidatos também vira banda ──────────────────────────────── */
+.home-options-band
+{
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  box-sizing: border-box;
+  padding: 56px max(24px, calc((100vw - 1100px) / 2 + 24px));
+  background: #0D1A2E;
+}
+.home-options-band .home-options { margin: 0; }
+
 .education-section > h2 { font-family: var(--font-display); font-size: clamp(28px, 3.4vw, 42px); line-height: 1.2; max-width: 780px; margin: 12px 0 24px; }
 .education-section > p { max-width: 780px; line-height: 1.8; }
-.education-label { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #376146; }
+.education-label { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #1D4ED8; }
 .education-grid { display: grid; gap: 20px; margin: 32px 0; }
 .spectrum-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .axes-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.political-family-card, .axis-explanation-card { padding: 26px; border: 1px solid #d6d8ce; border-radius: 22px; min-width: 0; }
+.political-family-card, .axis-explanation-card { padding: 26px; border: 1px solid #1A2B45; border-radius: 22px; min-width: 0; }
 .political-family-card { background: var(--ideology-background); border-top: 4px solid var(--ideology-color); }
 .political-family-card h3 { color: var(--ideology-color); }
 .education-grid h3 { font-size: 20px; line-height: 1.4; margin: 16px 0; }
 .education-grid p { font-size: 15px; line-height: 1.75; margin-bottom: 0; }
 .family-indicator { display: block; width: 22px; height: 22px; border-radius: 50%; background: var(--ideology-color); }
-.education-number { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: #376146; }
+.education-number { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: #1D4ED8; }
 /* Cartões de eixo no formato do 12 Axes: número com o título, um ícone em cada polo e descrição menor. */
-.axis-explanation-card { background: #fbf9f3; padding: 22px; }
+.axis-explanation-card { background: #0D1A2E; padding: 22px; }
 .axis-explanation-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
 .axis-explanation-top .education-number { font-size: 13px; font-weight: 600; color: var(--carmim); }
 .education-grid .axis-explanation-top h3 { margin: 0; font-size: 19px; line-height: 1.25; }
@@ -23,17 +46,42 @@
 .education-pole-icon { flex: none; width: 18px; height: 18px; color: var(--floresta); }
 .education-pole-arrow { color: var(--texto-suave); font-weight: 400; }
 .education-grid .axis-explanation-card > p:last-child { font-size: 13.5px; line-height: 1.5; color: var(--texto-suave); }
-.education-dark { background: #102e24; color: #fbf9f3; padding: 40px; border-radius: 28px; }
-.education-dark .education-label, .education-dark .education-number { color: #bbd5be; }
-.education-dark h2, .education-dark h3, .education-dark p { color: inherit; }
-.how-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); list-style: none; padding: 0; }
-.how-grid li { min-width: 0; }
 .example-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
 .election-app .example-layout .user-profile { margin: 0; }
 .example-candidates { display: grid; gap: 20px; min-width: 0; }
 .example-candidates > h3 { margin-top: 0; font-size: 18px; }
-.compatibility-explanation { border-left: 4px solid #376146; margin-top: 28px; padding: 8px 24px; line-height: 1.8; }
-.education-methodology { background: #e8eeea; border-radius: 28px; padding: 40px; }
+.compatibility-explanation { border-left: 4px solid #1D4ED8; margin-top: 28px; padding: 8px 24px; line-height: 1.8; }
+
+/* ── Banda 1: Introdução — surface escura ───────────────────────────────── */
+.education-introduction { background: #0D1A2E; color: #CBD5E8; }
+.education-introduction .education-label { color: #60A5FA; }
+.education-introduction h2 { color: #EEF4FF; }
+.education-introduction p { color: #7A96BC; }
+
+/* ── Banda 2: Espectro político — fundo base ────────────────────────────── */
+#espectro { background: #07101E; }
+
+/* ── Banda 3: Eixos — surface ───────────────────────────────────────────── */
+#eixos { background: #0D1A2E; }
+
+/* ── Banda 4: Como funciona — escuro máximo ─────────────────────────────── */
+.education-dark { background: #060D18; color: #CBD5E8; border-radius: 0; padding-block: 72px; }
+.education-dark .education-label, .education-dark .education-number { color: #60A5FA; }
+.education-dark h2, .education-dark h3, .education-dark p { color: inherit; }
+
+/* ── Banda 5: Exemplo — contido, sem banda ──────────────────────────────── */
+#exemplo { margin-block: 72px; background: none; }
+
+/* ── Banda 6: Metodologia — azul accent ────────────────────────────────── */
+.education-methodology
+{
+  background: #162B6E; color: #fff;
+  border-radius: 0; padding-block: 72px;
+}
+.education-methodology .education-label { color: #BFDBFE; }
+.education-methodology h2, .education-methodology p { color: #fff; }
+.education-methodology .profile-link { background: #fff !important; color: #0F2044 !important; }
+
 @media (max-width: 1000px)
 {
     .spectrum-grid, .axes-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -43,9 +91,9 @@
 {
     .election-app { padding: 20px 16px; }
     .election-header nav { gap: 12px 18px; font-size: 14px; }
-    .election-app .education-section { margin-block: 56px; }
+    .election-app .education-section { padding-block: 48px; }
+    .home-options-band { padding-block: 40px; }
     .spectrum-grid, .axes-grid, .example-layout { grid-template-columns: 1fr; }
-    .education-dark, .education-methodology { padding: 28px 22px; }
     .education-grid p { font-size: 16px; }
     .education-grid .education-poles { font-size: 14px; }
     .education-grid .axis-explanation-card > p:last-child { font-size: 14.5px; }

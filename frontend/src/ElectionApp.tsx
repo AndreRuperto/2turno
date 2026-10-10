@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Sun, Moon } from 'lucide-react';
 import { HistoricalComparisons } from './components/election/HistoricalComparisons';
 import { PlanProposals } from './components/election/PlanProposals';
 import { ScaleQuestion } from './components/election/ScaleQuestion';
@@ -65,6 +66,12 @@ function readAutoAdvance(): boolean
   {
     return true;
   }
+}
+
+function readTheme(): 'dark' | 'light'
+{
+  try { return window.localStorage.getItem('2turno-theme') === 'light' ? 'light' : 'dark'; }
+  catch { return 'dark'; }
 }
 const text = LANG === 'pt' ? {
   title: '2 Turno — Lula x Flávio Bolsonaro',
@@ -169,6 +176,7 @@ export default function ElectionApp()
   const advanceTimer = useRef<number | null>(null);
   const [comparison, setComparison] = useState<ElectionComparison | null>(null);
   const [busy, setBusy] = useState(Boolean(savedProgress));
+  const [theme, setTheme] = useState(readTheme);
   const [error, setError] = useState<string | null>(null);
   // Quiz deixado pela metade em outra visita (ou antes de voltar ao início).
   const [pendingProgress, setPendingProgress] = useState(loadElectionProgress);
@@ -185,6 +193,14 @@ export default function ElectionApp()
     document.title = text.title;
     document.documentElement.lang = LANG === 'pt' ? 'pt-BR' : 'en';
   }, []);
+
+  useEffect(() =>
+  {
+    if (theme === 'light') document.documentElement.dataset.theme = 'light';
+    else delete document.documentElement.dataset.theme;
+    try { window.localStorage.setItem('2turno-theme', theme); }
+    catch { /* sem storage */ }
+  }, [theme]);
 
   useEffect(() =>
   {
@@ -501,7 +517,7 @@ export default function ElectionApp()
     <a className="skip-link" href="#main-content">{text.skip}</a>
     <header className="election-header">
       <a className="election-brand" href={languagePrefix || '/'}>
-        <img src="/logo-2turno.png" alt={site.name} width={166} height={38} />
+        <img src={theme === 'dark' ? '/logo-2turno-dark.png' : '/logo-2turno-light.png'} alt={site.name} width={166} height={38} />
       </a>
       <nav aria-label={text.navigation}>
         <a href={`${languagePrefix || '/'}#teste`} onClick={() => { setQuiz(null); setComparison(null); setRadicalScores(null); setChoosingFormat(true); }}>{educationTranslations[LANG].quizLink}</a>
@@ -510,6 +526,9 @@ export default function ElectionApp()
         <a className="language-switch" href={LANG === 'pt' ? '/en' : '/'} onClick={preserveLanguageProgress} lang={LANG === 'pt' ? 'en' : 'pt-BR'}
           aria-label={LANG === 'pt' ? 'English' : 'Português'}>{LANG === 'pt' ? 'EN' : 'PT'}</a>
         {/* Só na página inicial: trocar de modo reinicia a tela, e no quiz ou no resultado isso perderia o andamento. */}
+        <button type="button" className="theme-toggle" aria-label={theme === 'dark' ? 'Mudar para modo claro' : 'Mudar para modo escuro'} onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}>
+          {theme === 'dark' ? <Sun size={22} /> : <Moon size={22} />}
+        </button>
         {available && onHome && !busy && <button type="button" className="extremist-mode-toggle" aria-pressed={modeActive} onClick={toggleExtremistMode}>
           {LANG === 'pt' ? 'Modo extremista' : 'Extremist mode'} · {modeActive ? 'ON' : 'OFF'}
         </button>}
@@ -551,16 +570,13 @@ export default function ElectionApp()
               <p className="election-kicker">{text.runoff}</p>
               <h1>{text.heading}</h1>
               <p>{text.introduction}</p>
+              <button className="profile-link hero-start-button" type="button" disabled={busy} onClick={() => modeActive ? void startQuiz() : setChoosingFormat(true)}>{text.start}<span aria-hidden="true"> →</span></button>
             </div>
           </section>}
-          <div className="home-options" id="teste">
-            <article className="questionnaire-card">
-              <span className="questionnaire-symbol" aria-hidden="true">12</span>
-              <h2>{profileText.questionnaire}</h2>
-              <p>{profileText.questionnaireDescription}</p>
-              <button className="profile-link" type="button" disabled={busy} onClick={() => modeActive ? void startQuiz() : setChoosingFormat(true)}>{profileText.start}</button>
-            </article>
-            {profiles.candidates.map(candidate => <CandidateCard key={candidate.id} candidate={candidate} />)}
+          <div className="home-options-band" id="teste">
+            <div className="home-options">
+              {profiles.candidates.map(candidate => <CandidateCard key={candidate.id} candidate={candidate} />)}
+            </div>
           </div>
           {!modeActive && choosingFormat && <section className="election-start" aria-label={profileText.formats}>
             <fieldset className="format-options">
