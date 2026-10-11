@@ -74,13 +74,14 @@
 .candidate-quick-info p { line-height: 1.6; }
 .user-profile > h1 { margin-top: 0; }
 .user-profile { background: var(--ideology-background, #0D1A2E); border-top: 4px solid var(--ideology-color, #1A2B45); }
-.user-profile .profile-summary-label { font-size: 14px; margin: 0 0 12px; font-weight: 600; color: #4B5563; }
+.user-profile .profile-summary-label { font-size: 14px; margin: 0 0 12px; font-weight: 600; color: #374151; }
 .user-profile .ideology-header-compact { padding: 0; border: 0; margin: 0 0 12px; border-radius: 0; }
 .ideology-header-compact .ideology-family { font-size: 12px; margin-bottom: 6px; }
 .ideology-header-compact h2 { font-size: clamp(24px, 3vw, 30px); margin: 0; }
-.profile-method-note { font-size: 13px; margin-bottom: 18px; }
+/* ideology-background é sempre pastel claro (hardcoded no cjs) — forçar texto escuro em ambos os modos */
+.profile-method-note { font-size: 13px; margin-bottom: 18px; color: #374151; }
 .profile-method-note summary { cursor: pointer; padding: 8px 0; }
-.user-profile > h2:not(.profile-summary-label) { font-size: 18px; margin: 0; }
+.user-profile > h2:not(.profile-summary-label) { font-size: 18px; margin: 0; color: #111827; }
 .detailed-comparison { margin: 28px 0; padding: 0 20px; border: 1px solid #1A2B45; border-radius: 14px; background: #0D1A2E; }
 .detailed-comparison > summary { cursor: pointer; padding: 20px 0; font-weight: 700; font-size: 18px; }
 .detailed-comparison[open] > summary { border-bottom: 1px solid #1A2B45; }

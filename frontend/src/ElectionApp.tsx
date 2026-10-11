@@ -330,8 +330,9 @@ export default function ElectionApp()
 
 
 
-  async function startQuiz()
+  async function startQuiz(formatOverride?: QuizVariant)
   {
+    const activeVariant = formatOverride ?? variant;
     clearElectionProgress();
     setPendingProgress(null);
     setBusy(true);
@@ -347,9 +348,9 @@ export default function ElectionApp()
         setRadicalScores(null);
         return;
       }
-      const response = await fetchElectionQuiz(variant);
+      const response = await fetchElectionQuiz(activeVariant);
       setModel(response);
-      setQuiz(variant === 'extreme' ? selectAllQuestionsBalanced(response.quiz) : selectAndBalanceQuestions(response.quiz));
+      setQuiz(activeVariant === 'extreme' ? selectAllQuestionsBalanced(response.quiz) : selectAndBalanceQuestions(response.quiz));
       setAnswers({});
       setQuestionIndex(0);
       setComparison(null);
@@ -558,6 +559,31 @@ export default function ElectionApp()
             <div><p className="election-kicker">2TURNO · {LANG === 'pt' ? 'MODO EXTREMISTA' : 'EXTREMIST MODE'}</p>
               <h1>{LANG === 'pt' ? 'Ideias no limite. Onde você fica?' : 'Ideas at the limit. Where do you stand?'}</h1>
               <p>{LANG === 'pt' ? 'Uma experiência opcional com afirmações políticas radicais. A luta é ficção e sátira.' : 'An optional experience with radical political statements. The fight is fiction and satire.'}</p></div>
+          </section> : choosingFormat ? <section className="format-select" aria-label={profileText.formats}>
+            <button type="button" className="format-select-back" onClick={() => setChoosingFormat(false)} aria-label={LANG === 'pt' ? 'Voltar' : 'Back'}>← {LANG === 'pt' ? 'Voltar' : 'Back'}</button>
+            <h1 className="format-select-heading">{LANG === 'pt' ? <>Velocidade ou <span>precisão?</span></> : <>Speed or <span>precision?</span></>}</h1>
+            <p className="format-select-lead">{LANG === 'pt' ? 'A versão curta revela o resultado rapidamente. A completa aumenta a precisão para aproximar mais seu resultado dos perfis.' : 'The short version reveals the result quickly. The extended version increases precision for a more accurate match.'}</p>
+            <div className="format-cards">
+              {(['short', 'extended', 'extreme'] as const).map((format, index) => {
+                const option = text.formats[index];
+                const isRecommended = format === 'extended';
+                return <article key={format} className={`format-card${isRecommended ? ' format-card-featured' : ''}`}>
+                  <div className="format-card-top">
+                    <span className="format-card-label">{option.name.toUpperCase()}</span>
+                    {isRecommended && <span className="format-card-badge">{text.recommended}</span>}
+                  </div>
+                  <p className="format-card-count">
+                    <strong>{option.count.split(' ')[0]}</strong> {option.count.split(' ').slice(1).join(' ')}
+                  </p>
+                  <p className="format-card-description">{option.description}</p>
+                  <p className="format-card-meta">⏱ {option.time}</p>
+                  <button className="format-card-start" type="button" disabled={busy}
+                    onClick={() => { setVariant(format); void startQuiz(format); }}>
+                    {option.name}<span aria-hidden="true"> →</span>
+                  </button>
+                </article>;
+              })}
+            </div>
           </section> : <section className="home-hero">
             <div className="home-hero-portraits" aria-hidden="true">
               {site.candidates.map(candidate => <div className="hero-candidate" key={candidate.id}>
@@ -570,38 +596,15 @@ export default function ElectionApp()
               <p className="election-kicker">{text.runoff}</p>
               <h1>{text.heading}</h1>
               <p>{text.introduction}</p>
-              <button className="profile-link hero-start-button" type="button" disabled={busy} onClick={() => modeActive ? void startQuiz() : setChoosingFormat(true)}>{text.start}<span aria-hidden="true"> →</span></button>
+              <button className="profile-link hero-start-button" type="button" disabled={busy} onClick={() => setChoosingFormat(true)}>{text.start}<span aria-hidden="true"> →</span></button>
             </div>
           </section>}
-          <div className="home-options-band" id="teste">
+          {!choosingFormat && <div className="home-options-band" id="teste">
             <div className="home-options">
               {profiles.candidates.map(candidate => <CandidateCard key={candidate.id} candidate={candidate} />)}
             </div>
-          </div>
-          {!modeActive && choosingFormat && <section className="election-start" aria-label={profileText.formats}>
-            <fieldset className="format-options">
-              <legend>{profileText.formats}</legend>
-              {(['short', 'extended', 'extreme'] as const).map((format, index) =>
-              {
-                const option = text.formats[index];
-                return <label key={format} className={variant === format ? 'format-option selected' : 'format-option'}>
-                  <input type="radio" name="questionnaire-format" value={format} checked={variant === format}
-                    onChange={() => setVariant(format)} disabled={busy} />
-                  <span className="format-option-head">
-                    <span className="format-option-radio" aria-hidden="true" />
-                    <strong>{option.name}</strong>
-                    {format === 'extended' && <span className="format-option-badge">{text.recommended}</span>}
-                  </span>
-                  <span className="format-option-meta">{option.count} · {option.time}</span>
-                  <span className="format-option-description">{option.description}</span>
-                </label>;
-              })}
-            </fieldset>
-            <button className="format-start" type="button" onClick={startQuiz} disabled={busy}>
-              {profileText.begin}<span aria-hidden="true"> →</span>
-            </button>
-          </section>}
-          {!modeActive && <HomeEducation />}
+          </div>}
+          {!modeActive && !choosingFormat && <HomeEducation />}
         </>}
         {quiz && question && <section>
           <ScaleQuestion key={question.id} question={question} axis={questionAxis}

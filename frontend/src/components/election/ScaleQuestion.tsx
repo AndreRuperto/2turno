@@ -4,7 +4,7 @@ import { InfoSheet } from '../results/InfoSheet';
 
 // As opções começam com discordância total e seguem até concordância total. As primeiras opções
 // tendem a ser escolhidas com mais frequência; começar pelo "concordo" puxaria as respostas para ele.
-const SCALE: AnswerValue[] = ['STRONGLY_DISAGREE', 'DISAGREE', 'NEUTRAL', 'AGREE', 'STRONGLY_AGREE'];
+const SCALE: AnswerValue[] = ['STRONGLY_AGREE', 'AGREE', 'NEUTRAL', 'DISAGREE', 'STRONGLY_DISAGREE'];
 
 export interface ScaleQuestionText
 {
