@@ -4,14 +4,43 @@
 .election-app h1 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3rem); }
 .election-app section { margin-block: 36px; }
 .election-app a { color: var(--green-500); }
-.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help, .theme-toggle)), .election-app select, .election-app input { padding: 12px; border: 1px solid var(--line-strong); border-radius: 8px; font: inherit; }
-.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help, .theme-toggle)) { cursor: pointer; background: var(--green-500); color: white; }
-.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help, .theme-toggle)):disabled { opacity: .5; cursor: default; }
+.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help, .theme-toggle, .format-card-start, .format-select-back)), .election-app select, .election-app input { padding: 12px; border: 1px solid var(--line-strong); border-radius: 8px; font: inherit; }
+.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help, .theme-toggle, .format-card-start, .format-select-back)) { cursor: pointer; background: var(--green-500); color: white; }
+.election-app button:where(:not(.answer-button, .e-axis-info, .auto-advance-toggle, .scale-point, .scale-question-help, .theme-toggle, .format-card-start, .format-select-back)):disabled { opacity: .5; cursor: default; }
 .election-start { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
 .election-start .format-options { width: 100%; }
 @media (max-width: 760px) {
   .election-start .format-options { grid-template-columns: 1fr; }
   .election-app .election-start .format-start { width: 100%; }
+}
+
+/* ── Tela de seleção de formato ─────────────────────────────────────────── */
+.format-select { padding-block: 48px 64px; }
+.format-select-back { background: none; border: none; color: var(--text-muted); font-size: 14px; font-weight: 600; cursor: pointer; padding: 0; margin-bottom: 32px; display: inline-flex; align-items: center; gap: 6px; }
+.format-select-back:hover { color: var(--text); }
+.format-select-heading { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.1; letter-spacing: -.03em; color: var(--text-strong); margin: 0 0 16px; }
+.format-select-heading span { color: var(--carmim); }
+.format-select-lead { font-size: clamp(15px, 1.4vw, 18px); line-height: 1.6; color: var(--text-muted); max-width: 580px; margin: 0 0 40px; }
+.format-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.format-card { display: flex; flex-direction: column; gap: 12px; padding: 28px 24px 24px; border: 1px solid var(--line-strong); border-radius: 20px; background: var(--surface); }
+.format-card-featured { background: var(--green-700); border-color: var(--green-700); color: #fff; }
+.format-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.format-card-label { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--green-400); }
+.format-card-featured .format-card-label { color: var(--green-400); }
+.format-card-badge { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--surface); color: var(--text-strong); }
+.format-card-count { margin: 0; line-height: 1.1; color: var(--text-strong); font-size: 18px; }
+.format-card-featured .format-card-count { color: #fff; }
+.format-card-count strong { font-family: var(--font-display); font-size: clamp(2.5rem, 4vw, 3.5rem); font-weight: 800; letter-spacing: -.04em; }
+.format-card-description { margin: 0; font-size: 14px; line-height: 1.6; color: var(--text-muted); flex: 1; }
+.format-card-featured .format-card-description { color: rgba(255,255,255,.75); }
+.format-card-meta { margin: 0; font-size: 13px; color: var(--text-muted); }
+.format-card-featured .format-card-meta { color: rgba(255,255,255,.6); }
+.election-app .format-card-start { display: block; width: 100%; padding: 14px; border-radius: 999px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; background: var(--green-500); color: #fff; margin-top: 4px; transition: opacity .15s; }
+.election-app .format-card-featured .format-card-start { background: #fff; color: var(--green-700); }
+.election-app .format-card-start:hover:not(:disabled) { opacity: .85; }
+.election-app .format-card-start:disabled { opacity: .5; cursor: default; }
+@media (max-width: 760px) {
+  .format-cards { grid-template-columns: 1fr; }
 }
 .election-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; margin-block: 24px; }
 .election-profile, .election-match { padding: 20px; border: 1px solid var(--line-strong); border-radius: 12px; background: white; }

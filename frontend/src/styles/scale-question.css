@@ -17,7 +17,7 @@
 .scale-points { display: grid; grid-template-columns: 1fr; gap: 10px; }
 .election-app .scale-point { --answer-color: #555b61; position: relative; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 18px; padding: 16px 48px 16px 18px; min-height: 68px; border: 1px solid var(--ink-100); border-left: 4px solid var(--answer-color); border-radius: 14px; background: var(--surface); color: var(--answer-color); font: inherit; cursor: pointer; text-align: left; transition: transform .15s ease, background .15s ease, box-shadow .15s ease; }
 .election-app .scale-point:is([data-answer="STRONGLY_DISAGREE"], [data-answer="DISAGREE"]) { --answer-color: #9a303b; }
-.election-app .scale-point:is([data-answer="AGREE"], [data-answer="STRONGLY_AGREE"]) { --answer-color: #1D4ED8; }
+.election-app .scale-point:is([data-answer="AGREE"], [data-answer="STRONGLY_AGREE"]) { --answer-color: var(--i-esquerda); }
 .election-app .scale-point:hover:not(:disabled):not(.selected) { transform: translateY(-3px); background: color-mix(in srgb, var(--answer-color) 6%, var(--surface)); box-shadow: 0 8px 20px #0F204410; }
 .election-app .scale-point.selected { background: var(--answer-color); border-color: var(--answer-color); color: #fff; box-shadow: 0 6px 20px color-mix(in srgb, var(--answer-color) 25%, transparent); }
 .scale-point:disabled { opacity: .5; cursor: default; }
