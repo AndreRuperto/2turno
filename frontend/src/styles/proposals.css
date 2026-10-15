@@ -1,26 +1,73 @@
-/* Propostas dos planos (página de resultado). Cores neutras: nenhuma cor de família política ou de partido. */
-.plan-proposals { margin: 36px 0 28px; }
+/* Related sage surfaces, neutral structure and restrained semantic accents. */
+.plan-proposals {
+    --proposal-surface: #162b24;
+    --proposal-text: #f1f5ef;
+    --proposal-muted: #b8cbbd;
+    --proposal-border: #456153;
+    --proposal-link: #a5ddba;
+    --proposal-agree: #9bdfb7;
+    --proposal-agree-tint: #224936;
+    --proposal-disagree: #f3b4b4;
+    --proposal-disagree-tint: #493034;
+    --proposal-neutral: #d2d9cf;
+    --proposal-neutral-tint: #334239;
+    margin: 36px 0 28px;
+}
+html[data-theme="light"]:not([data-extremist-mode]) .plan-proposals {
+    --proposal-surface: #eef3ed;
+    --proposal-text: #20382a;
+    --proposal-muted: #4b6052;
+    --proposal-border: #b6c6b8;
+    --proposal-link: #176b42;
+    --proposal-agree: #155736;
+    --proposal-agree-tint: #dcebdd;
+    --proposal-disagree: #96383d;
+    --proposal-disagree-tint: #f5e6e5;
+    --proposal-neutral: #43534a;
+    --proposal-neutral-tint: #e0e6df;
+}
 .plan-proposals > h2 { margin: 0 0 8px; }
 .plan-proposals-intro { max-width: 68ch; margin: 0 0 20px; color: var(--ink-700); }
-/* align-items: start evita que a resposta revelada num cartão estique o vizinho de linha. */
-.plan-proposals-list { display: grid; gap: 16px; align-items: start; }
-@media (min-width: 700px) { .plan-proposals-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-
-.plan-proposal { display: grid; gap: 12px; align-content: start; min-width: 0; padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--text); }
-.plan-proposal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-.plan-proposal-head h3 { margin: 0; font-size: 1.05rem; line-height: 1.4; overflow-wrap: anywhere; }
-.plan-proposals .plan-proposal-help { flex: none; }
-.plan-proposal-help-text { margin: 0; padding: 10px 12px; border-radius: 10px; background: var(--surface-soft); color: var(--text); font-size: .95rem; }
-
-/* As regras globais de .election-app para label e input não valem aqui. */
-.plan-proposal-scale { display: flex; flex-wrap: wrap; gap: 8px; }
-.election-app .plan-proposal-option { position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border: 1.5px solid var(--text-muted); border-radius: 999px; background: var(--surface-soft); color: var(--text); font-size: .92rem; cursor: pointer; }
-.plan-proposals .plan-proposal-option input[type="radio"] { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; opacity: 0; cursor: pointer; }
-.election-app .plan-proposal-option:hover { border-color: var(--ink-700); }
-.election-app .plan-proposal-option.selected { border-color: var(--text-strong); background: var(--text-strong); color: var(--surface); }
-.election-app .plan-proposal-option:has(input:focus-visible) { outline: 3px solid #a83039; outline-offset: 2px; }
-
-.plan-proposal-reveal:not(:empty) { padding-left: 12px; border-left: 3px solid var(--ink-700); }
-.plan-proposal-reveal p { margin: 0 0 4px; }
-.plan-proposal-reveal a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
-.plan-proposal-reveal a:focus-visible { outline: 3px solid #a83039; outline-offset: 2px; border-radius: 4px; }
+.plan-proposals-list { display: grid; gap: 16px; align-items: stretch; }
+.plan-proposals .plan-proposal {
+    --proposal-accent: var(--proposal-neutral);
+    --proposal-tint: var(--proposal-neutral-tint);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+    padding: 20px;
+    border: 1px solid var(--proposal-border);
+    border-radius: 14px;
+    background: var(--proposal-surface);
+    color: var(--proposal-text);
+}
+.plan-proposals .plan-proposal[data-verdict="agree"] { --proposal-accent: var(--proposal-agree); --proposal-tint: var(--proposal-agree-tint); }
+.plan-proposals .plan-proposal[data-verdict="disagree"] { --proposal-accent: var(--proposal-disagree); --proposal-tint: var(--proposal-disagree-tint); }
+.plan-proposal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.plan-proposal-candidate { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.plan-proposal-candidate img { width: 40px; height: 40px; flex: none; object-fit: cover; object-position: center 20%; border-radius: 50%; border: 1px solid var(--proposal-border); }
+.plan-proposal-candidate > div { display: grid; gap: 1px; min-width: 0; }
+.plan-proposal-candidate span { font-size: .72rem; color: var(--proposal-muted); }
+.plan-proposal-candidate strong { color: var(--proposal-text); font-size: .9rem; }
+.plan-proposals .plan-proposal > h3 { margin: 0; color: var(--proposal-text); font-size: 1rem; line-height: 1.55; overflow-wrap: anywhere; }
+.election-app .plan-proposals .plan-proposal-help { flex: none; background: transparent !important; color: var(--proposal-muted) !important; border-color: var(--proposal-border) !important; }
+.election-app .plan-proposals .plan-proposal-help:hover,
+.election-app .plan-proposals .plan-proposal-help[aria-expanded="true"] { background: var(--proposal-neutral-tint) !important; color: var(--proposal-text) !important; }
+.plan-proposals .plan-proposal-help-text { margin: 0; padding: 12px; border-radius: 8px; background: var(--proposal-neutral-tint); color: var(--proposal-text); font-size: .9rem; line-height: 1.6; }
+.plan-proposals .plan-proposal-reveal { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--proposal-border); }
+.plan-proposal-response > strong { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border-radius: 7px; background: var(--proposal-tint); color: var(--proposal-accent); font-size: .8rem; }
+.plan-proposal-response svg { flex: none; }
+.plan-proposals .plan-proposal-reveal a { display: inline-flex; align-items: center; gap: 5px; min-height: 44px; color: var(--proposal-link); font-size: .8rem; text-decoration: underline; text-underline-offset: 3px; }
+.plan-proposals .plan-proposal-reveal a:hover { text-decoration-thickness: 2px; }
+.plan-proposals .plan-proposal-reveal a:focus-visible,
+.election-app .plan-proposals .plan-proposal-help:focus-visible { outline: 3px solid var(--proposal-link); outline-offset: 3px; border-radius: 6px; }
+.plan-proposal-accessible { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+@media (min-width: 700px) {
+    .plan-proposals-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .plan-proposals-list > [data-proponent="flavio-bolsonaro"] { grid-column: 1; }
+    .plan-proposals-list > [data-proponent="lula-da-silva"] { grid-column: 2; }
+}
+@media (max-width: 380px) {
+    .plan-proposals .plan-proposal { padding: 16px; gap: 14px; }
+}

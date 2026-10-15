@@ -55,3 +55,35 @@ The closed historical comparison displays seven portraits with short names. Each
 Axis metadata, interactive tracks, comparison bars and generated candidate pages consistently use red on the left and blue on the right. Scoring and marker positions are unchanged.
 
 Validation: 102 frontend and 34 backend tests passed, along with lint, TypeScript, production build and artifact audit. Regular browser checks passed in PT/EN at 1280/768/390/320/568 pixels; extremist checks passed in PT/EN at 320/768/1280 pixels, including portraits, image decoding, biography controls, expanded cards, accessibility and reflow. Screenshots verified mobile layouts and the normal red-to-blue gradient. Latest preview: http://localhost:8082.
+
+## Integrated proposal questions
+
+Proposal questions use the ordinary questionnaire presentation and are shuffled with the other questions. Candidate attribution appears only in the results. Each selected proposal replaces an existing question slot; no quiz total increases.
+
+| Quiz total | Scored questions | Proposal questions | Proposals per candidate |
+| --- | --- | --- | --- |
+| 36 | 34 | 2 | 1 |
+| 40 (Extremist Mode) | 36 | 4 | 2 |
+| 60 | 52 | 8 | 4 |
+| 72 | 64 | 8 | 4 |
+
+Proposal answers are retained for the candidate-specific agreement report and excluded from compatibility, axis scores and classification. Scored axis means retain equal axis weighting. Candidate reference vectors are unchanged. The API selection pool contains 72 reference questions plus eight proposals; only the declared quiz total is selected and displayed. Saved question order survives reloads and language changes; older quizzes without proposals remain supported.
+
+The results report displays the recorded answer, agreement/disagreement/neutrality, the candidate making the proposal and a page-specific PDF link. It does not ask the questions again or infer the opposing candidate's position.
+
+Proposal wording and citations checked on 2026-10-15 against the linked plan PDFs:
+
+| Candidate | Proposal | PDF page |
+| --- | --- | --- |
+| Lula | Social media/platform regulation | 16 |
+| Lula | Police body-camera incentives | 30 |
+| Lula | Local content for data centres | 55 |
+| Lula | Land reform settlements | 60 |
+| Flavio Bolsonaro | Criminal factions and militias as narco-terrorist organisations | 13 |
+| Flavio Bolsonaro | Civic-military schools | 35 |
+| Flavio Bolsonaro | Environmental licensing deadline and legal requirements | 50 |
+| Flavio Bolsonaro | OECD membership | 63 |
+
+Sources: [Lula plan](https://planodegoverno2026.com.br/planos/lula-e48f1c29.pdf) and [Flavio Bolsonaro plan](https://planodegoverno2026.com.br/planos/flavio-bolsonaro-0a34723b.pdf).
+
+Validation: 115 frontend and 36 backend unit tests passed, along with lint, TypeScript, production build and artifact audit. `npm run test:proposals` completed all four quiz lengths in PT and EN, covering quotas, random placement, hidden attribution, reload/resume, language switching, unchanged compatibility when only proposal answers change, cited read-only results, accessibility and reflow. `npm run test:themes` passed eight language/theme/viewport cases. `npm run test:extremist` passed six language/viewport cases. Screenshots are in `frontend/node_modules/.cache/proposal-flow/`.

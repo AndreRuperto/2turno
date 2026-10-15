@@ -49,7 +49,8 @@ describe('modelo eleitoral', () =>
       const quiz = election.getQuiz(variant, 'pt');
       assert.equal(quiz.modelId, 'brazil-presidential-2026-v2');
       assert.equal(quiz.quiz.questionCount, election.questionsPerAxis(variant) * 12);
-      assert.equal(quiz.quiz.questions.length, 72);
+      assert.equal(quiz.quiz.questions.filter(question => !question.proposalId).length, 72);
+      assert.equal(quiz.quiz.questions.filter(question => question.proposalId).length, 8);
       assert.deepEqual(quiz.quiz.archetypeQuestions, []);
       assert.deepEqual(quiz.quiz.answerOptions.map(option => option.id), ANSWERS);
     });

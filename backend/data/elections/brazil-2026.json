@@ -1184,7 +1184,11 @@
       "proponentId": "flavio-bolsonaro",
       "topic": "escolas-civico-militares",
       "sourceId": "tse-pl",
-      "sourceLocator": "p. 35"
+      "sourceLocator": "p. 35",
+      "axisId": "direitos_sociais",
+      "agreePole": "RIGHT",
+      "sourceUrl": "https://planodegoverno2026.com.br/planos/flavio-bolsonaro-0a34723b.pdf",
+      "verifiedAt": "2026-10-15"
     },
     {
       "id": "br2026_star_adesao_ocde",
@@ -1192,7 +1196,11 @@
       "proponentId": "flavio-bolsonaro",
       "topic": "adesao-ocde",
       "sourceId": "tse-pl",
-      "sourceLocator": "p. 63"
+      "sourceLocator": "p. 63",
+      "axisId": "diplomacia_eleitoral",
+      "agreePole": "LEFT",
+      "sourceUrl": "https://planodegoverno2026.com.br/planos/flavio-bolsonaro-0a34723b.pdf",
+      "verifiedAt": "2026-10-15"
     },
     {
       "id": "br2026_star_licenca_prazo",
@@ -1200,15 +1208,23 @@
       "proponentId": "flavio-bolsonaro",
       "topic": "licenca-ambiental-prazo",
       "sourceId": "tse-pl",
-      "sourceLocator": "pp. 49–50"
+      "sourceLocator": "p. 50",
+      "axisId": "ambiente",
+      "agreePole": "RIGHT",
+      "sourceUrl": "https://planodegoverno2026.com.br/planos/flavio-bolsonaro-0a34723b.pdf",
+      "verifiedAt": "2026-10-15"
     },
     {
       "id": "br2026_star_classificacao_faccoes",
-      "text": "As facções criminosas devem ser classificadas oficialmente como organizações terroristas.",
+      "text": "As facções criminosas e milícias devem ser classificadas oficialmente como organizações narcoterroristas.",
       "proponentId": "flavio-bolsonaro",
       "topic": "classificacao-faccoes",
       "sourceId": "tse-pl",
-      "sourceLocator": "p. 13"
+      "sourceLocator": "p. 13",
+      "axisId": "justica_penal",
+      "agreePole": "RIGHT",
+      "sourceUrl": "https://planodegoverno2026.com.br/planos/flavio-bolsonaro-0a34723b.pdf",
+      "verifiedAt": "2026-10-15"
     },
     {
       "id": "br2026_star_conteudo_local_datacenters",
@@ -1216,7 +1232,11 @@
       "proponentId": "lula-da-silva",
       "topic": "conteudo-local-datacenters",
       "sourceId": "tse-pt",
-      "sourceLocator": "p. 55"
+      "sourceLocator": "p. 55",
+      "axisId": "coordenacao",
+      "agreePole": "LEFT",
+      "sourceUrl": "https://planodegoverno2026.com.br/planos/lula-e48f1c29.pdf",
+      "verifiedAt": "2026-10-15"
     },
     {
       "id": "br2026_star_regulacao_redes",
@@ -1224,7 +1244,11 @@
       "proponentId": "lula-da-silva",
       "topic": "regulacao-redes",
       "sourceId": "tse-pt",
-      "sourceLocator": "p. 16"
+      "sourceLocator": "p. 16",
+      "axisId": "coordenacao",
+      "agreePole": "LEFT",
+      "sourceUrl": "https://planodegoverno2026.com.br/planos/lula-e48f1c29.pdf",
+      "verifiedAt": "2026-10-15"
     },
     {
       "id": "br2026_star_assentamentos_reforma_agraria",
@@ -1232,7 +1256,11 @@
       "proponentId": "lula-da-silva",
       "topic": "assentamentos-reforma-agraria",
       "sourceId": "tse-pt",
-      "sourceLocator": "p. 60"
+      "sourceLocator": "p. 60",
+      "axisId": "protecao_social",
+      "agreePole": "LEFT",
+      "sourceUrl": "https://planodegoverno2026.com.br/planos/lula-e48f1c29.pdf",
+      "verifiedAt": "2026-10-15"
     },
     {
       "id": "br2026_star_cameras_corporais",
@@ -1240,23 +1268,27 @@
       "proponentId": "lula-da-silva",
       "topic": "cameras-corporais-policias",
       "sourceId": "tse-pt",
-      "sourceLocator": "p. 30"
+      "sourceLocator": "p. 30",
+      "axisId": "justica_penal",
+      "agreePole": "LEFT",
+      "sourceUrl": "https://planodegoverno2026.com.br/planos/lula-e48f1c29.pdf",
+      "verifiedAt": "2026-10-15"
     }
   ],
   "sources": [
     {
       "id": "tse-pt",
       "title": "Programa de governo de Lula apresentado ao TSE",
-      "url": "https://www.tse.jus.br/eleicoes/eleicoes-2026-content/arquivos/proposta-pt",
+      "url": "https://planodegoverno2026.com.br/planos/lula-e48f1c29.pdf",
       "kind": "primary",
-      "accessedAt": "2026-10-05"
+      "accessedAt": "2026-10-15"
     },
     {
       "id": "tse-pl",
       "title": "Programa de governo de Flávio Bolsonaro apresentado ao TSE",
-      "url": "https://www.tse.jus.br/eleicoes/eleicoes-2026-content/arquivos/proposta-pl",
+      "url": "https://planodegoverno2026.com.br/planos/flavio-bolsonaro-0a34723b.pdf",
       "kind": "primary",
-      "accessedAt": "2026-10-05"
+      "accessedAt": "2026-10-15"
     },
     {
       "id": "ir-2025",

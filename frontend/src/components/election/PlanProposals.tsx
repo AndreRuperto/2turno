@@ -1,82 +1,92 @@
-import { useId, useMemo, useState } from 'react';
+import { useId, useState } from 'react';
+import { ArrowUpRight, Check, Minus, X } from 'lucide-react';
 import { LANG } from '../../i18n';
 import site from '../../site.json';
 import help from '../../i18n/electionProposalHelp.json';
 import proposalRules from '../../utils/electionProposals.cjs';
 import type { ElectionProposal } from '../../types/election';
-import type { AnswerOption, AnswerValue } from '../../types/quiz';
+import type { AnswerValue } from '../../types/quiz';
 
-const copy = LANG === 'pt' ? {
-  title: 'Propostas dos planos',
-  introduction: 'Oito propostas tiradas dos planos de governo, quatro de cada candidato. Responda sem saber de quem é cada uma. Suas respostas aqui não mudam a compatibilidade acima.',
-  helpLabel: 'O que significa esta proposta?',
-  verdict: { agree: 'Você concorda.', disagree: 'Você discorda.', neutral: 'Você não concorda nem discorda.' },
-  proposedBy: (name: string) => `Proposta do plano de ${name}`,
-  otherPlan: (name: string) => `O plano de ${name} não se posiciona sobre esta proposta.`
-} : {
-  title: 'Proposals from the plans',
-  introduction: 'Eight proposals taken from the government plans, four from each candidate. Answer without knowing whose each one is. Your answers here do not change the compatibility above.',
-  helpLabel: 'What does this proposal mean?',
-  verdict: { agree: 'You agree.', disagree: 'You disagree.', neutral: 'You neither agree nor disagree.' },
-  proposedBy: (name: string) => `Proposed in ${name}'s plan`,
-  otherPlan: (name: string) => `${name}'s plan does not take a position on this proposal.`
+const copy = LANG === 'pt' ?
+{
+    title: 'Propostas dos planos',
+    introduction: 'Suas respostas às propostas de cada candidato. Não entram no cálculo de compatibilidade.',
+    help: 'O que significa esta proposta?',
+    answer: 'Sua resposta no questionário: ',
+    source: 'Consultar o plano',
+    author: 'Proposta de',
+    verdict: { agree: 'Você concorda com esta proposta de ', disagree: 'Você discorda desta proposta de ', neutral: 'Você respondeu de forma neutra ou condicional à proposta de ' },
+    labels: { STRONGLY_AGREE: 'Concordo totalmente', AGREE: 'Concordo', NEUTRAL: 'Neutro ou Depende', DISAGREE: 'Discordo', STRONGLY_DISAGREE: 'Discordo totalmente' }
+} :
+{
+    title: 'Proposals from the plans',
+    introduction: 'Your answers to each candidate’s proposals. Excluded from compatibility scores.',
+    help: 'What does this proposal mean?',
+    answer: 'Your questionnaire answer: ',
+    source: 'Read the plan',
+    author: 'Proposal by',
+    verdict: { agree: 'You agree with this proposal by ', disagree: 'You disagree with this proposal by ', neutral: 'Your answer was neutral or conditional on this proposal by ' },
+    labels: { STRONGLY_AGREE: 'Strongly agree', AGREE: 'Agree', NEUTRAL: 'Neutral or It depends', DISAGREE: 'Disagree', STRONGLY_DISAGREE: 'Strongly disagree' }
 };
 const helpTexts = help[LANG] as Record<string, string>;
 
 
 
-// Um cartão: a pessoa responde primeiro; o autor só aparece depois, numa região anunciada ao leitor de tela.
-function PlanProposal({ proposal, options }: { proposal: ElectionProposal; options: AnswerOption[] })
+function PlanProposal({ proposal, answer }: { proposal: ElectionProposal; answer: AnswerValue })
 {
-  const [answer, setAnswer] = useState<AnswerValue | undefined>();
-  const [helpOpen, setHelpOpen] = useState(false);
-  const identifier = useId();
-  const proponent = site.candidates.find(candidate => candidate.id === proposal.proponentId);
-  const otherCandidate = site.candidates.find(candidate => candidate.id !== proposal.proponentId);
-  const page = proposalRules.firstPage(proposal.sourceLocator);
-  const helpText = helpTexts[proposal.id];
-
-  return <article className="plan-proposal" data-proposal={proposal.id}>
-    <div className="plan-proposal-head">
-      <h3 id={`${identifier}-text`}>{proposal.text}</h3>
-      {helpText && <button type="button" className="candidate-info-button plan-proposal-help" aria-label={copy.helpLabel}
-        aria-expanded={helpOpen} aria-controls={`${identifier}-help`} onClick={() => setHelpOpen(open => !open)}>
-        <span aria-hidden="true">?</span>
-      </button>}
-    </div>
-    {helpText && <p id={`${identifier}-help`} className="plan-proposal-help-text" hidden={!helpOpen}>{helpText}</p>}
-    <div className="plan-proposal-scale" role="radiogroup" aria-labelledby={`${identifier}-text`}>
-      {options.map(option => <label key={option.id} className={answer === option.id ? 'plan-proposal-option selected' : 'plan-proposal-option'}>
-        <input type="radio" name={`${identifier}-answer`} value={option.id} checked={answer === option.id}
-          onChange={() => setAnswer(option.id)} />
-        {option.label}
-      </label>)}
-    </div>
-    <div className="plan-proposal-reveal" aria-live="polite">
-      {answer && proponent && otherCandidate && <>
-        <p><strong>{copy.verdict[proposalRules.proposalVerdict(answer)]}</strong></p>
-        <p>{copy.proposedBy(proponent.name)} (<a href={page ? `${proponent.planUrl}#page=${page}` : proponent.planUrl}>{proposal.sourceLocator}</a>).</p>
-        <p>{copy.otherPlan(otherCandidate.name)}</p>
-      </>}
-    </div>
-  </article>;
+    const [helpOpen, setHelpOpen] = useState(false);
+    const identifier = useId();
+    const proponent = site.candidates.find(candidate => candidate.id === proposal.proponentId);
+    if (!proponent) return null;
+    const page = proposalRules.firstPage(proposal.sourceLocator);
+    const helpText = helpTexts[proposal.id];
+    const verdict = proposalRules.proposalVerdict(answer);
+    const VerdictIcon = verdict === 'agree' ? Check : verdict === 'disagree' ? X : Minus;
+    return <article className="plan-proposal" data-proposal={proposal.id} data-proponent={proposal.proponentId} data-verdict={verdict}>
+        <div className="plan-proposal-head">
+            <div className="plan-proposal-candidate">
+                <img src={proponent.portrait} alt="" width="40" height="40" loading="lazy" />
+                <div><span>{copy.author}</span><strong>{proponent.name}</strong></div>
+            </div>
+            {helpText && <button type="button" className="candidate-info-button plan-proposal-help" aria-label={copy.help}
+                aria-expanded={helpOpen} aria-controls={identifier + '-help'} onClick={() => setHelpOpen(open => !open)}>
+                <span aria-hidden="true">?</span>
+            </button>}
+        </div>
+        <h3>{proposal.text}</h3>
+        {helpText && <p id={identifier + '-help'} className="plan-proposal-help-text" hidden={!helpOpen}>{helpText}</p>}
+        <div className="plan-proposal-reveal" data-verdict={verdict}>
+            <div className="plan-proposal-response">
+                <span className="plan-proposal-accessible">{copy.answer}</span>
+                <strong><VerdictIcon size={16} aria-hidden="true" />{copy.labels[answer]}</strong>
+            </div>
+            <p className="plan-proposal-accessible">{copy.verdict[verdict]}{proponent.name}.</p>
+            <a href={page ? proposal.sourceUrl + '#page=' + page : proposal.sourceUrl} target="_blank" rel="noopener noreferrer">
+                {copy.source} · {proposal.sourceLocator}<ArrowUpRight size={15} aria-hidden="true" />
+            </a>
+        </div>
+    </article>;
 }
 
 
 
-// Seção do resultado. A ordem é sorteada uma vez para que nem ela nem a alternância revelem o autor.
-export function PlanProposals({ proposals, options }: { proposals: ElectionProposal[]; options: AnswerOption[] })
+export function PlanProposals({ proposals, answers }: { proposals: ElectionProposal[]; answers: Record<string, AnswerValue> })
 {
-  const ordered = useMemo(() => proposalRules.shuffleProposals(proposals), [proposals]);
-  // Mesma ordem da régua do quiz: "Discordo totalmente" primeiro.
-  const scale = useMemo(() => [...options].sort((first, second) => first.scoreTowardAgreement - second.scoreTowardAgreement), [options]);
-  if (!ordered.length || !scale.length) return null;
-
-  return <section className="plan-proposals" aria-labelledby="plan-proposals-title">
-    <h2 id="plan-proposals-title">{copy.title}</h2>
-    <p className="plan-proposals-intro">{copy.introduction}</p>
-    <div className="plan-proposals-list">
-      {ordered.map(proposal => <PlanProposal key={proposal.id} proposal={proposal} options={scale} />)}
-    </div>
-  </section>;
+    const answered = Object.keys(answers).flatMap(identifier =>
+    {
+        const proposal = proposals.find(entry => entry.id === identifier);
+        return proposal ? [proposal] : [];
+    });
+    if (!answered.length) return null;
+    const bolsonaroProposals = answered.filter(proposal => proposal.proponentId === 'flavio-bolsonaro');
+    const lulaProposals = answered.filter(proposal => proposal.proponentId === 'lula-da-silva');
+    const orderedProposals = Array.from({ length: Math.max(bolsonaroProposals.length, lulaProposals.length) })
+        .flatMap((_, index) => [bolsonaroProposals[index], lulaProposals[index]].filter(Boolean));
+    return <section className="plan-proposals" aria-labelledby="plan-proposals-title">
+        <h2 id="plan-proposals-title">{copy.title}</h2>
+        <p className="plan-proposals-intro">{copy.introduction}</p>
+        <div className="plan-proposals-list">
+            {orderedProposals.map(proposal => <PlanProposal key={proposal.id} proposal={proposal} answer={answers[proposal.id]} />)}
+        </div>
+    </section>;
 }

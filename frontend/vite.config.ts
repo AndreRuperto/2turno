@@ -35,6 +35,7 @@ export default defineConfig(({ mode }) => {
         {
           return source.replace("const presentation = require('./electionPresentation.cjs');", "import presentation from './electionPresentation.cjs';")
             .replace("const alignment = require('./electionAlignment.cjs');", "import alignment from './electionAlignment.cjs';")
+            .replace("const proposalRules = require('./electionProposals.cjs');", "import proposalRules from './electionProposals.cjs';")
             .replace("const site = require('../site.json');", "import site from '../site.json';")
             .replace("const questions = require('../data/extremistQuestions.json');", "import questions from '../data/extremistQuestions.json';")
             .replace("const historicalProfiles = require('../data/historicalExtremists.json');", "import historicalProfiles from '../data/historicalExtremists.json';")

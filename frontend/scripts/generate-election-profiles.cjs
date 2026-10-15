@@ -8,6 +8,7 @@ const englishModel = readJson('i18n/en/elections/brazil-2026.json');
 const profiles =
 {
     axes: { pt: model.axes, en: englishModel.axes },
+    proposals: { pt: model.proposals, en: englishModel.proposals },
     candidates: candidateProfiles('pt').map(person =>
     {
         const english = candidateProfiles('en').find(candidate => candidate.id === person.id);
