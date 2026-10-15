@@ -1,4 +1,4 @@
-﻿import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { LANG } from '../../i18n';
 import type { ElectionComparison } from '../../types/election';
 import shareCard from '../../utils/electionShareCard.cjs';
@@ -129,7 +129,7 @@ export function ShareResult({ result }: { result: ElectionComparison })
         {error && !open && <p role="alert">{error}</p>}
         {open && card && <InfoSheet titleId={titleIdentifier} className="share-result-dialog" onClose={() => setOpen(false)}>
             <h3 id={titleIdentifier}>{text.title}</h3>
-            <p className="profile-note">{text.description}</p>
+            <p className="profile-note" style={{ color: 'var(--text)' }}>{text.description}</p>
             <img className="share-result-preview" src={card.url} alt={alternative} width="1080" height="1800" />
             <div className="election-actions share-result-actions">
                 <a className="profile-link" href={card.url} download={card.file.name}>{text.download}</a>

@@ -18,7 +18,8 @@
     "test:browser": "node scripts/check-election-browser.cjs",
     "brand:assets": "node scripts/brand-assets.mjs",
     "test:accessibility": "node scripts/audit-election-ui.cjs",
-    "test:extremist": "node scripts/check-extremist-mode.cjs"
+    "test:extremist": "node scripts/check-extremist-mode.cjs",
+    "test:themes": "node scripts/check-result-themes.cjs"
   },
   "dependencies": {
     "@fontsource/poppins": "^5.3.0",

@@ -527,7 +527,7 @@ export default function ElectionApp()
         <a className="language-switch" href={LANG === 'pt' ? '/en' : '/'} onClick={preserveLanguageProgress} lang={LANG === 'pt' ? 'en' : 'pt-BR'}
           aria-label={LANG === 'pt' ? 'English' : 'Português'}>{LANG === 'pt' ? 'EN' : 'PT'}</a>
         {/* Só na página inicial: trocar de modo reinicia a tela, e no quiz ou no resultado isso perderia o andamento. */}
-        <button type="button" className="theme-toggle" aria-label={theme === 'dark' ? 'Mudar para modo claro' : 'Mudar para modo escuro'} onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}>
+        <button type="button" className="theme-toggle" aria-label={LANG === 'pt' ? (theme === 'dark' ? 'Mudar para modo claro' : 'Mudar para modo escuro') : (theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode')} onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}>
           {theme === 'dark' ? <Sun size={22} /> : <Moon size={22} />}
         </button>
         {available && onHome && !busy && <button type="button" className="extremist-mode-toggle" aria-pressed={modeActive} onClick={toggleExtremistMode}>
@@ -558,7 +558,11 @@ export default function ElectionApp()
             <img src="/extremist-fight-poster.webp" alt={LANG === 'pt' ? 'Pôster fictício de MMA: Flávio Bolsonaro contra Lula' : 'Fictional MMA fight poster: Flávio Bolsonaro versus Lula'} width="1862" height="845" />
             <div><p className="election-kicker">2TURNO · {LANG === 'pt' ? 'MODO EXTREMISTA' : 'EXTREMIST MODE'}</p>
               <h1>{LANG === 'pt' ? 'Ideias no limite. Onde você fica?' : 'Ideas at the limit. Where do you stand?'}</h1>
-              <p>{LANG === 'pt' ? 'Uma experiência opcional com afirmações políticas radicais. A luta é ficção e sátira.' : 'An optional experience with radical political statements. The fight is fiction and satire.'}</p></div>
+              <p>{LANG === 'pt' ? 'Uma experiência opcional com afirmações políticas radicais. A luta é ficção e sátira.' : 'An optional experience with radical political statements. The fight is fiction and satire.'}</p>
+              <button type="button" className="profile-link extremist-start-button" disabled={busy} onClick={() => void startQuiz()}>
+                {text.start}<span aria-hidden="true"> →</span>
+              </button>
+            </div>
           </section> : choosingFormat ? <section className="format-select" aria-label={profileText.formats}>
             <button type="button" className="format-select-back" onClick={() => setChoosingFormat(false)} aria-label={LANG === 'pt' ? 'Voltar' : 'Back'}>← {LANG === 'pt' ? 'Voltar' : 'Back'}</button>
             <h1 className="format-select-heading">{LANG === 'pt' ? <>Velocidade ou <span>precisão?</span></> : <>Speed or <span>precision?</span></>}</h1>
@@ -650,8 +654,6 @@ export default function ElectionApp()
         {comparison && <section className="election-results">
           <h1>{text.results}</h1>
           <p>{comparison.closestCandidateIds.length === 2 ? text.tie : `${text.closest} ${comparison.candidates[0].name}`}</p>
-          <ProfileCard axes={comparison.axes.map(entry => entry.axis)}
-            scores={Object.fromEntries(comparison.axes.map(entry => [entry.axis.id, entry.userScore]))} />
           <h2>{text.candidates}</h2>
           <div className="election-grid">{comparison.candidates.map(match =>
           {
@@ -660,6 +662,8 @@ export default function ElectionApp()
             const scores = Object.fromEntries(comparison.axes.map(entry => [entry.axis.id, entry.candidateScores[match.id]]));
             return <CandidateCard key={match.id} candidate={{ ...candidate, scores }} compatibility={match.compatibility} />;
           })}</div>
+          <ProfileCard axes={comparison.axes.map(entry => entry.axis)}
+            scores={Object.fromEntries(comparison.axes.map(entry => [entry.axis.id, entry.userScore]))} />
           <details className="comparison-section detailed-comparison">
             <summary>{profileText.detailedComparison}</summary>
             <h2>{profileText.compare}</h2>
