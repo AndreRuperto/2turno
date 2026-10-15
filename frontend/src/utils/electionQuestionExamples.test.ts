@@ -4,13 +4,15 @@ import examples from '../i18n/electionQuestionExamples.json';
 
 describe('exemplos das perguntas eleitorais', () =>
 {
-  it('cobrem exatamente as 72 perguntas, em português e inglês', () =>
+  it('cobrem perguntas elegíveis e propostas sem identificar candidatos', () =>
   {
-    const questionIds = electionModel.questions.map(question => question.id).sort();
+    const questionIds = [...electionModel.questions, ...electionModel.proposals].map(question => question.id).sort();
     for (const language of ['pt', 'en'] as const)
     {
       expect(Object.keys(examples[language]).sort()).toEqual(questionIds);
       expect(Object.values(examples[language]).every(text => text.trim().length > 20)).toBe(true);
+      for (const proposal of electionModel.proposals)
+        expect((examples[language] as Record<string, string>)[proposal.id]).not.toMatch(/Lula|Bolsonaro/);
     }
   });
 });

@@ -152,8 +152,23 @@ function validateModel(model)
   require(isText(model.modelId), 'Election model identifier missing.');
   require(/^\d{4}-\d{2}-\d{2}$/.test(model.asOf) && !Number.isNaN(Date.parse(model.asOf)), 'Invalid asOf date.');
   const questionIdentifiers = uniqueIdentifiers(model.questions.map(question => question.id));
+  uniqueIdentifiers((model.proposals ?? []).map(proposal => proposal.id));
+  for (const proposal of model.proposals ?? [])
+  {
+    require(!questionIdentifiers.has(proposal.id) && axisIdentifiers.has(proposal.axisId), 'Invalid proposal question identifier or axis.');
+    require(['LEFT', 'RIGHT'].includes(proposal.agreePole) && isText(proposal.text), 'Invalid proposal question.');
+    require(CANDIDATE_IDS.includes(proposal.proponentId) && proposal.sourceUrl?.startsWith('https://') && isText(proposal.sourceLocator),
+      'Proposal attribution and citation are required.');
+  }
   validateQuestions(model, axisIdentifiers);
   const sourceIdentifiers = uniqueIdentifiers(model.sources.map(source => source.id));
+  uniqueIdentifiers([...model.questions, ...(model.proposals ?? [])].map(question => question.topic));
+  for (const proposal of model.proposals ?? [])
+  {
+    require(sourceIdentifiers.has(proposal.sourceId)
+      && model.sources.find(source => source.id === proposal.sourceId).url === proposal.sourceUrl,
+      'Proposal source must resolve to the cited plan document.');
+  }
   model.sources.forEach(source => require(source.url.startsWith('https://') && isText(source.title),
     'Invalid election source.'));
   const candidateIdentifiers = uniqueIdentifiers(model.candidates.map(candidate => candidate.id));
@@ -184,8 +199,19 @@ function candidateView(candidate, english)
 
 const proposalView = proposal => ({
   id: proposal.id, text: proposal.text, proponentId: proposal.proponentId,
-  topic: proposal.topic, sourceId: proposal.sourceId, sourceLocator: proposal.sourceLocator
+  topic: proposal.topic, sourceId: proposal.sourceId, sourceLocator: proposal.sourceLocator,
+  axisId: proposal.axisId, agreePole: proposal.agreePole, sourceUrl: proposal.sourceUrl, verifiedAt: proposal.verifiedAt
 });
+
+function proposalQuestions(proposals)
+{
+  return proposals.map(proposal => ({
+    id: proposal.id, proposalId: proposal.id, axisId: proposal.axisId, text: proposal.text,
+    agreePole: proposal.agreePole, weight: 0, topic: proposal.topic, core: true
+  }));
+}
+
+
 
 function buildModel(source, english)
 {
@@ -249,7 +275,7 @@ export function loadElection(dataDirectory = new URL('../data/', import.meta.url
 function createElection(models)
 {
   const portuguese = models.pt;
-  const questionsById = new Map(portuguese.questions.map(question => [question.id, question]));
+  const questionsById = new Map([...portuguese.questions, ...proposalQuestions(portuguese.proposals)].map(question => [question.id, question]));
 
   const getModel = language => models[normalizeLanguage(language)];
 
@@ -283,7 +309,7 @@ function createElection(models)
         questionCount: perAxis * model.axes.length,
         questionsPerAxis: variant === 'extreme' ? 0 : perAxis,
         axes: model.axes,
-        questions: model.questions,
+        questions: [...model.questions, ...proposalQuestions(model.proposals)],
         answerOptions: Object.entries(ANSWER_SCORES).map(([id, score]) =>
           ({ id, label: labels[id], scoreTowardAgreement: score })),
         archetypeQuestions: []
@@ -298,6 +324,7 @@ function createElection(models)
     for (const { questionId, answer } of answers)
     {
       const question = questionsById.get(questionId);
+      if (question.proposalId) continue;
       const agreement = ANSWER_SCORES[answer];
       const leftScore = question.agreePole === 'LEFT' ? agreement : 1 - agreement;
       const total = totals.get(question.axisId) ?? { sum: 0, weight: 0 };
@@ -349,8 +376,9 @@ function createElection(models)
     {
       const answered = request.answers.map(answer => questionsById.get(answer.questionId))
         .filter(question => question.axisId === axis.id);
-      const leftCount = answered.filter(question => question.agreePole === 'LEFT').length;
-      if (answered.length !== perAxis || Math.abs(2 * leftCount - answered.length) > 1)
+      const scored = answered.filter(question => !question.proposalId);
+      const leftCount = scored.filter(question => question.agreePole === 'LEFT').length;
+      if (answered.length !== perAxis || !scored.length || Math.abs(2 * leftCount - scored.length) > 1)
       {
         throw badRequest('Responda o número previsto de perguntas por eixo, equilibrado entre os dois polos.');
       }
@@ -392,7 +420,11 @@ function createElection(models)
   {
     validateRequestShape(request);
     const counts = validateAnswers(request);
-    return compareVector(scoreVector(request.answers), language, counts);
+    return {
+      ...compareVector(scoreVector(request.answers), language, counts),
+      proposalAnswers: request.answers.filter(answer => questionsById.get(answer.questionId).proposalId)
+        .map(answer => ({ questionId: answer.questionId, answer: answer.answer }))
+    };
   }
 
   function compare(request, language)

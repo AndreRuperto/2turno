@@ -197,6 +197,204 @@
       }
     ]
   },
+  "proposals": {
+    "pt": [
+      {
+        "id": "br2026_star_escolas_civico_militares",
+        "text": "O governo federal deve apoiar a ampliação de escolas públicas no modelo cívico-militar.",
+        "proponentId": "flavio-bolsonaro",
+        "topic": "escolas-civico-militares",
+        "sourceId": "tse-pl",
+        "sourceLocator": "p. 35",
+        "axisId": "direitos_sociais",
+        "agreePole": "RIGHT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/flavio-bolsonaro-0a34723b.pdf",
+        "verifiedAt": "2026-10-15"
+      },
+      {
+        "id": "br2026_star_adesao_ocde",
+        "text": "O Brasil deve buscar se tornar membro da OCDE.",
+        "proponentId": "flavio-bolsonaro",
+        "topic": "adesao-ocde",
+        "sourceId": "tse-pl",
+        "sourceLocator": "p. 63",
+        "axisId": "diplomacia_eleitoral",
+        "agreePole": "LEFT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/flavio-bolsonaro-0a34723b.pdf",
+        "verifiedAt": "2026-10-15"
+      },
+      {
+        "id": "br2026_star_licenca_prazo",
+        "text": "A licença ambiental deve ser concedida se o empreendedor cumprir os requisitos legais e o órgão ambiental não decidir nem se manifestar dentro do prazo.",
+        "proponentId": "flavio-bolsonaro",
+        "topic": "licenca-ambiental-prazo",
+        "sourceId": "tse-pl",
+        "sourceLocator": "p. 50",
+        "axisId": "ambiente",
+        "agreePole": "RIGHT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/flavio-bolsonaro-0a34723b.pdf",
+        "verifiedAt": "2026-10-15"
+      },
+      {
+        "id": "br2026_star_classificacao_faccoes",
+        "text": "As facções criminosas e milícias devem ser classificadas oficialmente como organizações narcoterroristas.",
+        "proponentId": "flavio-bolsonaro",
+        "topic": "classificacao-faccoes",
+        "sourceId": "tse-pl",
+        "sourceLocator": "p. 13",
+        "axisId": "justica_penal",
+        "agreePole": "RIGHT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/flavio-bolsonaro-0a34723b.pdf",
+        "verifiedAt": "2026-10-15"
+      },
+      {
+        "id": "br2026_star_conteudo_local_datacenters",
+        "text": "A instalação de centros de processamento de dados no Brasil deve incluir exigências de conteúdo local.",
+        "proponentId": "lula-da-silva",
+        "topic": "conteudo-local-datacenters",
+        "sourceId": "tse-pt",
+        "sourceLocator": "p. 55",
+        "axisId": "coordenacao",
+        "agreePole": "LEFT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/lula-e48f1c29.pdf",
+        "verifiedAt": "2026-10-15"
+      },
+      {
+        "id": "br2026_star_regulacao_redes",
+        "text": "O governo deve ampliar a regulação das redes sociais e das plataformas digitais.",
+        "proponentId": "lula-da-silva",
+        "topic": "regulacao-redes",
+        "sourceId": "tse-pt",
+        "sourceLocator": "p. 16",
+        "axisId": "coordenacao",
+        "agreePole": "LEFT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/lula-e48f1c29.pdf",
+        "verifiedAt": "2026-10-15"
+      },
+      {
+        "id": "br2026_star_assentamentos_reforma_agraria",
+        "text": "O governo deve continuar assentando famílias acampadas por meio da reforma agrária.",
+        "proponentId": "lula-da-silva",
+        "topic": "assentamentos-reforma-agraria",
+        "sourceId": "tse-pt",
+        "sourceLocator": "p. 60",
+        "axisId": "protecao_social",
+        "agreePole": "LEFT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/lula-e48f1c29.pdf",
+        "verifiedAt": "2026-10-15"
+      },
+      {
+        "id": "br2026_star_cameras_corporais",
+        "text": "O governo federal deve ampliar os incentivos para o uso de câmeras corporais pelas polícias.",
+        "proponentId": "lula-da-silva",
+        "topic": "cameras-corporais-policias",
+        "sourceId": "tse-pt",
+        "sourceLocator": "p. 30",
+        "axisId": "justica_penal",
+        "agreePole": "LEFT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/lula-e48f1c29.pdf",
+        "verifiedAt": "2026-10-15"
+      }
+    ],
+    "en": [
+      {
+        "id": "br2026_star_escolas_civico_militares",
+        "text": "The federal government should support expanding public schools following the civic-military model.",
+        "proponentId": "flavio-bolsonaro",
+        "topic": "escolas-civico-militares",
+        "sourceId": "tse-pl",
+        "sourceLocator": "p. 35",
+        "axisId": "direitos_sociais",
+        "agreePole": "RIGHT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/flavio-bolsonaro-0a34723b.pdf",
+        "verifiedAt": "2026-10-15"
+      },
+      {
+        "id": "br2026_star_adesao_ocde",
+        "text": "Brazil should seek to become a member of the OECD.",
+        "proponentId": "flavio-bolsonaro",
+        "topic": "adesao-ocde",
+        "sourceId": "tse-pl",
+        "sourceLocator": "p. 63",
+        "axisId": "diplomacia_eleitoral",
+        "agreePole": "LEFT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/flavio-bolsonaro-0a34723b.pdf",
+        "verifiedAt": "2026-10-15"
+      },
+      {
+        "id": "br2026_star_licenca_prazo",
+        "text": "An environmental licence should be granted if the applicant meets the legal requirements and the environmental authority neither decides nor responds within the deadline.",
+        "proponentId": "flavio-bolsonaro",
+        "topic": "licenca-ambiental-prazo",
+        "sourceId": "tse-pl",
+        "sourceLocator": "p. 50",
+        "axisId": "ambiente",
+        "agreePole": "RIGHT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/flavio-bolsonaro-0a34723b.pdf",
+        "verifiedAt": "2026-10-15"
+      },
+      {
+        "id": "br2026_star_classificacao_faccoes",
+        "text": "Criminal factions and militias should be officially classified as narco-terrorist organisations.",
+        "proponentId": "flavio-bolsonaro",
+        "topic": "classificacao-faccoes",
+        "sourceId": "tse-pl",
+        "sourceLocator": "p. 13",
+        "axisId": "justica_penal",
+        "agreePole": "RIGHT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/flavio-bolsonaro-0a34723b.pdf",
+        "verifiedAt": "2026-10-15"
+      },
+      {
+        "id": "br2026_star_conteudo_local_datacenters",
+        "text": "The installation of data centres in Brazil should include local content requirements.",
+        "proponentId": "lula-da-silva",
+        "topic": "conteudo-local-datacenters",
+        "sourceId": "tse-pt",
+        "sourceLocator": "p. 55",
+        "axisId": "coordenacao",
+        "agreePole": "LEFT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/lula-e48f1c29.pdf",
+        "verifiedAt": "2026-10-15"
+      },
+      {
+        "id": "br2026_star_regulacao_redes",
+        "text": "The government should expand the regulation of social media and digital platforms.",
+        "proponentId": "lula-da-silva",
+        "topic": "regulacao-redes",
+        "sourceId": "tse-pt",
+        "sourceLocator": "p. 16",
+        "axisId": "coordenacao",
+        "agreePole": "LEFT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/lula-e48f1c29.pdf",
+        "verifiedAt": "2026-10-15"
+      },
+      {
+        "id": "br2026_star_assentamentos_reforma_agraria",
+        "text": "The government should continue settling encamped families through land reform.",
+        "proponentId": "lula-da-silva",
+        "topic": "assentamentos-reforma-agraria",
+        "sourceId": "tse-pt",
+        "sourceLocator": "p. 60",
+        "axisId": "protecao_social",
+        "agreePole": "LEFT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/lula-e48f1c29.pdf",
+        "verifiedAt": "2026-10-15"
+      },
+      {
+        "id": "br2026_star_cameras_corporais",
+        "text": "The federal government should expand incentives for police forces to use body cameras.",
+        "proponentId": "lula-da-silva",
+        "topic": "cameras-corporais-policias",
+        "sourceId": "tse-pt",
+        "sourceLocator": "p. 30",
+        "axisId": "justica_penal",
+        "agreePole": "LEFT",
+        "sourceUrl": "https://planodegoverno2026.com.br/planos/lula-e48f1c29.pdf",
+        "verifiedAt": "2026-10-15"
+      }
+    ]
+  },
   "candidates": [
     {
       "id": "lula-da-silva",

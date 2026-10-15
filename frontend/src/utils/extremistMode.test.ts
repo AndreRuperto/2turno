@@ -79,3 +79,33 @@ describe('Separate extremist policy mode', () =>
     });
 
 });
+
+describe('Proposal questions inside the forty-question mode', () =>
+{
+    it('keeps forty questions, four proposals, stable saved orders and independent compatibility', () =>
+    {
+        for (let attempt = 0; attempt < 30; attempt += 1)
+        {
+            const quiz = mode.createRadicalQuiz(profiles.axes.pt, 'pt', profiles.proposals.pt);
+            expect(quiz.questions).toHaveLength(40);
+            expect(new Set(quiz.questions.map((question: { id: string }) => question.id)).size).toBe(40);
+            const proposals = quiz.questions.filter((question: { proposalId?: string }) => question.proposalId);
+            expect(proposals).toHaveLength(4);
+            for (const identifier of ['lula-da-silva', 'flavio-bolsonaro'])
+                expect(proposals.filter((question: { id: string }) => profiles.proposals.pt.find(proposal => proposal.id === question.id)?.proponentId === identifier)).toHaveLength(2);
+            const identifiers = quiz.questions.map((question: { id: string }) => question.id);
+            for (const identifier of ['radical_20', 'radical_34', 'radical_35', 'radical_36', 'radical_37', 'radical_38', 'radical_39', 'radical_40'])
+                expect(identifiers).toContain(identifier);
+            const restored = mode.createRadicalQuiz(profiles.axes.en, 'en', profiles.proposals.en, identifiers);
+            expect(restored.questions.map((question: { id: string }) => question.id)).toEqual(identifiers);
+            const answers: Record<string, AnswerValue> = Object.fromEntries(quiz.questions.map((question: { id: string; proposalId?: string }) =>
+                [question.id, question.proposalId ? 'STRONGLY_AGREE' : 'NEUTRAL']));
+            const before = mode.scoreRadicalAnswers(answers, quiz.questions);
+            const changed = { ...answers };
+            for (const proposal of proposals) changed[proposal.id] = 'STRONGLY_DISAGREE';
+            expect(mode.scoreRadicalAnswers(changed, quiz.questions)).toEqual(before);
+            expect(Object.values(before)).toEqual(Array(12).fill(50));
+            expect(mode.classifyRadicalProfile(before, changed)).toEqual(mode.classifyRadicalProfile(before, answers));
+        }
+    });
+});

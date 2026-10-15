@@ -15,11 +15,12 @@ import questionExamples from './i18n/electionQuestionExamples.json';
 import presentation from './utils/electionPresentation.cjs';
 import alignment from './utils/electionAlignment.cjs';
 import radicalMode from './utils/extremistMode.cjs';
-import type { ElectionComparison, ElectionQuiz } from './types/election';
+import proposalRules from './utils/electionProposals.cjs';
+import type { ElectionComparison, ElectionProposal, ElectionQuiz } from './types/election';
 import type { AnswerValue, QuizPayload, QuizVariant } from './types/quiz';
-import { selectAllQuestionsBalanced, selectAndBalanceQuestions } from './utils/quizSelection';
 import { answeredElectionCount, clearElectionProgress, loadElectionProgress, restoreElectionQuiz, saveElectionProgress } from './utils/electionProgress';
 
+const planProposals = profiles.proposals[LANG] as ElectionProposal[];
 const languagePrefix = LANG === 'en' ? '/en' : '';
 const AUTO_ADVANCE_KEY = '2turno-auto-advance';
 const ANSWER_VALUES: AnswerValue[] = ['STRONGLY_AGREE', 'AGREE', 'NEUTRAL', 'DISAGREE', 'STRONGLY_DISAGREE'];
@@ -219,7 +220,7 @@ export default function ElectionApp()
       {
         if (saved.modeActive)
         {
-          const restored = radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG);
+          const restored = radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG, planProposals, saved.questionIds);
           if (cancelled) return;
           setChoosingFormat(saved.choosingFormat);
           setAnswers(saved.answers);
@@ -342,7 +343,7 @@ export default function ElectionApp()
       if (modeActive)
       {
         setModel(null);
-        setQuiz(radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG));
+        setQuiz(radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG, planProposals));
         setAnswers({});
         setQuestionIndex(0);
         setRadicalScores(null);
@@ -350,7 +351,7 @@ export default function ElectionApp()
       }
       const response = await fetchElectionQuiz(activeVariant);
       setModel(response);
-      setQuiz(activeVariant === 'extreme' ? selectAllQuestionsBalanced(response.quiz) : selectAndBalanceQuestions(response.quiz));
+      setQuiz(proposalRules.selectQuizQuestions(response.quiz, response.proposals ?? planProposals));
       setAnswers({});
       setQuestionIndex(0);
       setComparison(null);
@@ -398,7 +399,7 @@ export default function ElectionApp()
     if (!quiz) return;
     if (modeActive)
     {
-      setRadicalScores(radicalMode.scoreRadicalAnswers(answers));
+      setRadicalScores(radicalMode.scoreRadicalAnswers(answers, quiz.questions));
       clearElectionProgress();
       setQuiz(null);
       return;
@@ -438,7 +439,7 @@ export default function ElectionApp()
     {
       const extremist = saved.mode === 'extremist';
       const response = extremist ? null : await fetchElectionQuiz(saved.variant);
-      const restored = restoreElectionQuiz(response?.quiz ?? radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG), saved);
+      const restored = restoreElectionQuiz(response?.quiz ?? radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG, planProposals, saved.questionIds), saved);
       if (!restored)
       {
         clearElectionProgress();
@@ -645,6 +646,7 @@ export default function ElectionApp()
             })}</div>
           </section>}
           <ProfileCard axes={profiles.axes[LANG]} scores={radicalScores} identifier="radical-profile" classificationOverride={radicalClassification} />
+          <PlanProposals proposals={planProposals} answers={answers} />
           <HistoricalComparisons scores={radicalScores} answers={answers} />
           <div className="election-actions">
             <button type="button" onClick={() => setRadicalScores(null)}>{text.restart}</button>
@@ -673,7 +675,7 @@ export default function ElectionApp()
               ...profiles.candidates.map(candidate => ({ name: candidate.name, symbol: String(candidate.number), score: entry.candidateScores[candidate.id], color: presentation.classificationLabels(candidate.scores, LANG).color }))
             ]} />)}</div>
           </details>
-          <PlanProposals proposals={model?.proposals ?? []} options={model?.quiz.answerOptions ?? []} />
+          <PlanProposals proposals={model?.proposals ?? planProposals} answers={Object.fromEntries((comparison.proposalAnswers ?? []).map(entry => [entry.questionId, entry.answer]))} />
           <p>{text.disclaimer}</p>
           <a href={`${languagePrefix}/election-methodology`}>{text.methodology}</a>
           <div className="election-actions"><ShareResult result={comparison} /><button type="button" onClick={() => setComparison(null)}>{text.restart}</button></div>

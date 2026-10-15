@@ -19,7 +19,8 @@ function comparisonFixture(language)
     return {
         modelId: 'brazil-presidential-2026-v2', asOf: '2026-10-05', scoringMethod: 'mean-absolute-distance-v1',
         axes: axes.map(axis => ({ axis, userScore: scores[axis.id], candidateScores: Object.fromEntries(profiles.candidates.map(candidate => [candidate.id, candidate.scores[axis.id]])) })),
-        candidates: result.candidates, closestCandidateIds: result.closestCandidateIds, answeredQuestionCounts: {}
+        candidates: result.candidates, closestCandidateIds: result.closestCandidateIds, answeredQuestionCounts: {},
+        proposalAnswers: profiles.proposals[language].slice(0, 2).map(proposal => ({ questionId: proposal.id, answer: 'AGREE' }))
     };
 }
 
@@ -73,7 +74,7 @@ async function checkResults(browser, language, width, theme)
         await page.locator('#seu-perfil .profile-method-note > summary').click();
         await page.locator('#seu-perfil .axis-guidance > summary').first().click();
         await page.locator('.plan-proposal-help').first().click();
-        await page.locator('.plan-proposal-option input[value="AGREE"]').first().check();
+        assert.equal(await page.locator('.plan-proposal input').count(), 0, 'Results must reuse quiz answers, not ask again');
         await checkAccessibility(page, '.election-results');
         const name = language + '-' + width + '-' + theme;
         await page.locator('.election-results > .election-grid').screenshot({ path: join(screenshots, 'candidates-' + name + '.png') });

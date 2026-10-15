@@ -1,5 +1,6 @@
 const questions = require('../data/extremistQuestions.json');
 const presentation = require('./electionPresentation.cjs');
+const proposalRules = require('./electionProposals.cjs');
 const historicalProfiles = require('../data/historicalExtremists.json');
 
 const options =
@@ -11,9 +12,14 @@ const values = { STRONGLY_AGREE: 100, AGREE: 75, NEUTRAL: 50, DISAGREE: 25, STRO
 
 
 
-function createRadicalQuiz(axes, language = 'pt')
+function createRadicalQuiz(axes, language = 'pt', proposals = [], savedIdentifiers)
 {
     const locale = language === 'en' ? 'en' : 'pt';
+    const original = questions.map(question => ({ id: question.id, axisId: question.axisId, agreePole: question.agreePole, weight: 1, text: question.text[locale] }));
+    const pool = [...original, ...proposalRules.proposalQuestions(proposals)];
+    const selected = savedIdentifiers?.length
+        ? savedIdentifiers.map(identifier => pool.find(question => question.id === identifier)).filter(Boolean)
+        : proposals.length ? proposalRules.mixRadicalProposals(original, proposals) : original;
     return {
         title: locale === 'pt' ? 'Modo extremista' : 'Extremist mode',
         description: locale === 'pt' ? '40 afirmações sobre políticas radicais.' : '40 statements about radical policies.',
@@ -21,20 +27,21 @@ function createRadicalQuiz(axes, language = 'pt')
         questionCount: questions.length,
         questionsPerAxis: null,
         axes,
-        questions: questions.map(question => ({ id: question.id, axisId: question.axisId, agreePole: question.agreePole, weight: 1, text: question.text[locale] })),
+        questions: selected,
         answerOptions: Object.entries(values).map(([identifier, score], index) => ({ id: identifier, label: options[locale][index], scoreTowardAgreement: score }))
     };
 }
 
 
 
-function scoreRadicalAnswers(answers)
+function scoreRadicalAnswers(answers, selectedQuestions = questions)
 {
-    if (Object.keys(answers).length !== questions.length || questions.some(question => !Object.hasOwn(values, answers[question.id])))
+    if (selectedQuestions.length !== 40 || Object.keys(answers).length !== 40 || selectedQuestions.some(question => !Object.hasOwn(values, answers[question.id])))
         throw new Error('Complete all radical questions with valid answers.');
     const totals = {};
-    for (const question of questions)
+    for (const question of selectedQuestions)
     {
+        if (question.proposalId) continue;
         const score = values[answers[question.id]];
         const total = totals[question.axisId] || { sum: 0, count: 0 };
         total.sum += question.agreePole === 'LEFT' ? score : 100 - score;
