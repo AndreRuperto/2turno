@@ -55,7 +55,7 @@ async function main()
                 assert.equal(await page.locator('.format-options').count(), 0);
                 const calls = [];
                 page.on('request', request => { if (request.url().includes('/api/')) calls.push(request.url()); });
-                await page.locator('.questionnaire-card button').click();
+                await page.locator('.extremist-start-button').click();
                 await page.getByText('1 / 40', { exact: true }).waitFor();
                 assert.equal(await page.locator('.extremist-mode-toggle').count(), 0, 'The toggle is only offered on the home page');
                 await checkAccess(page);

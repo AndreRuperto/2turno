@@ -59,6 +59,7 @@ describe('Detailed 2 Turno share card', () =>
     it.each(['pt', 'en'])('renders the restored axes and comparisons in %s', language =>
     {
         const drawn: { value: string; font: string }[] = [];
+        const markers: { horizontal: number; radius: number }[] = [];
         const context = {
             font: '',
             fillStyle: '',
@@ -74,13 +75,19 @@ describe('Detailed 2 Turno share card', () =>
             fillRect() {},
             save() {},
             restore() {},
-            arc() {},
+            arc(horizontal: number, _vertical: number, radius: number) { markers.push({ horizontal, radius }); },
             clip() {},
             moveTo() {},
             lineTo() {},
             stroke() {}
         };
-        shareCard.drawResultCard(context, resultFixture(), [], language);
+        const result = resultFixture();
+        result.axes[0].userScore = language === 'pt' ? 100 : 0;
+        shareCard.drawResultCard(context, result, [], language);
+        const userMarkers = markers.filter(marker => marker.radius === 7);
+        expect(userMarkers).toHaveLength(12);
+        if (language === 'pt') expect(userMarkers[0].horizontal).toBeLessThan(userMarkers[2].horizontal);
+        else expect(userMarkers[0].horizontal).toBeGreaterThan(userMarkers[2].horizontal);
         expect(shareCard.cardSize).toBe(1080);
         expect(drawn.some(entry => entry.value === '2 TURNO')).toBe(true);
         expect(drawn.some(entry => entry.value === '75.0%')).toBe(true);
@@ -90,5 +97,11 @@ describe('Detailed 2 Turno share card', () =>
         expect(drawn.some(entry => entry.value === 'Lula')).toBe(true);
         expect(drawn.some(entry => /12axes/i.test(entry.value))).toBe(false);
         expect(drawn.some(entry => entry.value === (language === 'pt' ? 'SEUS 12 EIXOS' : 'YOUR 12 AXES'))).toBe(true);
+        expect(drawn.some(entry => entry.value === (language === 'pt' ? 'ONDE VOCÊ SE APROXIMA E SE DISTANCIA' : 'WHERE YOUR VIEWS ALIGN AND DIFFER'))).toBe(true);
+        expect(drawn.filter(entry => entry.value === (language === 'pt' ? 'MAIS ALINHADO' : 'CLOSER ALIGNMENT'))).toHaveLength(2);
+        expect(drawn.filter(entry => entry.value === (language === 'pt' ? 'MENOS ALINHADO' : 'LESS ALIGNED'))).toHaveLength(2);
+        expect(drawn.filter(entry => entry.value === (language === 'pt' ? 'EMPATE' : 'TIE'))).toHaveLength(2);
+        expect(drawn.some(entry => entry.value === 'FB')).toBe(true);
+
     });
 });
