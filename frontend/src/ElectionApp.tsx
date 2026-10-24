@@ -678,7 +678,7 @@ export default function ElectionApp()
           <PlanProposals proposals={model?.proposals ?? planProposals} answers={Object.fromEntries((comparison.proposalAnswers ?? []).map(entry => [entry.questionId, entry.answer]))} />
           <p>{text.disclaimer}</p>
           <a href={`${languagePrefix}/election-methodology`}>{text.methodology}</a>
-          <div className="election-actions"><ShareResult result={comparison} /><button type="button" onClick={() => setComparison(null)}>{text.restart}</button></div>
+          <div className="election-actions"><ShareResult result={comparison} theme={theme} /><button type="button" onClick={() => setComparison(null)}>{text.restart}</button></div>
         </section>}
       </>}
     </main>

@@ -39,6 +39,8 @@ export default defineConfig(({ mode }) => {
             .replace("const site = require('../site.json');", "import site from '../site.json';")
             .replace("const questions = require('../data/extremistQuestions.json');", "import questions from '../data/extremistQuestions.json';")
             .replace("const historicalProfiles = require('../data/historicalExtremists.json');", "import historicalProfiles from '../data/historicalExtremists.json';")
+            .replace("const translations = require('../i18n/electionShare.json');", "import translations from '../i18n/electionShare.json';")
+            .replace("const profiles = require('../data/electionProfiles.generated.json');", "import profiles from '../data/electionProfiles.generated.json';")
             .replace('module.exports =', 'export default');
         }
       }
