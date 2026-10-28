@@ -128,6 +128,8 @@ Não há banco de dados. Os dados só mudam por commits revisados, então o back
 │   ├── src/i18n/            textos PT/EN
 │   └── scripts/             geração das páginas estáticas e auditoria do build
 ├── colinha-eleitoral/       documentação do modelo eleitoral e dos planos de governo
+├── design/                  assets de design (logos, favicons, hero, OG images)
+├── docs/                    documentação interna (melhorias, validação de UI)
 ├── profile-audit/           pipeline de vetores do catálogo do 12 Axes
 ├── scripts/                 dev.mjs (sobe tudo) e checagem de i18n
 └── .claude/                 skills do Claude Code para o catálogo do 12 Axes
@@ -214,7 +216,7 @@ npm start                      # site + API em http://localhost:8080
 
 O backend serve o `frontend/dist` com URLs sem `.html`, redirecionamentos de URLs antigas e cache por tipo de arquivo ([`backend/src/static.js`](backend/src/static.js)). Se `frontend/dist` não existir, ele serve só a API. O [`backend/Dockerfile`](backend/Dockerfile) continua disponível para subir só a API em outro lugar.
 
-Para trocar de domínio, mude `website` em `frontend/src/site.json` e as URLs em `frontend/election.html` (canonical, og:url e og:image).
+Para trocar de domínio, mude `website` em `frontend/src/site.json` e as URLs em `frontend/index.html` e `frontend/election.html` (canonical, og:url e og:image).
 
 Todo push e pull request roda o CI em `.github/workflows/ci.yml`.
 
