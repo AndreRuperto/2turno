@@ -1,7 +1,11 @@
-import type { Axis, QuizPayload, QuizVariant, SubmittedAnswer } from './quiz';
+import type { Axis, Pole, QuizPayload, QuizVariant, SubmittedAnswer } from './quiz';
 
 export interface ElectionProposal
 {
+  axisId: string;
+  agreePole: Pole;
+  sourceUrl: string;
+  verifiedAt: string;
   id: string;
   text: string;
   proponentId: string;
@@ -54,6 +58,7 @@ export interface ElectionComparison
   modelId: string;
   asOf: string;
   scoringMethod: 'mean-absolute-distance-v1';
+  proposalAnswers?: SubmittedAnswer[];
   axes: ElectionAxisComparison[];
   candidates: ElectionCandidateMatch[];
   closestCandidateIds: string[];

@@ -71,7 +71,15 @@
     "br2026_contrapesos_3": "Um ministro suspender sozinho um decreto num caso urgente, e o plenário do STF confirmar ou derrubar essa decisão em poucos dias.",
     "br2026_contrapesos_4": "Numa disputa sobre como aplicar o orçamento da saúde, o Judiciário evitar mandar o governo fazer algo que o Congresso e o Executivo decidiram não fazer.",
     "br2026_contrapesos_5": "O Tribunal de Contas da União ou o Ministério Público investigarem um contrato do governo sem precisar da autorização de um ministro ou do presidente.",
-    "br2026_contrapesos_6": "Menos partidos, confederações e entidades poderem entrar com ações diretamente no STF pedindo para derrubar uma lei."
+    "br2026_contrapesos_6": "Menos partidos, confederações e entidades poderem entrar com ações diretamente no STF pedindo para derrubar uma lei.",
+    "br2026_star_escolas_civico_militares": "Uma escola pública manter professores civis nas aulas e contar com militares da reserva para atividades de disciplina e formação cívica.",
+    "br2026_star_adesao_ocde": "Adaptar normas brasileiras aos padrões da OCDE para concluir o processo de entrada na organização.",
+    "br2026_star_licenca_prazo": "Um projeto apresentar a documentação exigida, o órgão ambiental deixar o prazo terminar sem resposta e a licença ser concedida.",
+    "br2026_star_classificacao_faccoes": "PCC, CV e milícias receberem a classificação oficial de organizações narcoterroristas.",
+    "br2026_star_conteudo_local_datacenters": "Um novo datacenter ter de usar parte dos equipamentos ou serviços de fornecedores nacionais.",
+    "br2026_star_regulacao_redes": "Criar regras para que plataformas digitais enfrentem a desinformação e campanhas de ódio.",
+    "br2026_star_assentamentos_reforma_agraria": "Destinar terras a famílias sem terra que aguardam assentamento e apoiar a estruturação da produção nesses locais.",
+    "br2026_star_cameras_corporais": "O governo federal incentivar estados a adotar câmeras nos uniformes policiais e guardar as gravações segundo padrões comuns."
   },
   "en": {
     "br2026_coordenacao_1": "BNDES, the national development bank, lending below market rates to factories that make semiconductors or renewable-energy equipment.",
@@ -145,6 +153,14 @@
     "br2026_contrapesos_3": "A single justice suspending a decree in an urgent case, with the full Supreme Court confirming or overturning that decision within a few days.",
     "br2026_contrapesos_4": "In a dispute over how to spend the health budget, the courts avoiding ordering the government to do something Congress and the executive decided not to do.",
     "br2026_contrapesos_5": "The Federal Court of Accounts or public prosecutors investigating a government contract without needing permission from a minister or the president.",
-    "br2026_contrapesos_6": "Fewer parties, confederations and organisations being able to file cases directly at the Supreme Court asking for a law to be struck down."
+    "br2026_contrapesos_6": "Fewer parties, confederations and organisations being able to file cases directly at the Supreme Court asking for a law to be struck down.",
+    "br2026_star_escolas_civico_militares": "A public school retaining civilian teachers for lessons and involving retired military personnel in discipline and civic activities.",
+    "br2026_star_adesao_ocde": "Adapting Brazilian rules to OECD standards to complete the process of joining the organisation.",
+    "br2026_star_licenca_prazo": "A project submitting the required documents, the environmental authority missing its response deadline and the licence being granted.",
+    "br2026_star_classificacao_faccoes": "PCC, CV and militias receiving the official designation of narco-terrorist organisations.",
+    "br2026_star_conteudo_local_datacenters": "A new data centre having to source some equipment or services from domestic suppliers.",
+    "br2026_star_regulacao_redes": "Creating rules for digital platforms to address disinformation and hate campaigns.",
+    "br2026_star_assentamentos_reforma_agraria": "Allocating land to landless families waiting for settlement and supporting production in those settlements.",
+    "br2026_star_cameras_corporais": "The federal government encouraging states to adopt police body cameras and store recordings under common standards."
   }
 }

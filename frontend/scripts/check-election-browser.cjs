@@ -257,8 +257,8 @@ async function checkResults(page, language, answer, themeScore)
     const preview = page.locator('.share-result-preview');
     await preview.waitFor();
     await preview.evaluate(image => image.decode());
-    assert.equal(await preview.evaluate(image => image.naturalWidth), 1080);
-    assert.equal(await preview.evaluate(image => image.naturalHeight), 1800);
+    assert.equal(await preview.evaluate(image => image.naturalWidth), 2160);
+    assert.equal(await preview.evaluate(image => image.naturalHeight), 3600);
     await page.getByRole('dialog').evaluate(dialog => Promise.all(dialog.getAnimations({ subtree: true }).map(animation => animation.finished.catch(() => undefined))));
     await checkAccessibility(page);
     const dialogBounds = await page.getByRole('dialog').boundingBox();

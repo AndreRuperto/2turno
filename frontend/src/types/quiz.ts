@@ -19,6 +19,8 @@ export interface Axis {
 }
 
 export interface Question {
+  /** Direct policy agreement, excluded from compatibility scoring. */
+  proposalId?: string;
   id: string;
   axisId: string;
   text: string;

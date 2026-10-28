@@ -1,30 +1,34 @@
 const presentation = require('./electionPresentation.cjs');
 const site = require('../site.json');
 const alignment = require('./electionAlignment.cjs');
+const translations = require('../i18n/electionShare.json');
+const profiles = require('../data/electionProfiles.generated.json');
 
 const cardSize = 1080;
 const cardHeight = 1800;
-
-const LULA_ID = 'lula-da-silva';
-const FLAVIO_ID = 'flavio-bolsonaro';
-const PT_RED = '#c0392b';
-const PL_BLUE = '#2b5fa8';
-const BG = '#0d0f14';
-const INK = '#fffaf2';
-const INK_DIM = 'rgba(255,255,242,0.58)';
-const INK_FAINT = 'rgba(255,255,242,0.14)';
-const PAD = 64;
+const pixelRatio = 2;
+const padding = 40;
+const columnWidth = 488;
+const themes =
+{
+    dark: { background: '#090D11', surface: '#14191F', border: '#303842', text: '#F5F6F8', muted: '#B5BECA', neutral: '#828E9F', red: '#FF6475', blue: '#53B4FF', redSurface: '#211419', blueSurface: '#101F2B', redBorder: '#733340', blueBorder: '#295470', track: '#313943' },
+    light: { background: '#FAFAF8', surface: '#F0F1F0', border: '#D7DCDF', text: '#171D28', muted: '#505B6C', neutral: '#7B8490', red: '#B92235', blue: '#1264AA', redSurface: '#FCEEEF', blueSurface: '#EAF3FB', redBorder: '#EBC6CD', blueBorder: '#BDD5EB', track: '#D8DEE4' }
+};
 
 
 
-function wrappedLines(context, value, maxWidth)
+function wrappedLines(context, value, maximumWidth)
 {
     const lines = [];
     let line = '';
-    for (const word of value.split(' '))
+    for (const word of value.split(/\s+/))
     {
-        const next = line ? `${line} ${word}` : word;
-        if (line && context.measureText(next).width > maxWidth) { lines.push(line); line = word; }
+        const next = line ? line + ' ' + word : word;
+        if (line && context.measureText(next).width > maximumWidth)
+        {
+            lines.push(line);
+            line = word;
+        }
         else line = next;
     }
     if (line) lines.push(line);
@@ -33,20 +37,58 @@ function wrappedLines(context, value, maxWidth)
 
 
 
-function truncate(context, text, maxWidth)
+function fittedLines(context, value, width, maximumLines, initialSize, weight = 500, family = 'Poppins')
 {
-    if (context.measureText(text).width <= maxWidth) return text;
-    let s = text;
-    while (s.length > 0 && context.measureText(s + '\u2026').width > maxWidth) s = s.slice(0, -1);
-    return s + '\u2026';
+    for (let size = initialSize; size >= 8; size -= 1)
+    {
+        context.font = weight + ' ' + size + 'px ' + family + ', sans-serif';
+        const lines = wrappedLines(context, value, width);
+        if (lines.length <= maximumLines && lines.every(line => context.measureText(line).width <= width)) return lines;
+    }
+    return wrappedLines(context, value, width);
 }
 
 
 
-function fillCircle(context, x, y, radius)
+function drawText(context, value, horizontal, vertical, size, color, weight = 500, family = 'Poppins')
+{
+    context.font = weight + ' ' + size + 'px ' + family + ', sans-serif';
+    context.fillStyle = color;
+    context.fillText(value, horizontal, vertical);
+}
+
+
+
+function drawFitted(context, value, horizontal, vertical, width, maximumLines, size, lineHeight, color, weight = 500, family = 'Poppins')
+{
+    const lines = fittedLines(context, value, width, maximumLines, size, weight, family);
+    context.fillStyle = color;
+    lines.forEach((line, index) => context.fillText(line, horizontal, vertical + index * lineHeight));
+}
+
+
+
+function drawPanel(context, horizontal, vertical, width, height, background, border, radius = 20)
 {
     context.beginPath();
-    context.arc(x, y, radius, 0, Math.PI * 2);
+    context.roundRect(horizontal, vertical, width, height, radius);
+    context.fillStyle = background;
+    context.fill();
+    if (border)
+    {
+        context.strokeStyle = border;
+        context.lineWidth = 1;
+        context.stroke();
+    }
+}
+
+
+
+function drawCircle(context, horizontal, vertical, radius, color)
+{
+    context.beginPath();
+    context.arc(horizontal, vertical, radius, 0, Math.PI * 2);
+    context.fillStyle = color;
     context.fill();
 }
 
@@ -54,318 +96,207 @@ function fillCircle(context, x, y, radius)
 
 function shareSummary(result, language = 'pt')
 {
+    const copy = translations[language];
+    const axes = result.axes.map(entry => ({ ...entry, axis: profiles.axes[language].find(axis => axis.id === entry.axis.id) || entry.axis }));
+    const scores = Object.fromEntries(axes.map(entry => [entry.axis.id, entry.userScore]));
+    const classification = presentation.classificationLabels(scores, language);
+    const candidates = site.candidates.map(profile => result.candidates.find(candidate => candidate.id === profile.id))
+        .filter(Boolean).map(candidate => ({ ...candidate, name: site.candidates.find(profile => profile.id === candidate.id).name }));
     return {
-        classification: presentation.classificationLabels(Object.fromEntries(result.axes.map(entry => [entry.axis.id, entry.userScore])), language),
-        candidates: result.candidates.map(candidate => ({ ...candidate, name: site.candidates.find(profile => profile.id === candidate.id)?.name || candidate.name })),
+        classification, candidates, axes,
+        description: copy.descriptions[classification.subtype],
         tied: result.closestCandidateIds.length > 1,
-        alignment: result.candidates.map(candidate =>
+        alignment: candidates.map(candidate =>
         {
-            const areas = alignment.alignmentAreas(
-                Object.fromEntries(result.axes.map(entry => [entry.axis.id, entry.userScore])),
-                Object.fromEntries(result.axes.map(entry => [entry.axis.id, entry.candidateScores[candidate.id]])),
-                result.axes.map(entry => entry.axis));
-            const name = site.candidates.find(profile => profile.id === candidate.id)?.name || candidate.name;
-            const list = new Intl.ListFormat(language === 'pt' ? 'pt-BR' : 'en', { style: 'long', type: 'conjunction' });
-            const agreement = areas.aligned.length
-                ? (language === 'pt' ? 'mais alinhado em ' : 'closer alignment in ') + list.format(areas.aligned)
-                : (language === 'pt' ? 'sem áreas de forte proximidade' : 'no areas of strong similarity');
-            const difference = areas.different.length
-                ? (language === 'pt' ? 'menos alinhado em ' : 'less aligned in ') + list.format(areas.different)
-                : (language === 'pt' ? 'sem divergências marcantes' : 'no marked differences');
-            return { name, ...areas, statement: name + ': ' + agreement + '; ' + difference + '.' };
+            const areas = alignment.alignmentAreas(scores,
+                Object.fromEntries(axes.map(entry => [entry.axis.id, entry.candidateScores[candidate.id]])), axes.map(entry => entry.axis));
+            const list = new Intl.ListFormat(language, { style: 'long', type: 'conjunction' });
+            const agreement = areas.aligned.length ? copy.closerSentence + list.format(areas.aligned) : copy.noClose;
+            const difference = areas.different.length ? copy.differentSentence + list.format(areas.different) : copy.noDifference;
+            return { id: candidate.id, name: candidate.name, ...areas, statement: candidate.name + ': ' + agreement + '; ' + difference };
         }),
-        text: { result: language === 'pt' ? 'Meu resultado' : 'My result', compatibility: language === 'pt' ? 'COMPATIBILIDADE' : 'COMPATIBILITY' }
+        text: copy
     };
 }
 
 
 
-function drawResultCard(context, result, portraits = [], language = 'pt')
+function candidatePalette(candidate, colors)
 {
-    const isPt = language !== 'en';
-    const uiText =
+    return candidate.id === 'lula-da-silva'
+        ? { accent: colors.red, surface: colors.redSurface, border: colors.redBorder }
+        : { accent: colors.blue, surface: colors.blueSurface, border: colors.blueBorder };
+}
+
+
+
+function drawPortrait(context, portrait, candidate, horizontal, vertical, colors)
+{
+    const diameter = 116;
+    drawCircle(context, horizontal + diameter / 2, vertical + diameter / 2, diameter / 2, colors.border);
+    if (!portrait)
     {
-        brand: '2 TURNO',
-        myResult: isPt ? 'MEU RESULTADO' : 'MY RESULT',
-        axes: isPt ? 'SEUS 12 EIXOS' : 'YOUR 12 AXES',
-        you: isPt ? 'VOCÊ' : 'YOU',
-        compat: isPt ? 'COMPATIBILIDADE' : 'COMPATIBILITY',
-        balance: isPt ? 'Equilíbrio' : 'Balance',
-        note: isPt ? 'Estimativa descritiva. Não representa intenção de voto.' : 'Descriptive estimate. Does not represent voting intention.',
-        siteUrl: '2TURNO.UP.RAILWAY.APP'
-    };
-
-    const summary = shareSummary(result, language);
-    const { classification } = summary;
-    const accentColor = classification.color;
-
-    // Resolve candidates in fixed positions: Lula left, Flávio right
-    const lulaIdx = result.candidates.findIndex(c => c.id === LULA_ID);
-    const flavioIdx = result.candidates.findIndex(c => c.id === FLAVIO_ID);
-    const lulaCand = result.candidates[lulaIdx] ?? result.candidates[0];
-    const flavioCand = result.candidates[flavioIdx] ?? result.candidates[1];
-    const lulaPortrait = portraits[lulaIdx] ?? null;
-    const flavioPortrait = portraits[flavioIdx] ?? null;
-    const lulaName = site.candidates.find(p => p.id === LULA_ID)?.name ?? lulaCand.name;
-    const flavioName = site.candidates.find(p => p.id === FLAVIO_ID)?.name ?? flavioCand.name;
-
-    // ── BACKGROUND ──────────────────────────────────────────────────────────────
-    context.fillStyle = BG;
-    context.fillRect(0, 0, cardSize, cardHeight);
-
-    // Soft radial glow at top-right
-    const glow = context.createRadialGradient(cardSize, 0, 0, cardSize, 0, 520);
-    glow.addColorStop(0, accentColor + '28');
-    glow.addColorStop(1, 'transparent');
-    context.fillStyle = glow;
-    context.fillRect(0, 0, cardSize, 520);
-
-    // ── HEADER (y 44–88) ─────────────────────────────────────────────────────────
-    context.fillStyle = INK;
-    context.font = 'bold 40px Sora, sans-serif';
-    context.textAlign = 'left';
-    context.fillText(uiText.brand, PAD, 80);
-
-    context.fillStyle = INK_FAINT;
-    context.fillRect(268, 67, 588, 1);
-
-    context.fillStyle = INK_DIM;
-    context.font = '600 17px Poppins, sans-serif';
-    context.textAlign = 'right';
-    context.fillText(uiText.myResult, cardSize - PAD, 80);
-    context.textAlign = 'left';
-
-    // ── CLASSIFICATION (y 110–270) ───────────────────────────────────────────────
-    context.fillStyle = accentColor;
-    context.font = '600 21px Poppins, sans-serif';
-    context.fillText(classification.familyLabel.toUpperCase(), PAD, 132);
-
-    context.fillStyle = INK;
-    context.font = 'bold 54px Sora, sans-serif';
-    const subtypeLines = wrappedLines(context, classification.subtypeLabel, cardSize - 2 * PAD);
-    subtypeLines.forEach((line, i) => context.fillText(line, PAD, 198 + i * 60));
-
-    // ── PORTRAIT DIVIDE (y 270–690) ──────────────────────────────────────────────
-    const divTop = 270;
-    const divH = 420;
-    const divBottom = divTop + divH; // 690
-    const halfW = cardSize / 2;
-
-    function drawPortraitHalf(portrait, x, w, side)
-    {
-        context.save();
-        context.beginPath();
-        context.rect(x, divTop, w, divH);
-        context.clip();
-
-        if (portrait)
-        {
-            const scale = Math.max(w / portrait.naturalWidth, divH / portrait.naturalHeight);
-            const pw = portrait.naturalWidth * scale;
-            const ph = portrait.naturalHeight * scale;
-            context.drawImage(portrait, x + (w - pw) / 2, divTop + (divH - ph) * 0.06, pw, ph);
-        }
-
-        // Multi-stop gradient: top 40% fully visible, darkens in lower 35% where text lives
-        const bottomFade = context.createLinearGradient(0, divTop, 0, divBottom);
-        bottomFade.addColorStop(0,    BG + '00'); // top: transparent
-        bottomFade.addColorStop(0.40, BG + '00'); // 40%: still clear
-        bottomFade.addColorStop(0.65, BG + '96'); // 65%: ~59% dark
-        bottomFade.addColorStop(0.82, BG + 'e4'); // 82%: ~89% dark
-        bottomFade.addColorStop(1,    BG);         // bottom: fully opaque
-        context.fillStyle = bottomFade;
-        context.fillRect(x, divTop, w, divH);
-
-        // Inner-edge vignette toward the divide line
-        const edgeX0 = side === 'left' ? halfW : x + w;
-        const edgeX1 = side === 'left' ? halfW - 64 : x + w - 64;
-        const edgeVign = context.createLinearGradient(edgeX0, 0, edgeX1, 0);
-        edgeVign.addColorStop(0, BG + '70');
-        edgeVign.addColorStop(1, 'transparent');
-        context.fillStyle = edgeVign;
-        context.fillRect(x, divTop, w, divH);
-
-        context.restore();
-    }
-
-    drawPortraitHalf(lulaPortrait, 0, halfW, 'left');
-    drawPortraitHalf(flavioPortrait, halfW, halfW, 'right');
-
-    // The Divide — glowing vertical line
-    context.save();
-    context.shadowBlur = 32;
-    context.shadowColor = accentColor;
-    context.strokeStyle = accentColor;
-    context.lineWidth = 2;
-    context.beginPath();
-    context.moveTo(halfW, divTop);
-    context.lineTo(halfW, divBottom);
-    context.stroke();
-    context.shadowBlur = 10;
-    context.stroke();
-    context.restore();
-
-    // ── CANDIDATE INFO (overlaid at portrait bottom) ──────────────────────────────
-    const partyY = divBottom - 16;
-
-    function drawCandidateInfo(cand, name, align)
-    {
-        const isLeft = align === 'left';
-        const textX = isLeft ? PAD : cardSize - PAD;
-        context.textAlign = align;
-
-        // Party · number
-        context.font = '500 18px Poppins, sans-serif';
-        context.fillStyle = INK_DIM;
-        context.fillText(`${cand.party}\u00a0\u00b7\u00a0${cand.number}`, textX, partyY);
-
-        // Candidate name (may wrap; drawn bottom-up from partyY)
-        context.font = 'bold 26px Sora, sans-serif';
-        context.fillStyle = INK;
-        const nameLines = wrappedLines(context, name, halfW - PAD - 24);
-        const nameBottomY = partyY - 28;
-        [...nameLines].reverse().forEach((line, i) =>
-            context.fillText(line, textX, nameBottomY - i * 32));
-
-        // "COMPATIBILIDADE" label above name
-        const nameBlockH = nameLines.length * 32;
-        const compatLabelY = nameBottomY - nameBlockH - 14;
-        context.font = '600 13px Poppins, sans-serif';
-        context.fillStyle = INK_DIM;
-        context.fillText(uiText.compat, textX, compatLabelY);
-
-        // Large compatibility %
-        context.font = 'bold 58px Sora, sans-serif';
-        context.fillStyle = INK;
-        context.fillText(`${cand.compatibility.toFixed(1)}%`, textX, compatLabelY - 22);
-    }
-
-    drawCandidateInfo(lulaCand, lulaName, 'left');
-    drawCandidateInfo(flavioCand, flavioName, 'right');
-    context.textAlign = 'left';
-
-    // ── AXES SECTION (y 710–1726) ────────────────────────────────────────────────
-    // 2 axes per row → 6 rows of ~155 px → labels at 26 px, very readable
-    const axesTop = 710;
-    const fullBarLeft = PAD;
-    const fullBarWidth = cardSize - 2 * PAD;   // 952
-    const colGap = 40;
-    const colWidth = (fullBarWidth - colGap) / 2;  // 456
-    const rowH = 155;
-    const rowsTop = axesTop + 76;
-
-    // Section header
-    context.fillStyle = INK_DIM;
-    context.font = '600 20px Poppins, sans-serif';
-    context.fillText(uiText.axes, PAD, axesTop + 40);
-
-    // Legend: ● VOCÊ  ● Lula  ● Flávio  (right-aligned, laid out right→left)
-    const legendItems = [
-        { label: uiText.you, color: INK, r: 7 },
-        { label: lulaName.split(' ')[0], color: PT_RED, r: 6 },
-        { label: flavioName.split(' ')[0], color: PL_BLUE, r: 6 }
-    ];
-    context.font = '500 15px Poppins, sans-serif';
-    let lx = cardSize - PAD;
-    const legendY = axesTop + 40;
-    const legendDotY = legendY - 7;
-    for (let i = legendItems.length - 1; i >= 0; i--)
-    {
-        const item = legendItems[i];
-        const tw = context.measureText(item.label).width;
-        context.textAlign = 'right';
-        context.fillStyle = INK_DIM;
-        context.fillText(item.label, lx, legendY);
-        lx -= tw + 10;
-        context.fillStyle = item.color;
-        fillCircle(context, lx, legendDotY, item.r);
-        lx -= item.r + 22;
-    }
-    context.textAlign = 'left';
-
-    // Twelve axis rows, 2 per line
-    result.axes.forEach((entry, index) =>
-    {
-        const col = index % 2;
-        const row = Math.floor(index / 2);
-        const colX = fullBarLeft + col * (colWidth + colGap);
-        const rowY = rowsTop + row * rowH;
-        const trackY = rowY + 72;
-        const dotY = trackY + 4;   // center of 8px track
-
-        const userScore = entry.userScore;
-        const leanLeft = userScore > 50;
-        const isBalanced = userScore === 50;
-        const leanColor = isBalanced ? INK_DIM
-            : leanLeft ? (entry.axis.leftColor || PT_RED)
-            : (entry.axis.rightColor || PL_BLUE);
-        const dominantPct = Math.max(userScore, 100 - userScore).toFixed(0) + '%';
-        const scoreToX = score => colX + colWidth * score / 100;
-
-        // Axis label — truncated to leave room for % badge
-        context.font = '600 24px Poppins, sans-serif';
-        const maxLabelW = colWidth - context.measureText(dominantPct).width - 28;
-        context.fillStyle = INK;
-        context.fillText(truncate(context, entry.axis.label, maxLabelW), colX, rowY + 28);
-
-        // Dominant % — right-aligned, colored by direction
-        context.textAlign = 'right';
-        context.fillStyle = leanColor;
-        context.font = '600 18px Poppins, sans-serif';
-        context.fillText(dominantPct, colX + colWidth, rowY + 28);
+        const initials = candidate.name.split(' ').map(word => word[0]).slice(0, 2).join('');
+        context.textAlign = 'center';
+        drawText(context, initials, horizontal + diameter / 2, vertical + 71, 34, colors.text, 700, 'Sora');
         context.textAlign = 'left';
+        return;
+    }
+    context.save();
+    context.beginPath();
+    context.arc(horizontal + diameter / 2, vertical + diameter / 2, diameter / 2, 0, Math.PI * 2);
+    context.clip();
+    const scale = Math.max(diameter / portrait.naturalWidth, diameter / portrait.naturalHeight);
+    const width = portrait.naturalWidth * scale;
+    const height = portrait.naturalHeight * scale;
+    context.drawImage(portrait, horizontal + (diameter - width) / 2, vertical + (diameter - height) * .15, width, height);
+    context.restore();
+}
 
-        // Dominant pole name
-        const dominantPole = isBalanced ? uiText.balance
-            : leanLeft ? entry.axis.leftPole : entry.axis.rightPole;
-        context.font = '400 14px Poppins, sans-serif';
-        context.fillStyle = INK_DIM;
-        context.fillText(truncate(context, dominantPole, colWidth * 0.88), colX, rowY + 50);
 
-        // Track
-        context.fillStyle = INK_FAINT;
-        context.fillRect(colX, trackY, colWidth, 8);
 
-        // Colored fill segment: center → user position (shows lean direction)
-        if (!isBalanced)
-        {
-            const fillX = scoreToX(Math.min(userScore, 50));
-            const fillW = scoreToX(Math.max(userScore, 50)) - fillX;
-            context.fillStyle = leanColor + 'a0';
-            context.fillRect(fillX, trackY, fillW, 8);
-        }
+function drawProfile(context, summary, profileColors)
+{
+    const palette = profileColors || {
+        background: summary.classification.background,
+        border: summary.classification.color,
+        accent: summary.classification.color,
+        title: summary.classification.color,
+        muted: summary.classification.color
+    };
+    drawPanel(context, padding, 132, 1000, 164, palette.background, palette.border);
+    drawPanel(context, 60, 154, 5, 118, palette.accent, null, 2);
+    drawText(context, summary.text.profile + ' · ' + summary.classification.familyLabel.toUpperCase(), 82, 174, 19, palette.title, 600);
+    drawFitted(context, summary.classification.subtypeLabel, 82, 225, 916, 1, 42, 48, palette.title, 700, 'Sora');
+    drawFitted(context, summary.description, 82, 260, 916, 1, 22, 28, palette.muted);
+}
 
-        const lulaScore = entry.candidateScores[LULA_ID] ?? 50;
-        const flavioScore = entry.candidateScores[FLAVIO_ID] ?? 50;
 
-        // Candidate dots (drawn below user dot)
-        context.fillStyle = PT_RED;
-        fillCircle(context, scoreToX(lulaScore), dotY, 6);
-        context.fillStyle = PL_BLUE;
-        fillCircle(context, scoreToX(flavioScore), dotY, 6);
 
-        // User dot — white, larger, soft glow
-        context.save();
-        context.shadowBlur = 14;
-        context.shadowColor = 'rgba(255,250,242,0.55)';
-        context.fillStyle = INK;
-        fillCircle(context, scoreToX(userScore), dotY, 10);
-        context.restore();
+function drawCandidate(context, candidate, portrait, horizontal, closest, summary, colors, language)
+{
+    const palette = candidatePalette(candidate, colors);
+    drawPanel(context, horizontal, 316, columnWidth, 260, palette.surface, closest ? palette.accent : palette.border);
+    if (closest) drawText(context, summary.tied ? summary.text.tie : summary.text.closest, horizontal + 24, 345, 15, palette.accent, 600);
+    drawPortrait(context, portrait, candidate, horizontal + 24, 364, colors);
+    drawFitted(context, candidate.name, horizontal + 160, 389, 304, 2, 27, 30, colors.text, 700, 'Sora');
+    drawText(context, candidate.party + ' · ' + candidate.number, horizontal + 160, 447, 20, colors.muted);
+    const percentage = new Intl.NumberFormat(language, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(candidate.compatibility) + '%';
+    drawText(context, percentage, horizontal + 160, 504, 50, palette.accent, 700, 'Sora');
+    drawText(context, summary.text.compatibility, horizontal + 24, 531, 16, colors.muted, 600);
+    drawPanel(context, horizontal + 24, 546, 440, 12, colors.track, null, 6);
+    if (candidate.compatibility > 0) drawPanel(context, horizontal + 24, 546, 440 * candidate.compatibility / 100, 12, palette.accent, null, 6);
+}
+
+
+
+function scorePosition(score, horizontal, width)
+{
+    return horizontal + presentation.percentagePair(score).position / 100 * width;
+}
+
+
+
+function drawAxis(context, entry, index, candidates, colors, language)
+{
+    const horizontal = padding + Math.floor(index / 6) * 512;
+    const vertical = 696 + index % 6 * 98;
+    drawPanel(context, horizontal, vertical, columnWidth, 90, colors.surface, colors.border, 14);
+    drawText(context, String(index + 1).padStart(2, '0'), horizontal + 16, vertical + 31, 17, colors.muted, 500, 'Sora');
+    drawFitted(context, entry.axis.label, horizontal + 55, vertical + 28, 338, 2, 21, 24, colors.text, 600);
+    context.textAlign = 'right';
+    const percentage = new Intl.NumberFormat(language, { maximumFractionDigits: 1 }).format(entry.userScore) + '%';
+    drawText(context, percentage, horizontal + 470, vertical + 28, 21, colors.text, 700, 'Sora');
+    context.textAlign = 'left';
+    const trackHorizontal = horizontal + 55;
+    const trackWidth = 406;
+    const trackVertical = vertical + 71;
+    const gradient = context.createLinearGradient(trackHorizontal, 0, trackHorizontal + trackWidth, 0);
+    gradient.addColorStop(0, colors.red);
+    gradient.addColorStop(.5, colors.neutral);
+    gradient.addColorStop(1, colors.blue);
+    drawPanel(context, trackHorizontal, trackVertical, trackWidth, 7, gradient, null, 3);
+    candidates.forEach(candidate =>
+    {
+        const score = entry.candidateScores[candidate.id];
+        if (!Number.isFinite(score)) return;
+        const position = scorePosition(score, trackHorizontal, trackWidth);
+        drawPanel(context, position - 2, trackVertical - 5, 4, 17, candidatePalette(candidate, colors).accent, null, 2);
     });
+    const position = scorePosition(entry.userScore, trackHorizontal, trackWidth);
+    drawCircle(context, position, trackVertical + 3.5, 10, colors.border);
+    drawCircle(context, position, trackVertical + 3.5, 7, colors.text);
+}
 
-    // ── FOOTER (y 1726–1786) ─────────────────────────────────────────────────────
-    context.fillStyle = INK_FAINT;
-    context.fillRect(PAD, 1726, fullBarWidth, 1);
-    context.fillStyle = INK_DIM;
-    context.font = '14px Poppins, sans-serif';
-    context.fillText(uiText.note, PAD, 1758);
-    context.fillStyle = INK;
-    context.font = '600 20px Poppins, sans-serif';
-    context.fillText(uiText.siteUrl, PAD, 1786);
 
+
+function drawAlignment(context, candidate, horizontal, summary, colors)
+{
+    const palette = candidatePalette(candidate, colors);
+    drawPanel(context, horizontal, 1344, columnWidth, 316, palette.surface, palette.border);
+    drawText(context, candidate.name, horizontal + 24, 1387, 27, colors.text, 700, 'Sora');
+    const groups = [
+        { title: summary.text.closer, areas: candidate.aligned, empty: summary.text.noClose },
+        { title: summary.text.different, areas: candidate.different, empty: summary.text.noDifference }
+    ];
+    groups.forEach((group, index) =>
+    {
+        const vertical = 1425 + index * 113;
+        drawText(context, group.title, horizontal + 24, vertical, 16, colors.muted, 600);
+        const values = group.areas.length ? group.areas : [group.empty];
+        values.forEach((value, valueIndex) =>
+        {
+            drawText(context, index ? '−' : '+', horizontal + 24, vertical + 30 + valueIndex * 36, 25, palette.accent, 600);
+            drawFitted(context, value, horizontal + 51, vertical + 30 + valueIndex * 36, 409, 1, 22, 26, colors.text);
+        });
+    });
+}
+
+
+
+function drawResultCard(context, result, portraits = [], language = 'pt', theme = 'dark', profileColors)
+{
+    const summary = shareSummary(result, language);
+    const copy = summary.text;
+    const colors = themes[theme];
+    context.save();
+    context.textAlign = 'left';
+    context.textBaseline = 'alphabetic';
+    context.fillStyle = colors.background;
+    context.fillRect(0, 0, cardSize, cardHeight);
+    drawText(context, copy.brand, padding, 75, 48, colors.text, 800, 'Sora');
+    drawText(context, copy.election.replace('{year}', site.runoffDate.slice(0, 4)), padding + 2, 106, 18, colors.muted);
+    context.textAlign = 'right';
+    drawText(context, copy.result, 1040, 71, 17, colors.muted, 500);
+    context.textAlign = 'left';
+    drawProfile(context, summary, profileColors);
+    summary.candidates.forEach((candidate, index) =>
+    {
+        const portraitIndex = result.candidates.findIndex(entry => entry.id === candidate.id);
+        drawCandidate(context, candidate, portraits[portraitIndex], padding + index * 512,
+            result.closestCandidateIds.includes(candidate.id), summary, colors, language);
+    });
+    drawText(context, copy.axes, padding, 624, 27, colors.text, 700, 'Sora');
+    const legend = [{ name: copy.you, color: colors.text }, ...summary.candidates.map(candidate => ({ name: candidate.name, color: candidatePalette(candidate, colors).accent }))];
+    let legendHorizontal = padding;
+    legend.forEach(item =>
+    {
+        drawCircle(context, legendHorizontal + 6, 652, 5, item.color);
+        drawText(context, item.name, legendHorizontal + 20, 658, 17, colors.muted);
+        legendHorizontal += context.measureText(item.name).width + 58;
+    });
+    drawText(context, copy.axisNote, padding, 683, 16, colors.muted);
+    summary.axes.forEach((entry, index) => drawAxis(context, entry, index, summary.candidates, colors, language));
+    drawText(context, copy.alignment, padding, 1321, 25, colors.text, 700, 'Sora');
+    summary.alignment.forEach((candidate, index) => drawAlignment(context, candidate, padding + index * 512, summary, colors));
+    context.fillStyle = colors.border;
+    context.fillRect(padding, 1695, 1000, 1);
+    drawText(context, copy.disclaimer, padding, 1733, 18, colors.muted, 400);
+    drawText(context, new URL(site.website).host.toUpperCase(), padding, 1770, 19, colors.text, 600);
+    context.restore();
     return summary;
 }
 
 
 
-module.exports = { cardSize, cardHeight, shareSummary, drawResultCard };
+module.exports = { cardSize, cardHeight, pixelRatio, themes, shareSummary, drawResultCard };

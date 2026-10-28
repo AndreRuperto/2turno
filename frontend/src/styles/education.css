@@ -32,7 +32,7 @@
 .political-family-card, .axis-explanation-card { padding: 26px; border: 1px solid #1A2B45; border-radius: 22px; min-width: 0; }
 .political-family-card { background: var(--ideology-background); border-top: 4px solid var(--ideology-color); }
 .political-family-card h3 { color: var(--ideology-color); }
-.political-family-card p { color: var(--ink-700); }
+.political-family-card p { color: #374151; }
 .education-grid h3 { font-size: 20px; line-height: 1.4; margin: 16px 0; }
 .education-grid p { font-size: 15px; line-height: 1.75; margin-bottom: 0; }
 .family-indicator { display: block; width: 22px; height: 22px; border-radius: 50%; background: var(--ideology-color); }

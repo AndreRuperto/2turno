@@ -15,11 +15,12 @@ import questionExamples from './i18n/electionQuestionExamples.json';
 import presentation from './utils/electionPresentation.cjs';
 import alignment from './utils/electionAlignment.cjs';
 import radicalMode from './utils/extremistMode.cjs';
-import type { ElectionComparison, ElectionQuiz } from './types/election';
+import proposalRules from './utils/electionProposals.cjs';
+import type { ElectionComparison, ElectionProposal, ElectionQuiz } from './types/election';
 import type { AnswerValue, QuizPayload, QuizVariant } from './types/quiz';
-import { selectAllQuestionsBalanced, selectAndBalanceQuestions } from './utils/quizSelection';
 import { answeredElectionCount, clearElectionProgress, loadElectionProgress, restoreElectionQuiz, saveElectionProgress } from './utils/electionProgress';
 
+const planProposals = profiles.proposals[LANG] as ElectionProposal[];
 const languagePrefix = LANG === 'en' ? '/en' : '';
 const AUTO_ADVANCE_KEY = '2turno-auto-advance';
 const ANSWER_VALUES: AnswerValue[] = ['STRONGLY_AGREE', 'AGREE', 'NEUTRAL', 'DISAGREE', 'STRONGLY_DISAGREE'];
@@ -219,7 +220,7 @@ export default function ElectionApp()
       {
         if (saved.modeActive)
         {
-          const restored = radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG);
+          const restored = radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG, planProposals, saved.questionIds);
           if (cancelled) return;
           setChoosingFormat(saved.choosingFormat);
           setAnswers(saved.answers);
@@ -342,7 +343,7 @@ export default function ElectionApp()
       if (modeActive)
       {
         setModel(null);
-        setQuiz(radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG));
+        setQuiz(radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG, planProposals));
         setAnswers({});
         setQuestionIndex(0);
         setRadicalScores(null);
@@ -350,7 +351,7 @@ export default function ElectionApp()
       }
       const response = await fetchElectionQuiz(activeVariant);
       setModel(response);
-      setQuiz(activeVariant === 'extreme' ? selectAllQuestionsBalanced(response.quiz) : selectAndBalanceQuestions(response.quiz));
+      setQuiz(proposalRules.selectQuizQuestions(response.quiz, response.proposals ?? planProposals));
       setAnswers({});
       setQuestionIndex(0);
       setComparison(null);
@@ -398,7 +399,7 @@ export default function ElectionApp()
     if (!quiz) return;
     if (modeActive)
     {
-      setRadicalScores(radicalMode.scoreRadicalAnswers(answers));
+      setRadicalScores(radicalMode.scoreRadicalAnswers(answers, quiz.questions));
       clearElectionProgress();
       setQuiz(null);
       return;
@@ -438,7 +439,7 @@ export default function ElectionApp()
     {
       const extremist = saved.mode === 'extremist';
       const response = extremist ? null : await fetchElectionQuiz(saved.variant);
-      const restored = restoreElectionQuiz(response?.quiz ?? radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG), saved);
+      const restored = restoreElectionQuiz(response?.quiz ?? radicalMode.createRadicalQuiz(profiles.axes[LANG], LANG, planProposals, saved.questionIds), saved);
       if (!restored)
       {
         clearElectionProgress();
@@ -527,7 +528,7 @@ export default function ElectionApp()
         <a className="language-switch" href={LANG === 'pt' ? '/en' : '/'} onClick={preserveLanguageProgress} lang={LANG === 'pt' ? 'en' : 'pt-BR'}
           aria-label={LANG === 'pt' ? 'English' : 'Português'}>{LANG === 'pt' ? 'EN' : 'PT'}</a>
         {/* Só na página inicial: trocar de modo reinicia a tela, e no quiz ou no resultado isso perderia o andamento. */}
-        <button type="button" className="theme-toggle" aria-label={theme === 'dark' ? 'Mudar para modo claro' : 'Mudar para modo escuro'} onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}>
+        <button type="button" className="theme-toggle" aria-label={LANG === 'pt' ? (theme === 'dark' ? 'Mudar para modo claro' : 'Mudar para modo escuro') : (theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode')} onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}>
           {theme === 'dark' ? <Sun size={22} /> : <Moon size={22} />}
         </button>
         {available && onHome && !busy && <button type="button" className="extremist-mode-toggle" aria-pressed={modeActive} onClick={toggleExtremistMode}>
@@ -558,7 +559,11 @@ export default function ElectionApp()
             <img src="/extremist-fight-poster.webp" alt={LANG === 'pt' ? 'Pôster fictício de MMA: Flávio Bolsonaro contra Lula' : 'Fictional MMA fight poster: Flávio Bolsonaro versus Lula'} width="1862" height="845" />
             <div><p className="election-kicker">2TURNO · {LANG === 'pt' ? 'MODO EXTREMISTA' : 'EXTREMIST MODE'}</p>
               <h1>{LANG === 'pt' ? 'Ideias no limite. Onde você fica?' : 'Ideas at the limit. Where do you stand?'}</h1>
-              <p>{LANG === 'pt' ? 'Uma experiência opcional com afirmações políticas radicais. A luta é ficção e sátira.' : 'An optional experience with radical political statements. The fight is fiction and satire.'}</p></div>
+              <p>{LANG === 'pt' ? 'Uma experiência opcional com afirmações políticas radicais. A luta é ficção e sátira.' : 'An optional experience with radical political statements. The fight is fiction and satire.'}</p>
+              <button type="button" className="profile-link extremist-start-button" disabled={busy} onClick={() => void startQuiz()}>
+                {text.start}<span aria-hidden="true"> →</span>
+              </button>
+            </div>
           </section> : choosingFormat ? <section className="format-select" aria-label={profileText.formats}>
             <button type="button" className="format-select-back" onClick={() => setChoosingFormat(false)} aria-label={LANG === 'pt' ? 'Voltar' : 'Back'}>← {LANG === 'pt' ? 'Voltar' : 'Back'}</button>
             <h1 className="format-select-heading">{LANG === 'pt' ? <>Velocidade ou <span>precisão?</span></> : <>Speed or <span>precision?</span></>}</h1>
@@ -641,6 +646,7 @@ export default function ElectionApp()
             })}</div>
           </section>}
           <ProfileCard axes={profiles.axes[LANG]} scores={radicalScores} identifier="radical-profile" classificationOverride={radicalClassification} />
+          <PlanProposals proposals={planProposals} answers={answers} />
           <HistoricalComparisons scores={radicalScores} answers={answers} />
           <div className="election-actions">
             <button type="button" onClick={() => setRadicalScores(null)}>{text.restart}</button>
@@ -650,8 +656,6 @@ export default function ElectionApp()
         {comparison && <section className="election-results">
           <h1>{text.results}</h1>
           <p>{comparison.closestCandidateIds.length === 2 ? text.tie : `${text.closest} ${comparison.candidates[0].name}`}</p>
-          <ProfileCard axes={comparison.axes.map(entry => entry.axis)}
-            scores={Object.fromEntries(comparison.axes.map(entry => [entry.axis.id, entry.userScore]))} />
           <h2>{text.candidates}</h2>
           <div className="election-grid">{comparison.candidates.map(match =>
           {
@@ -660,6 +664,8 @@ export default function ElectionApp()
             const scores = Object.fromEntries(comparison.axes.map(entry => [entry.axis.id, entry.candidateScores[match.id]]));
             return <CandidateCard key={match.id} candidate={{ ...candidate, scores }} compatibility={match.compatibility} />;
           })}</div>
+          <ProfileCard axes={comparison.axes.map(entry => entry.axis)}
+            scores={Object.fromEntries(comparison.axes.map(entry => [entry.axis.id, entry.userScore]))} />
           <details className="comparison-section detailed-comparison">
             <summary>{profileText.detailedComparison}</summary>
             <h2>{profileText.compare}</h2>
@@ -669,10 +675,10 @@ export default function ElectionApp()
               ...profiles.candidates.map(candidate => ({ name: candidate.name, symbol: String(candidate.number), score: entry.candidateScores[candidate.id], color: presentation.classificationLabels(candidate.scores, LANG).color }))
             ]} />)}</div>
           </details>
-          <PlanProposals proposals={model?.proposals ?? []} options={model?.quiz.answerOptions ?? []} />
+          <PlanProposals proposals={model?.proposals ?? planProposals} answers={Object.fromEntries((comparison.proposalAnswers ?? []).map(entry => [entry.questionId, entry.answer]))} />
           <p>{text.disclaimer}</p>
           <a href={`${languagePrefix}/election-methodology`}>{text.methodology}</a>
-          <div className="election-actions"><ShareResult result={comparison} /><button type="button" onClick={() => setComparison(null)}>{text.restart}</button></div>
+          <div className="election-actions"><ShareResult result={comparison} theme={theme} /><button type="button" onClick={() => setComparison(null)}>{text.restart}</button></div>
         </section>}
       </>}
     </main>

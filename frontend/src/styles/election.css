@@ -56,8 +56,8 @@
 .election-app label { display: block; }
 .election-brand { display: inline-flex; text-decoration: none; }
 .election-brand img { display: block; height: 38px; width: auto; }
-.theme-toggle { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 8px; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--surface); color: #fff; cursor: pointer; transition: background .15s; }
-.theme-toggle:hover { background: var(--accent-soft); }
+.election-app .election-header .theme-toggle { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 8px; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--text); cursor: pointer; transition: background .15s; }
+.election-app .election-header .theme-toggle:hover { background: var(--accent-soft); }
 
 .election-app .home-hero
 {
@@ -79,8 +79,8 @@
 .home-hero-text p:last-of-type { margin: 0; font-size: 1.05rem; line-height: 1.65; color: #EEF2FF; text-align: justify; }
 .home-hero-text .hero-start-button { margin-top: 24px; background: #F59E0B !important; color: #0F2044 !important; }
 .home-hero .election-kicker { color: #C7D5EF; }
-body[data-political-family] { background: var(--result-background); }
-body[data-political-family] .election-header a, body[data-political-family] .election-results > a { color: var(--result-color); }
+body[data-political-family] { background: var(--bg); }
+body[data-political-family] .election-header a, body[data-political-family] .election-results > a { color: var(--green-400); }
 .election-results { border-top: 5px solid var(--result-color); padding-top: 20px; }
 .election-results .election-actions button { background: var(--result-color); }
 @media (max-width: 900px)
@@ -140,3 +140,5 @@ html[data-extremist-mode] .election-app .resume-card { border: 1px solid #41404c
   .election-app .resume-actions button { transition: none; }
   .election-app .resume-actions button:hover { transform: none; }
 }
+
+.extremist-hero .extremist-start-button { margin-top: 12px; }
