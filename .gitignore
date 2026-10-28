@@ -43,3 +43,6 @@ colinha-eleitoral/planos-de-governo/
 
 # Local assistant session logs
 /claude-sessions/
+
+# Material de divulgação (vídeo, composição)
+/brag-output/
